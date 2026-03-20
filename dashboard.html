@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#6C63FF">
+  <title>Dashboard - Gestify</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="icon" href="icons/icon-192.png">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    window.addEventListener('load', function() {
+      const img = new Image();
+      img.src = 'logos/LOGOv3.png';
+      img.onload = function() {
+        const canvas = document.getElementById('sidebarLogo');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < data.data.length; i += 4) {
+          const r = data.data[i], g = data.data[i+1], b = data.data[i+2];
+          if (r < 40 && g < 40 && b < 40) {
+            data.data[i] = 255; data.data[i+1] = 255; data.data[i+2] = 255;
+          } else if (r > 200 && g > 200 && b > 200) {
+            data.data[i] = 0; data.data[i+1] = 0; data.data[i+2] = 0;
+          } else if (b > r + 30 && (r + g + b) > 200) {
+            const t = b / 255;
+            data.data[i]   = Math.round(74  + t * (139 - 74));
+            data.data[i+1] = Math.round(67  + t * (131 - 67));
+            data.data[i+2] = Math.round(204 + t * (255 - 204));
+          }
+        }
+        ctx.putImageData(data, 0, 0);
+      };
+    });
+  </script>
+</head>
+<body class="app-page">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <canvas id="sidebarLogo" style="width:240px;height:auto"></canvas>
+      <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+    </div>
+
+    <div class="business-info">
+      <div class="business-avatar" id="businessAvatar">B</div>
+      <div>
+        <p class="business-name" id="businessName">Mi Negocio</p>
+        <span class="role-badge" id="userRole">Admin</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" onclick="showSection('dashboard')">
+        <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span> Dashboard
+      </a>
+      <a href="#" class="nav-item" onclick="showSection('inventario')">
+        <span class="nav-icon"><i data-lucide="package"></i></span> Inventario
+      </a>
+      <a href="#" class="nav-item" onclick="showSection('ventas')">
+        <span class="nav-icon"><i data-lucide="shopping-cart"></i></span> Ventas
+      </a>
+      <a href="#" class="nav-item" onclick="showSection('caja')">
+        <span class="nav-icon"><i data-lucide="wallet"></i></span> Caja
+      </a>
+      <a href="#" class="nav-item" id="navEmpleados" onclick="showSection('empleados')">
+        <span class="nav-icon"><i data-lucide="users"></i></span> Empleados
+      </a>
+      <a href="#" class="nav-item" onclick="showSection('reportes')">
+        <span class="nav-icon"><i data-lucide="bar-chart-2"></i></span> Reportes
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="#" class="nav-item" onclick="showSection('ajustes')">
+        <span class="nav-icon"><i data-lucide="settings"></i></span> Ajustes
+      </a>
+      <a href="#" class="nav-item logout" onclick="handleLogout()">
+        <span class="nav-icon"><i data-lucide="log-out"></i></span> Cerrar Sesión
+      </a>
+    </div>
+  </aside>
+
+  <!-- Overlay para móvil -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- Contenido principal -->
+  <main class="main-content">
+
+    <!-- Header -->
+    <header class="app-header">
+      <button class="menu-btn" onclick="toggleSidebar()"><i data-lucide="menu"></i></button>
+      <h2 class="page-title" id="pageTitle">Dashboard</h2>
+      <div class="header-actions">
+        <div class="user-avatar" id="headerAvatar">U</div>
+      </div>
+    </header>
+
+    <!-- Secciones -->
+
+    <!-- DASHBOARD -->
+    <section id="section-dashboard" class="section active">
+      <div class="stats-grid">
+        <div class="stat-card purple">
+          <div class="stat-icon"><i data-lucide="trending-up"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Ventas Hoy</span>
+            <span class="stat-value" id="statVentasHoy">S/ 0.00</span>
+          </div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon"><i data-lucide="package"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Productos</span>
+            <span class="stat-value" id="statProductos">0</span>
+          </div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon"><i data-lucide="wallet"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">En Caja</span>
+            <span class="stat-value" id="statCaja">S/ 0.00</span>
+          </div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-icon"><i data-lucide="alert-triangle"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Stock Bajo</span>
+            <span class="stat-value" id="statStockBajo">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3>Últimas Ventas</h3>
+            <a href="#" onclick="showSection('ventas')" class="ver-mas">Ver todas</a>
+          </div>
+          <div id="ultimasVentas" class="list-empty">
+            <p>No hay ventas hoy</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Stock Bajo</h3>
+            <a href="#" onclick="showSection('inventario')" class="ver-mas">Ver todos</a>
+          </div>
+          <div id="stockBajoList" class="list-empty">
+            <p>Todo en orden</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INVENTARIO -->
+    <section id="section-inventario" class="section hidden">
+      <div class="section-toolbar">
+        <input type="text" class="search-input" placeholder="Buscar producto..." oninput="buscarProducto(this.value)">
+        <button class="btn-primary" onclick="showModal('modalProducto')">+ Agregar</button>
+      </div>
+      <div class="card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Categoría</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tablaInventario">
+            <tr><td colspan="5" class="empty-row">Sin productos aún</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- VENTAS -->
+    <section id="section-ventas" class="section hidden">
+      <div class="section-toolbar">
+        <input type="date" class="date-input" id="filtroFechaVenta" onchange="filtrarVentas()">
+        <button class="btn-primary" onclick="showModal('modalVenta')">+ Nueva Venta</button>
+      </div>
+      <div class="card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Hora</th>
+              <th>Producto</th>
+              <th>Cant.</th>
+              <th>Total</th>
+              <th>Vendedor</th>
+            </tr>
+          </thead>
+          <tbody id="tablaVentas">
+            <tr><td colspan="5" class="empty-row">Sin ventas aún</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CAJA -->
+    <section id="section-caja" class="section hidden">
+      <div class="caja-grid">
+        <div class="card caja-resumen">
+          <h3>Estado de Caja</h3>
+          <div class="caja-monto">
+            <span>Saldo actual</span>
+            <strong id="cajaSaldo">S/ 0.00</strong>
+          </div>
+          <div class="caja-actions">
+            <button class="btn-success" onclick="showModal('modalIngreso')">+ Ingreso</button>
+            <button class="btn-danger" onclick="showModal('modalEgreso')">- Egreso</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Movimientos</h3>
+          </div>
+          <div id="movimientosCaja" class="list-empty">
+            <p>Sin movimientos hoy</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EMPLEADOS -->
+    <section id="section-empleados" class="section hidden">
+      <div class="section-toolbar">
+        <h3>Gestión de Empleados</h3>
+        <button class="btn-primary" onclick="showModal('modalEmpleado')">+ Invitar</button>
+      </div>
+      <div id="listaEmpleados" class="empleados-grid">
+        <p class="empty-text">Sin empleados aún</p>
+      </div>
+    </section>
+
+    <!-- REPORTES -->
+    <section id="section-reportes" class="section hidden">
+      <div class="reportes-toolbar">
+        <select id="reportePeriodo" onchange="cargarReporte()">
+          <option value="hoy">Hoy</option>
+          <option value="semana">Esta semana</option>
+          <option value="mes" selected>Este mes</option>
+        </select>
+        <button class="btn-secondary" onclick="exportarReporte()">📥 Exportar</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card purple">
+          <div class="stat-icon">💰</div>
+          <div class="stat-info">
+            <span class="stat-label">Total Ventas</span>
+            <span class="stat-value" id="reporteTotalVentas">S/ 0.00</span>
+          </div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon">🧾</div>
+          <div class="stat-info">
+            <span class="stat-label">N° Transacciones</span>
+            <span class="stat-value" id="reporteTransacciones">0</span>
+          </div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon">📦</div>
+          <div class="stat-info">
+            <span class="stat-label">Productos Vendidos</span>
+            <span class="stat-value" id="reporteProductosVendidos">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Top Productos</h3></div>
+        <div id="topProductos" class="list-empty"><p>Sin datos</p></div>
+      </div>
+    </section>
+
+    <!-- AJUSTES -->
+    <section id="section-ajustes" class="section hidden">
+      <div class="card ajustes-card">
+        <h3>Información del Negocio</h3>
+        <div class="form-group">
+          <label>Nombre del negocio</label>
+          <input type="text" id="ajusteNombreNegocio" placeholder="Nombre de tu negocio">
+        </div>
+        <div class="form-group">
+          <label>Moneda</label>
+          <select id="ajusteMoneda">
+            <option value="S/">Soles (S/)</option>
+            <option value="$">Dólares ($)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Stock mínimo (alerta)</label>
+          <input type="number" id="ajusteStockMinimo" placeholder="5" value="5">
+        </div>
+        <button class="btn-primary" onclick="guardarAjustes()">Guardar cambios</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== MODALES ===================== -->
+
+  <!-- Modal Producto -->
+  <div id="modalProducto" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalProductoTitle">Agregar Producto</h3>
+        <button onclick="closeModal('modalProducto')">✕</button>
+      </div>
+      <form onsubmit="guardarProducto(event)">
+        <div class="form-group">
+          <label>Nombre del producto</label>
+          <input type="text" id="prodNombre" placeholder="Ej: Arroz 1kg" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Precio de venta</label>
+            <input type="number" id="prodPrecio" placeholder="0.00" step="0.01" min="0" required>
+          </div>
+          <div class="form-group">
+            <label>Stock actual</label>
+            <input type="number" id="prodStock" placeholder="0" min="0" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Categoría</label>
+          <input type="text" id="prodCategoria" placeholder="Ej: Abarrotes">
+        </div>
+        <div class="form-group">
+          <label>Precio de compra (opcional)</label>
+          <input type="number" id="prodPrecioCompra" placeholder="0.00" step="0.01" min="0">
+        </div>
+        <input type="hidden" id="prodId">
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modalProducto')">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Venta -->
+  <div id="modalVenta" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Registrar Venta</h3>
+        <button onclick="closeModal('modalVenta')">✕</button>
+      </div>
+      <form onsubmit="guardarVenta(event)">
+        <div class="form-group">
+          <label>Producto</label>
+          <select id="ventaProducto" required onchange="actualizarPrecioVenta()">
+            <option value="">Selecciona un producto</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Cantidad</label>
+            <input type="number" id="ventaCantidad" placeholder="1" min="1" value="1" required onchange="calcularTotalVenta()">
+          </div>
+          <div class="form-group">
+            <label>Precio unitario</label>
+            <input type="number" id="ventaPrecio" placeholder="0.00" step="0.01" min="0" required onchange="calcularTotalVenta()">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Total</label>
+          <input type="text" id="ventaTotal" placeholder="S/ 0.00" readonly class="total-display">
+        </div>
+        <div class="form-group">
+          <label>Notas (opcional)</label>
+          <input type="text" id="ventaNotas" placeholder="Ej: Venta al fiado">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modalVenta')">Cancelar</button>
+          <button type="submit" class="btn-primary">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Ingreso/Egreso Caja -->
+  <div id="modalIngreso" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalCajaTitulo">Registrar Ingreso</h3>
+        <button onclick="closeModal('modalIngreso')">✕</button>
+      </div>
+      <form onsubmit="guardarMovimientoCaja(event)">
+        <input type="hidden" id="cajaTipo" value="ingreso">
+        <div class="form-group">
+          <label>Monto</label>
+          <input type="number" id="cajaMonto" placeholder="0.00" step="0.01" min="0.01" required>
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <input type="text" id="cajaDescripcion" placeholder="Ej: Venta en efectivo" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modalIngreso')">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Egreso (mismo modal reutilizado) -->
+  <div id="modalEgreso" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Registrar Egreso</h3>
+        <button onclick="closeModal('modalEgreso')">✕</button>
+      </div>
+      <form onsubmit="guardarMovimientoCaja(event, 'egreso')">
+        <div class="form-group">
+          <label>Monto</label>
+          <input type="number" id="egresoMonto" placeholder="0.00" step="0.01" min="0.01" required>
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <input type="text" id="egresoDescripcion" placeholder="Ej: Pago a proveedor" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modalEgreso')">Cancelar</button>
+          <button type="submit" class="btn-danger">Registrar Egreso</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Empleado -->
+  <div id="modalEmpleado" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Crear Empleado</h3>
+        <button onclick="closeModal('modalEmpleado')">✕</button>
+      </div>
+      <form onsubmit="crearEmpleado(event)">
+        <div class="form-group">
+          <label>Nombre del empleado</label>
+          <input type="text" id="empleadoNombre" placeholder="Nombre completo" required>
+        </div>
+        <div class="form-group">
+          <label>PIN de acceso (4 dígitos)</label>
+          <input type="number" id="empleadoPin" placeholder="Ej: 1234" min="1000" max="9999" required>
+        </div>
+        <div class="form-group">
+          <label>Rol</label>
+          <select id="empleadoRol" required>
+            <option value="empleado">Empleado (ventas e inventario)</option>
+            <option value="readonly">Solo lectura (reportes)</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modalEmpleado')">Cancelar</button>
+          <button type="submit" class="btn-primary">Crear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Bottom Nav (solo móvil) -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav-items">
+      <a class="bottom-nav-item active" onclick="showSection('dashboard')" href="#">
+        <i data-lucide="layout-dashboard"></i><span>Inicio</span>
+      </a>
+      <a class="bottom-nav-item" onclick="showSection('inventario')" href="#">
+        <i data-lucide="package"></i><span>Inventario</span>
+      </a>
+      <a class="bottom-nav-item" onclick="showSection('ventas')" href="#">
+        <i data-lucide="shopping-cart"></i><span>Ventas</span>
+      </a>
+      <a class="bottom-nav-item" onclick="showSection('caja')" href="#">
+        <i data-lucide="wallet"></i><span>Caja</span>
+      </a>
+      <a class="bottom-nav-item" onclick="showSection('reportes')" href="#">
+        <i data-lucide="bar-chart-2"></i><span>Reportes</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Toast de notificación -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/inventario.js"></script>
+  <script src="js/ventas.js"></script>
+  <script src="js/caja.js"></script>
+  <script src="js/empleados.js"></script>
+  <script src="js/reportes.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/pwa.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

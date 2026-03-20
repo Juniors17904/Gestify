@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#6C63FF">
+  <title>Gestify</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
+  <link rel="icon" href="icons/icon-192.png">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      background: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* ===== PANEL IZQUIERDO ===== */
+    .split-left {
+      width: 45%;
+      background: #0B0F1E;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 48px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Círculos decorativos de fondo */
+    .split-left::before {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(108,99,255,0.25) 0%, transparent 70%);
+      top: -100px;
+      left: -100px;
+    }
+
+    .split-left::after {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%);
+      bottom: -80px;
+      right: -80px;
+    }
+
+    .split-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+      z-index: 1;
+    }
+
+    .split-brand h2 {
+      color: white;
+      font-size: 36px;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+
+    .split-brand p {
+      color: rgba(255,255,255,0.5);
+      font-size: 14px;
+      margin: 0;
+      max-width: 260px;
+      line-height: 1.6;
+    }
+
+    /* ===== PANEL DERECHO ===== */
+    .split-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+      background: #F8FAFC;
+    }
+
+    .split-form-wrap {
+      width: 100%;
+      max-width: 380px;
+      background: white;
+      border-radius: 20px;
+      padding: 40px 36px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+    }
+
+    .split-form-wrap h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1E293B;
+      margin: 0 0 6px;
+    }
+
+    .split-form-wrap > p {
+      font-size: 13px;
+      color: #94A3B8;
+      margin: 0 0 24px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 700px) {
+      body { flex-direction: column; }
+      .split-left { width: 100%; padding: 48px 24px; }
+      .split-right { padding: 32px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PANEL IZQUIERDO -->
+  <div class="split-left">
+    <div class="split-brand">
+
+      <!-- Logo imagen -->
+      <canvas id="logoCanvas" style="width:468px;height:auto;filter:hue-rotate(50deg) saturate(1.4) brightness(0.95)"></canvas>
+
+      <h2>Bienvenido</h2>
+      <p>La herramienta que tu negocio necesita, siempre contigo.</p>
+    </div>
+  </div>
+
+  <!-- PANEL DERECHO -->
+  <div class="split-right">
+    <div class="split-form-wrap">
+
+      <h2>Inicia sesión con tu cuenta</h2>
+      <p>¿No tienes cuenta? Regístrate gratis</p>
+
+      <!-- Tabs -->
+      <div class="auth-tabs" style="margin-bottom:24px">
+        <button class="tab-btn active" onclick="showTab('login')">Iniciar Sesión</button>
+        <button class="tab-btn" onclick="showTab('register')">Registrarse</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" id="loginEmail" placeholder="correo@ejemplo.com" required>
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <div class="input-password">
+            <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+            <button type="button" class="toggle-pwd" onclick="togglePwd('loginPassword', this)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" id="loginBtn">
+          <span>Iniciar Sesión</span>
+        </button>
+        <p class="forgot-link"><a href="#" onclick="showForgot()">¿Olvidaste tu contraseña?</a></p>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" class="auth-form hidden" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label>Nombre del negocio</label>
+          <input type="text" id="regBusiness" placeholder="Ej: Bodega San Juan" required>
+        </div>
+        <div class="form-group">
+          <label>Tu nombre</label>
+          <input type="text" id="regName" placeholder="Tu nombre completo" required>
+        </div>
+        <div class="form-group">
+          <label>Tipo de negocio</label>
+          <select id="regTipo" required>
+            <option value="">Selecciona...</option>
+            <option value="bodega">Bodega / Abarrotes</option>
+            <option value="farmacia">Farmacia / Botica</option>
+            <option value="restaurante">Restaurante / Comida</option>
+            <option value="ropa">Tienda de Ropa</option>
+            <option value="electronica">Electrónica / Celulares</option>
+            <option value="ferreteria">Ferretería</option>
+            <option value="panaderia">Panadería / Pastelería</option>
+            <option value="salon">Salón / Peluquería</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" id="regEmail" placeholder="correo@ejemplo.com" required>
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <div class="input-password">
+            <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6">
+            <button type="button" class="toggle-pwd" onclick="togglePwd('regPassword', this)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" id="registerBtn">
+          <span>Crear Cuenta</span>
+        </button>
+      </form>
+
+      <div id="authMessage" class="auth-message hidden"></div>
+    </div>
+  </div>
+
+  <script>
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = 'logos/LOGOv3.png';
+    img.onload = function() {
+      const canvas = document.getElementById('logoCanvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < data.data.length; i += 4) {
+        const r = data.data[i], g = data.data[i+1], b = data.data[i+2];
+        if (r < 40 && g < 40 && b < 40) { data.data[i+3] = 0; }
+          else if (r > 200 && g > 200 && b > 200) { data.data[i] = 108; data.data[i+1] = 99; data.data[i+2] = 255; }
+      }
+      ctx.putImageData(data, 0, 0);
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/pwa.js"></script>
+</body>
+</html>

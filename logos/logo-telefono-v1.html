@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestify - Logo Teléfono v1</title>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <div style="background:linear-gradient(135deg,#6C63FF 0%,#3B82F6 100%);border-radius:20px;padding:44px 24px 36px;display:flex;flex-direction:column;align-items:center;gap:22px;width:320px">
+    <svg width="160" height="220" viewBox="0 0 140 195" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bP" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.3)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0.95)"/>
+        </linearGradient>
+        <linearGradient id="frG" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.9)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0.5)"/>
+        </linearGradient>
+        <filter id="gp" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="2" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4.5" markerHeight="4.5" orient="auto">
+          <polygon points="0,0 10,5 0,10" fill="white"/>
+        </marker>
+      </defs>
+      <rect x="22" y="10" width="96" height="168" rx="20" stroke="url(#frG)" stroke-width="3.5" fill="none"/>
+      <rect x="30" y="30" width="80" height="122" rx="6" stroke="url(#frG)" stroke-width="1.5" fill="none" opacity="0.4"/>
+      <circle cx="70" cy="20" r="3.5" fill="url(#frG)" opacity="0.8"/>
+      <rect x="58" y="162" width="24" height="6" rx="3" fill="url(#frG)" opacity="0.8"/>
+      <rect x="34"  y="118" width="16" height="32"  rx="2" fill="url(#bP)"/>
+      <rect x="53"  y="69"  width="16" height="81"  rx="2" fill="url(#bP)"/>
+      <rect x="72"  y="46"  width="16" height="104" rx="2" fill="url(#bP)"/>
+      <rect x="91"  y="76"  width="16" height="74"  rx="2" fill="url(#bP)"/>
+      <polyline points="42,118 61,69 80,46 99,76 107,50" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#gp)" marker-end="url(#ap)"/>
+    </svg>
+    <div style="text-align:center">
+      <div style="font-family:'Libre Baskerville',serif;font-weight:700;font-size:32px;color:white;letter-spacing:5px">GESTIFY</div>
+      <div style="font-family:sans-serif;font-size:10px;color:rgba(255,255,255,0.8);letter-spacing:3px;margin-top:8px;font-weight:600">GESTIONA TU NEGOCIO DESDE CUALQUIER LUGAR</div>
+    </div>
+  </div>
+</body>
+</html>
