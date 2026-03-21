@@ -96,7 +96,7 @@
     <div style="width:calc(100% - 32px);max-width:400px;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
 
     <!-- HEADER -->
-    <div class="login-header" style="background:#6C63FF;padding:36px 24px 28px">
+    <div class="login-header" style="background:white;padding:36px 24px 20px">
       <div
         style="
           width: 330px;
@@ -107,8 +107,8 @@
       >
         <canvas id="logoCanvas" style="width: 330px; height: auto"></canvas>
       </div>
-      <h1 style="margin:12px 0 4px;font-size:28px;font-weight:800;color:white;letter-spacing:1px">GESTIFY</h1>
-    <p style="margin:0;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.6)">Bienvenido de nuevo</p>
+      <h1 style="margin:10px 0 4px;font-size:26px;font-weight:800;color:#6C63FF;letter-spacing:1px">GESTIFY</h1>
+    <p style="margin:0;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#94A3B8">Bienvenido</p>
     </div>
 
     <!-- CARD FORMULARIO -->
@@ -120,9 +120,6 @@
         </button>
         <button class="tab-btn" onclick="showTab('register')">
           Registrarse
-        </button>
-        <button class="tab-btn" onclick="showTab('empleado')">
-          Soy Empleado
         </button>
       </div>
 
@@ -261,39 +258,6 @@
         </button>
       </form>
 
-      <!-- Empleado Form -->
-      <form
-        id="empleadoForm"
-        class="auth-form hidden"
-        onsubmit="handleEmployeeLogin(event)"
-      >
-        <p style="font-size: 13px; color: #64748b; margin: 0 0 16px">
-          Pídele a tu jefe el nombre del negocio y tu PIN.
-        </p>
-        <div class="form-group">
-          <label>Nombre del negocio</label>
-          <input
-            type="text"
-            id="empNegocio"
-            placeholder="Ej: Bodega San Juan"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label>Tu PIN</label>
-          <input
-            type="number"
-            id="empPin"
-            placeholder="1234"
-            min="1000"
-            max="9999"
-            required
-          />
-        </div>
-        <button type="submit" class="btn-primary" id="empBtn">
-          <span>Ingresar</span>
-        </button>
-      </form>
 
       <div id="authMessage" class="auth-message hidden"></div>
     </div>
