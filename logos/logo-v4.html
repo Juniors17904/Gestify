@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestify - Logo v4</title>
+  <style>
+    body { margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <div style="width:330px;position:relative;overflow:hidden;height:148px">
+    <canvas id="logoCanvas" style="width:330px;height:auto"></canvas>
+  </div>
+
+  <script>
+    const img = new Image();
+    img.src = '../logos/LOGOv3.png';
+    img.onload = function() {
+      const canvas = document.getElementById('logoCanvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < data.data.length; i += 4) {
+        const r = data.data[i], g = data.data[i+1], b = data.data[i+2];
+        if (r < 40 && g < 40 && b < 40) { data.data[i+3] = 0; }
+        else if (r > 200 && g > 200 && b > 200) { data.data[i] = 108; data.data[i+1] = 99; data.data[i+2] = 255; }
+      }
+      ctx.putImageData(data, 0, 0);
+    };
+  </script>
+</body>
+</html>
