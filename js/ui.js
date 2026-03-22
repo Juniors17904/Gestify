@@ -284,7 +284,8 @@ async function completarSetup(e) {
   if (error) {
     btn.disabled = false;
     btn.innerHTML = '<span>Comenzar</span>';
-    showToast('Error al guardar', 'error');
+    showToast('Error: ' + error.message, 'error');
+    console.error('Error setup negocio:', error);
     return;
   }
 
