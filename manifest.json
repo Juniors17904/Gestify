@@ -4,7 +4,7 @@
   "description": "Gestiona tu negocio desde cualquier lugar",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#FFFFFF",
+  "background_color": "#6C63FF",
   "theme_color": "#6C63FF",
   "orientation": "portrait-primary",
   "icons": [
