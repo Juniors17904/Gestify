@@ -104,6 +104,7 @@ function setupDashboardUI(nombre, negocioNombre, rol) {
 
   // Cargar sección inicial
   showSection('dashboard');
+  showToast(`¡Bienvenido, ${nombre.split(' ')[0]}!`, 'success');
 }
 
 // Navegación entre secciones
