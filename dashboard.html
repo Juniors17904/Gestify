@@ -10,41 +10,13 @@
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="icon" href="icons/icon-192.png">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script>
-    window.addEventListener('load', function() {
-      const img = new Image();
-      img.src = 'logos/LOGOv3.png';
-      img.onload = function() {
-        const canvas = document.getElementById('sidebarLogo');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-        const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < data.data.length; i += 4) {
-          const r = data.data[i], g = data.data[i+1], b = data.data[i+2];
-          if (r < 40 && g < 40 && b < 40) {
-            data.data[i] = 255; data.data[i+1] = 255; data.data[i+2] = 255;
-          } else if (r > 200 && g > 200 && b > 200) {
-            data.data[i] = 0; data.data[i+1] = 0; data.data[i+2] = 0;
-          } else if (b > r + 30 && (r + g + b) > 200) {
-            const t = b / 255;
-            data.data[i]   = Math.round(74  + t * (139 - 74));
-            data.data[i+1] = Math.round(67  + t * (131 - 67));
-            data.data[i+2] = Math.round(204 + t * (255 - 204));
-          }
-        }
-        ctx.putImageData(data, 0, 0);
-      };
-    });
-  </script>
 </head>
 <body class="app-page">
 
   <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <canvas id="sidebarLogo" style="width:240px;height:auto"></canvas>
+      <img src="logos/LOGOv3.png" style="width:200px;height:auto" alt="Gestify">
       <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
     </div>
 
