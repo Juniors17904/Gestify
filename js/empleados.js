@@ -24,7 +24,7 @@ function renderEmpleados(lista) {
       <div class="empleado-avatar">${emp.nombre[0].toUpperCase()}</div>
       <div class="empleado-info">
         <p>${emp.nombre}</p>
-        <span class="role-badge ${emp.rol}">${formatRol(emp.rol)}</span>
+        <span class="role-badge">${formatRol(emp.rol)}</span>
         ${emp.email ? `<br><span style="font-size:11px;color:var(--gray-400)">${emp.email}</span>` : ''}
       </div>
       ${emp.rol !== 'admin' ? `

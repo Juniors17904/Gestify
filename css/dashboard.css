@@ -79,15 +79,12 @@
 
 .role-badge {
   font-size: 10px;
+  background: var(--primary);
   color: white;
-  padding: 2px 8px;
+  padding: 2px 7px;
   border-radius: 20px;
   font-weight: 600;
-  background: var(--primary);
 }
-.role-badge.admin    { background: #16A34A; }
-.role-badge.empleado { background: #6C63FF; }
-.role-badge.readonly { background: #94A3B8; color: #1E293B; }
 
 /* Nav */
 .sidebar-nav {
