@@ -106,11 +106,19 @@ async function handleRegister(e) {
       });
     }
 
-    window.location.href = 'dashboard.html';
+    // Si la sesión ya está activa (sin verificación), redirigir
+    if (data.session) {
+      window.location.href = 'dashboard.html';
+    } else {
+      // Verificación de correo activada — pedir que revisen su email
+      showAuthMessage('✉️ Revisa tu correo y confirma tu cuenta para continuar.', 'success');
+    }
+    btn.disabled = false;
+    btn.innerHTML = '<span>Crear Cuenta</span>';
     return;
   }
 
-  showAuthMessage('Cuenta creada. Iniciando sesión...', 'success');
+  showAuthMessage('Cuenta creada. Verifica tu correo.', 'success');
   btn.disabled = false;
   btn.innerHTML = '<span>Crear Cuenta</span>';
 }
@@ -120,6 +128,15 @@ async function handleLogout() {
   localStorage.removeItem('empleadoSession');
   await db.auth.signOut();
   window.location.href = 'index.html';
+}
+
+// Login con Google
+async function handleGoogleLogin() {
+  const { error } = await db.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.origin + '/dashboard.html' }
+  });
+  if (error) showAuthMessage('Error al conectar con Google', 'error');
 }
 
 // Recuperar contraseña
