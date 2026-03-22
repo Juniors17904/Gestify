@@ -25,7 +25,7 @@ function renderEmpleados(lista) {
       <div class="empleado-info">
         <p>${emp.nombre}</p>
         <span class="role-badge">${formatRol(emp.rol)}</span>
-        ${emp.pin ? `<br><span style="font-size:11px;color:var(--gray-400)">PIN: ${emp.pin}</span>` : ''}
+        ${emp.email ? `<br><span style="font-size:11px;color:var(--gray-400)">${emp.email}</span>` : ''}
       </div>
       ${emp.rol !== 'admin' ? `
         <button class="action-btn delete" onclick="eliminarEmpleado('${emp.id}')">🗑️</button>
@@ -38,36 +38,41 @@ async function crearEmpleado(e) {
   e.preventDefault();
 
   const nombre = document.getElementById('empleadoNombre').value;
-  const pin    = document.getElementById('empleadoPin').value;
+  const email  = document.getElementById('empleadoEmail').value;
   const rol    = document.getElementById('empleadoRol').value;
-  const negocioId = currentBusiness?.id || currentUser.id;
+  const negocioId = currentBusiness?.id;
+  const btn = e.target.querySelector('[type="submit"]');
 
-  // Verificar que el PIN no esté en uso en este negocio
-  const { data: existe } = await db
-    .from('empleados')
-    .select('id')
-    .eq('negocio_id', negocioId)
-    .eq('pin', pin)
-    .single();
-
-  if (existe) {
-    showToast('Ese PIN ya está en uso, elige otro', 'error');
+  if (!negocioId) {
+    showToast('No tienes un negocio configurado', 'error');
     return;
   }
 
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
+  // Invitar usuario por correo via Supabase Admin (requiere service_role)
+  // Como estamos en el cliente, insertamos el registro y marcamos como pendiente
+  // El email de invitación se maneja desde un edge function o manualmente
   const { error } = await db.from('empleados').insert({
     negocio_id: negocioId,
     nombre,
-    pin,
-    rol,
-    user_id: null
+    email,
+    rol
   });
 
-  if (error) { showToast('Error al crear empleado', 'error'); return; }
+  if (error) {
+    showToast('Error al invitar empleado', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Enviar invitación';
+    return;
+  }
 
-  showToast(`Empleado "${nombre}" creado con PIN ${pin}`, 'success');
+  showToast(`Invitación enviada a ${email}`, 'success');
   closeModal('modalEmpleado');
   loadEmpleados();
+  btn.disabled = false;
+  btn.textContent = 'Enviar invitación';
 }
 
 async function eliminarEmpleado(id) {

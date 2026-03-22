@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Demo Selector</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, sans-serif; background: #F0F2F5; }
+
+    .demo-title {
+      text-align: center;
+      padding: 24px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #1E293B;
+    }
+
+    .demos {
+      display: flex;
+      gap: 24px;
+      padding: 0 24px 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .demo-box {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      width: 340px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .demo-label {
+      background: #6C63FF;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* ===== OPCIÓN A: PANTALLA COMPLETA ===== */
+    .pantalla-completa {
+      background: linear-gradient(135deg, #6C63FF, #5A52D5);
+      padding: 28px 20px;
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .pc-avatar {
+      width: 60px;
+      height: 60px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .pc-title {
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .pc-sub {
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .empresa-card {
+      background: white;
+      border-radius: 12px;
+      padding: 14px 16px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    .empresa-card:hover { transform: scale(1.02); }
+
+    .empresa-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .empresa-info p { font-weight: 700; font-size: 14px; color: #1E293B; }
+    .empresa-info span { font-size: 12px; color: #94A3B8; }
+
+    .empresa-arrow { margin-left: auto; color: #94A3B8; font-size: 18px; }
+
+    /* ===== OPCIÓN B: DROPDOWN EN HEADER ===== */
+    .mockup-app { min-height: 400px; display: flex; flex-direction: column; }
+
+    .mock-header {
+      background: white;
+      border-bottom: 1px solid #E2E8F0;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mock-menu { font-size: 20px; color: #64748B; }
+
+    .mock-empresa-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #F7F7FB;
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      border: 1.5px solid #E2E8F0;
+      flex: 1;
+    }
+
+    .mock-empresa-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: #6C63FF;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .mock-empresa-nombre { font-size: 13px; font-weight: 700; color: #1E293B; flex: 1; }
+    .mock-empresa-chevron { color: #94A3B8; font-size: 12px; }
+    .mock-avatar { width: 30px; height: 30px; background: #6C63FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 12px; }
+
+    /* Dropdown */
+    .mock-dropdown {
+      background: white;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 12px;
+      margin: 8px 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid #F0F2F5;
+    }
+
+    .dropdown-item:last-child { border-bottom: none; }
+    .dropdown-item.active { background: #EEF0FF; }
+
+    .drop-icon { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+    .drop-info p { font-size: 13px; font-weight: 700; color: #1E293B; }
+    .drop-info span { font-size: 11px; color: #94A3B8; }
+    .drop-check { margin-left: auto; color: #6C63FF; font-size: 16px; }
+
+    .mock-content {
+      flex: 1;
+      padding: 16px;
+      background: #F0F2F5;
+    }
+
+    .mock-stat { background: white; border-radius: 8px; padding: 12px; margin-bottom: 8px; height: 40px; }
+  </style>
+</head>
+<body>
+
+<p class="demo-title">¿Cómo quieres el selector de empresa?</p>
+
+<div class="demos">
+
+  <!-- OPCIÓN A -->
+  <div class="demo-box">
+    <div class="demo-label">A — Pantalla completa al entrar</div>
+    <div class="pantalla-completa">
+      <div class="pc-avatar">J</div>
+      <p class="pc-title">Hola, Juniors</p>
+      <p class="pc-sub">¿A qué empresa entras hoy?</p>
+
+      <div class="empresa-card">
+        <div class="empresa-icon" style="background:#6C63FF">E</div>
+        <div class="empresa-info">
+          <p>eSika</p>
+          <span>Empleado</span>
+        </div>
+        <span class="empresa-arrow">›</span>
+      </div>
+
+      <div class="empresa-card">
+        <div class="empresa-icon" style="background:#22C55E">B</div>
+        <div class="empresa-info">
+          <p>Bodega San Juan</p>
+          <span>Admin</span>
+        </div>
+        <span class="empresa-arrow">›</span>
+      </div>
+
+      <div class="empresa-card">
+        <div class="empresa-icon" style="background:#F59E0B">F</div>
+        <div class="empresa-info">
+          <p>Farmacia Cruz Verde</p>
+          <span>Cajero</span>
+        </div>
+        <span class="empresa-arrow">›</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPCIÓN B -->
+  <div class="demo-box">
+    <div class="demo-label">B — Dropdown en el header</div>
+    <div class="mockup-app">
+      <div class="mock-header">
+        <span class="mock-menu">≡</span>
+        <div class="mock-empresa-selector">
+          <div class="mock-empresa-dot">E</div>
+          <span class="mock-empresa-nombre">eSika</span>
+          <span class="mock-empresa-chevron">▾</span>
+        </div>
+        <div class="mock-avatar">J</div>
+      </div>
+
+      <!-- Dropdown abierto -->
+      <div class="mock-dropdown">
+        <div class="dropdown-item active">
+          <div class="drop-icon" style="background:#6C63FF">E</div>
+          <div class="drop-info"><p>eSika</p><span>Empleado</span></div>
+          <span class="drop-check">✓</span>
+        </div>
+        <div class="dropdown-item">
+          <div class="drop-icon" style="background:#22C55E">B</div>
+          <div class="drop-info"><p>Bodega San Juan</p><span>Admin</span></div>
+        </div>
+        <div class="dropdown-item">
+          <div class="drop-icon" style="background:#F59E0B">F</div>
+          <div class="drop-info"><p>Farmacia Cruz Verde</p><span>Cajero</span></div>
+        </div>
+      </div>
+
+      <div class="mock-content">
+        <div class="mock-stat"></div>
+        <div class="mock-stat"></div>
+        <div class="mock-stat"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

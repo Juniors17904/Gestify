@@ -6,13 +6,13 @@ async function loadCaja() {
 
   // Calcular saldo total
   const { data: ingresos } = await db
-    .from('caja_movimientos')
+    .from('caja')
     .select('monto')
     .eq('negocio_id', negocioId)
     .eq('tipo', 'ingreso');
 
   const { data: egresos } = await db
-    .from('caja_movimientos')
+    .from('caja')
     .select('monto')
     .eq('negocio_id', negocioId)
     .eq('tipo', 'egreso');
@@ -25,7 +25,7 @@ async function loadCaja() {
 
   // Movimientos de hoy
   const { data: movimientos } = await db
-    .from('caja_movimientos')
+    .from('caja')
     .select('*')
     .eq('negocio_id', negocioId)
     .gte('created_at', hoy + 'T00:00:00')
@@ -67,14 +67,11 @@ async function guardarMovimientoCaja(e, tipoForzado) {
 
   const monto = parseFloat(document.getElementById(montoId).value);
   const descripcion = document.getElementById(descId).value;
-  const { data: { user } } = await db.auth.getUser();
-
-  const { error } = await db.from('caja_movimientos').insert({
-    negocio_id: currentBusiness?.id || currentUser.id,
+  const { error } = await db.from('caja').insert({
+    negocio_id: currentBusiness?.id,
     tipo,
     monto,
-    descripcion,
-    user_id: user.id
+    descripcion
   });
 
   if (error) { showToast('Error al guardar movimiento', 'error'); return; }

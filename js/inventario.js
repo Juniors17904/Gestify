@@ -7,13 +7,14 @@ async function loadInventario() {
   const { data, error } = await db
     .from('productos')
     .select('*')
-    .eq('negocio_id', currentBusiness?.id || currentUser.id)
+    .eq('negocio_id', currentBusiness?.id)
     .order('nombre');
 
   if (error) { showToast('Error al cargar inventario', 'error'); return; }
 
   productos = data || [];
   renderTablaInventario(productos);
+  actualizarSelectProductos();
 }
 
 function renderTablaInventario(lista) {
@@ -27,7 +28,7 @@ function renderTablaInventario(lista) {
     <tr>
       <td><strong>${p.nombre}</strong></td>
       <td>${formatMoney(p.precio)}</td>
-      <td>${renderStock(p.stock)}</td>
+      <td>${renderStock(p.stock, p.stock_minimo)}</td>
       <td>${p.categoria || '-'}</td>
       <td>
         <button class="action-btn edit" onclick="editarProducto('${p.id}')">✏️</button>
@@ -37,8 +38,8 @@ function renderTablaInventario(lista) {
   `).join('');
 }
 
-function renderStock(stock) {
-  const min = APP_CONFIG.stockMinimo;
+function renderStock(stock, stockMinimo) {
+  const min = stockMinimo || 5;
   const cls = stock === 0 ? 'out' : stock <= min ? 'low' : 'ok';
   const label = stock === 0 ? 'Sin stock' : stock <= min ? `${stock} ⚠️` : stock;
   return `<span class="badge-stock ${cls}">${label}</span>`;
@@ -59,13 +60,12 @@ async function guardarProducto(e) {
     nombre: document.getElementById('prodNombre').value,
     precio: parseFloat(document.getElementById('prodPrecio').value),
     stock: parseInt(document.getElementById('prodStock').value),
+    stock_minimo: parseInt(document.getElementById('prodStockMinimo').value) || 5,
     categoria: document.getElementById('prodCategoria').value || null,
-    precio_compra: parseFloat(document.getElementById('prodPrecioCompra').value) || null,
-    negocio_id: currentBusiness?.id || currentUser.id
+    negocio_id: currentBusiness?.id
   };
 
   let error;
-
   if (editandoProductoId) {
     ({ error } = await db.from('productos').update(producto).eq('id', editandoProductoId));
   } else {
@@ -79,7 +79,6 @@ async function guardarProducto(e) {
   document.getElementById('modalProductoTitle').textContent = 'Agregar Producto';
   closeModal('modalProducto');
   loadInventario();
-  actualizarSelectProductos();
 }
 
 function editarProducto(id) {
@@ -88,27 +87,22 @@ function editarProducto(id) {
 
   editandoProductoId = id;
   document.getElementById('modalProductoTitle').textContent = 'Editar Producto';
-  document.getElementById('prodId').value = id;
   document.getElementById('prodNombre').value = p.nombre;
   document.getElementById('prodPrecio').value = p.precio;
   document.getElementById('prodStock').value = p.stock;
+  document.getElementById('prodStockMinimo').value = p.stock_minimo || 5;
   document.getElementById('prodCategoria').value = p.categoria || '';
-  document.getElementById('prodPrecioCompra').value = p.precio_compra || '';
-
   showModal('modalProducto');
 }
 
 async function eliminarProducto(id) {
   if (!confirm('¿Eliminar este producto?')) return;
-
   const { error } = await db.from('productos').delete().eq('id', id);
   if (error) { showToast('Error al eliminar', 'error'); return; }
-
   showToast('Producto eliminado', 'success');
   loadInventario();
 }
 
-// Para el select de ventas
 async function actualizarSelectProductos() {
   const select = document.getElementById('ventaProducto');
   if (!select) return;
@@ -116,17 +110,14 @@ async function actualizarSelectProductos() {
   const { data } = await db
     .from('productos')
     .select('id, nombre, precio, stock')
-    .eq('negocio_id', currentBusiness?.id || currentUser.id)
+    .eq('negocio_id', currentBusiness?.id)
     .gt('stock', 0)
     .order('nombre');
 
-  select.innerHTML = '<option value="">Selecciona un producto</option>';
-  (data || []).forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p.id;
-    opt.textContent = `${p.nombre} (Stock: ${p.stock})`;
-    opt.dataset.precio = p.precio;
-    opt.dataset.stock = p.stock;
-    select.appendChild(opt);
-  });
+  select.innerHTML = '<option value="">Selecciona un producto</option>' +
+    (data || []).map(p =>
+      `<option value="${p.id}" data-precio="${p.precio}" data-stock="${p.stock}">
+        ${p.nombre} (Stock: ${p.stock})
+      </option>`
+    ).join('');
 }

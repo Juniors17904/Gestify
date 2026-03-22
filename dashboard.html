@@ -78,6 +78,14 @@
     </nav>
 
     <div class="sidebar-footer">
+      <div id="btnDemoWrap" style="display:none;padding:8px;flex-direction:column;gap:6px">
+        <button id="btnAgregarDemo" onclick="cargarDataDemo()" style="width:100%;padding:10px;background:linear-gradient(135deg,#6C63FF,#F59E0B);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer">
+          ✨ Agregar data de ejemplo
+        </button>
+        <button id="btnBorrarDemo" onclick="borrarDataDemo()" style="width:100%;padding:10px;background:#FEE2E2;color:#DC2626;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:none">
+          🗑️ Borrar data de ejemplo
+        </button>
+      </div>
       <a href="#" class="nav-item" onclick="showSection('ajustes')">
         <span class="nav-icon"><i data-lucide="settings"></i></span> Ajustes
       </a>
@@ -96,8 +104,19 @@
     <!-- Header -->
     <header class="app-header">
       <button class="menu-btn" onclick="toggleSidebar()"><i data-lucide="menu"></i></button>
-      <h2 class="page-title" id="pageTitle">Dashboard</h2>
-      <div class="header-actions">
+
+      <!-- Selector de empresa -->
+      <div class="empresa-selector" id="empresaSelector" onclick="toggleEmpresaDropdown()">
+        <div class="empresa-selector-dot" id="empresaSelectorDot">N</div>
+        <span class="empresa-selector-nombre" id="empresaSelectorNombre">Mi Negocio</span>
+        <span class="empresa-selector-chevron">▾</span>
+      </div>
+
+      <!-- Dropdown -->
+      <div class="empresa-dropdown hidden" id="empresaDropdown"></div>
+
+      <h2 class="page-title" id="pageTitle" style="display:none">Dashboard</h2>
+      <div style="margin-left:auto">
         <div class="user-avatar" id="headerAvatar">U</div>
       </div>
     </header>
@@ -284,11 +303,47 @@
 
     <!-- AJUSTES -->
     <section id="section-ajustes" class="section hidden">
-      <div class="card ajustes-card">
+
+      <!-- Tabs de ajustes -->
+      <div class="ajustes-tabs">
+        <button class="ajuste-tab active" onclick="showAjusteTab('negocio')">Negocio</button>
+        <button class="ajuste-tab" onclick="showAjusteTab('cuenta')">Mi Cuenta</button>
+        <button class="ajuste-tab" onclick="showAjusteTab('apariencia')">Apariencia</button>
+        <button class="ajuste-tab" onclick="showAjusteTab('plan')">Plan</button>
+      </div>
+
+      <!-- TAB: Negocio -->
+      <div id="ajuste-negocio" class="ajuste-panel card ajustes-card">
         <h3>Información del Negocio</h3>
         <div class="form-group">
           <label>Nombre del negocio</label>
           <input type="text" id="ajusteNombreNegocio" placeholder="Nombre de tu negocio">
+        </div>
+        <div class="form-group">
+          <label>RUC / DNI</label>
+          <input type="text" id="ajusteRuc" placeholder="Ej: 20123456789">
+        </div>
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="tel" id="ajusteTelefono" placeholder="Ej: 999 888 777">
+        </div>
+        <div class="form-group">
+          <label>Dirección</label>
+          <input type="text" id="ajusteDireccion" placeholder="Av. Principal 123">
+        </div>
+        <div class="form-group">
+          <label>Tipo de negocio</label>
+          <select id="ajusteTipo">
+            <option value="bodega">Bodega / Abarrotes</option>
+            <option value="farmacia">Farmacia / Botica</option>
+            <option value="restaurante">Restaurante / Comida</option>
+            <option value="ropa">Tienda de Ropa</option>
+            <option value="electronica">Electrónica / Celulares</option>
+            <option value="ferreteria">Ferretería</option>
+            <option value="panaderia">Panadería / Pastelería</option>
+            <option value="salon">Salón / Peluquería</option>
+            <option value="otro">Otro</option>
+          </select>
         </div>
         <div class="form-group">
           <label>Moneda</label>
@@ -303,6 +358,85 @@
         </div>
         <button class="btn-primary" onclick="guardarAjustes()">Guardar cambios</button>
       </div>
+
+      <!-- TAB: Mi Cuenta -->
+      <div id="ajuste-cuenta" class="ajuste-panel card ajustes-card" style="display:none">
+        <h3>Mi Cuenta</h3>
+        <div class="cuenta-avatar-section">
+          <div class="cuenta-avatar" id="cuentaAvatar">U</div>
+          <div>
+            <p id="cuentaNombreDisplay" style="font-weight:700;font-size:15px;margin:0 0 4px"></p>
+            <p id="cuentaEmailDisplay" style="font-size:13px;color:#94A3B8;margin:0"></p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Nombre visible</label>
+          <input type="text" id="ajusteNombreUsuario" placeholder="Tu nombre">
+        </div>
+        <button class="btn-primary" onclick="guardarCuenta()" style="margin-bottom:16px">Guardar nombre</button>
+        <hr style="border:none;border-top:1px solid #F0F2F5;margin:8px 0 20px">
+        <h3>Cambiar contraseña</h3>
+        <div class="form-group">
+          <label>Nueva contraseña</label>
+          <input type="password" id="nuevaPassword" placeholder="Mínimo 6 caracteres" minlength="6">
+        </div>
+        <button class="btn-primary" onclick="cambiarPassword()">Actualizar contraseña</button>
+      </div>
+
+      <!-- TAB: Apariencia -->
+      <div id="ajuste-apariencia" class="ajuste-panel card ajustes-card" style="display:none">
+        <h3>Apariencia</h3>
+        <div class="form-group">
+          <label>Tema</label>
+          <div class="tema-options">
+            <div class="tema-option active" id="temaClaro" onclick="setTema('claro')">
+              <div class="tema-preview claro"></div>
+              <span>Claro</span>
+            </div>
+            <div class="tema-option" id="temaOscuro" onclick="setTema('oscuro')">
+              <div class="tema-preview oscuro"></div>
+              <span>Oscuro</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Color principal</label>
+          <div class="color-options">
+            <div class="color-dot active" style="background:#6C63FF" onclick="setColor('#6C63FF', this)"></div>
+            <div class="color-dot" style="background:#3B82F6" onclick="setColor('#3B82F6', this)"></div>
+            <div class="color-dot" style="background:#22C55E" onclick="setColor('#22C55E', this)"></div>
+            <div class="color-dot" style="background:#F59E0B" onclick="setColor('#F59E0B', this)"></div>
+            <div class="color-dot" style="background:#EF4444" onclick="setColor('#EF4444', this)"></div>
+            <div class="color-dot" style="background:#EC4899" onclick="setColor('#EC4899', this)"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Plan -->
+      <div id="ajuste-plan" class="ajuste-panel card ajustes-card" style="display:none">
+        <h3>Tu Plan</h3>
+        <div class="plan-actual">
+          <div class="plan-badge-grande" id="planBadge">Gratis</div>
+          <p id="planDesc" style="color:#64748B;font-size:13px;margin-top:8px">Plan gratuito activo</p>
+        </div>
+        <div class="plan-limites">
+          <div class="limite-item">
+            <span>Productos</span><strong>Hasta 50</strong>
+          </div>
+          <div class="limite-item">
+            <span>Empleados</span><strong>Hasta 2</strong>
+          </div>
+          <div class="limite-item">
+            <span>Reportes</span><strong>Básicos</strong>
+          </div>
+          <div class="limite-item">
+            <span>Soporte</span><strong>Comunidad</strong>
+          </div>
+        </div>
+        <button class="btn-pro" onclick="mostrarPro()">⚡ Mejorar a Pro</button>
+      </div>
+
+    </section>
     </section>
 
   </main>
@@ -331,15 +465,16 @@
             <input type="number" id="prodStock" placeholder="0" min="0" required>
           </div>
         </div>
-        <div class="form-group">
-          <label>Categoría</label>
-          <input type="text" id="prodCategoria" placeholder="Ej: Abarrotes">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Stock mínimo</label>
+            <input type="number" id="prodStockMinimo" placeholder="5" min="0" value="5">
+          </div>
+          <div class="form-group">
+            <label>Categoría</label>
+            <input type="text" id="prodCategoria" placeholder="Ej: Polos">
+          </div>
         </div>
-        <div class="form-group">
-          <label>Precio de compra (opcional)</label>
-          <input type="number" id="prodPrecioCompra" placeholder="0.00" step="0.01" min="0">
-        </div>
-        <input type="hidden" id="prodId">
         <div class="modal-actions">
           <button type="button" class="btn-secondary" onclick="closeModal('modalProducto')">Cancelar</button>
           <button type="submit" class="btn-primary">Guardar</button>
@@ -441,7 +576,7 @@
   <div id="modalEmpleado" class="modal hidden">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>Crear Empleado</h3>
+        <h3>Invitar Empleado</h3>
         <button onclick="closeModal('modalEmpleado')">✕</button>
       </div>
       <form onsubmit="crearEmpleado(event)">
@@ -450,8 +585,8 @@
           <input type="text" id="empleadoNombre" placeholder="Nombre completo" required>
         </div>
         <div class="form-group">
-          <label>PIN de acceso (4 dígitos)</label>
-          <input type="number" id="empleadoPin" placeholder="Ej: 1234" min="1000" max="9999" required>
+          <label>Correo electrónico</label>
+          <input type="email" id="empleadoEmail" placeholder="correo@ejemplo.com" required>
         </div>
         <div class="form-group">
           <label>Rol</label>
@@ -462,7 +597,7 @@
         </div>
         <div class="modal-actions">
           <button type="button" class="btn-secondary" onclick="closeModal('modalEmpleado')">Cancelar</button>
-          <button type="submit" class="btn-primary">Crear</button>
+          <button type="submit" class="btn-primary">Enviar invitación</button>
         </div>
       </form>
     </div>
@@ -490,9 +625,9 @@
   </nav>
 
   <!-- Modal setup primer ingreso -->
-  <div id="modalSetup" class="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div id="modalSetup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
     <div style="background:white;border-radius:20px;padding:32px 24px;width:calc(100% - 48px);max-width:400px">
-      <h2 style="margin:0 0 4px;font-size:20px;font-weight:800;color:#1E293B">¡Bienvenido a Gestify!</h2>
+      <h2 style="margin:0 0 4px;font-size:20px;font-weight:800;color:#1E293B">Configura tu negocio</h2>
       <p style="margin:0 0 24px;font-size:13px;color:#94A3B8">Cuéntanos sobre tu negocio para comenzar</p>
       <form onsubmit="completarSetup(event)">
         <div class="form-group">
@@ -533,6 +668,7 @@
   <script src="js/empleados.js"></script>
   <script src="js/reportes.js"></script>
   <script src="js/dashboard.js"></script>
+  <script src="js/demo.js"></script>
   <script src="js/pwa.js"></script>
   <script>lucide.createIcons();</script>
 </body>

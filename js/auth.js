@@ -15,14 +15,6 @@ function togglePwd(inputId, btn) {
 
 // Verificar sesión al cargar
 async function checkSession() {
-  // Sesión de empleado por PIN
-  if (localStorage.getItem('empleadoSession')) {
-    if (window.location.pathname.includes('index') || window.location.pathname === '/') {
-      window.location.href = 'dashboard.html';
-    }
-    return;
-  }
-
   const { data: { session } } = await db.auth.getSession();
 
   if (session) {
@@ -71,7 +63,6 @@ async function handleRegister(e) {
   btn.disabled = true;
   btn.innerHTML = '<span>Creando cuenta...</span>';
 
-  // Crear usuario en Supabase Auth
   const { data, error } = await db.auth.signUp({
     email,
     password,
@@ -87,7 +78,6 @@ async function handleRegister(e) {
     return;
   }
 
-  // Crear perfil del negocio en la BD
   if (data.user) {
     const { data: negocio } = await db.from('negocios').insert({
       nombre: business,
@@ -106,11 +96,9 @@ async function handleRegister(e) {
       });
     }
 
-    // Si la sesión ya está activa (sin verificación), redirigir
     if (data.session) {
       window.location.href = 'dashboard.html';
     } else {
-      // Verificación de correo activada — pedir que revisen su email
       showAuthMessage('✉️ Revisa tu correo y confirma tu cuenta para continuar.', 'success');
     }
     btn.disabled = false;
@@ -150,57 +138,6 @@ async function showForgot() {
   } else {
     alert('Te enviamos un correo para restablecer tu contraseña.');
   }
-}
-
-// Login empleado
-async function handleEmployeeLogin(e) {
-  e.preventDefault();
-  const negocioNombre = document.getElementById('empNegocio').value.trim();
-  const pin = document.getElementById('empPin').value.trim();
-  const btn = document.getElementById('empBtn');
-
-  btn.disabled = true;
-  btn.innerHTML = '<span>Verificando...</span>';
-
-  // Buscar negocio por nombre
-  const { data: negocios } = await db
-    .from('negocios')
-    .select('id, nombre')
-    .ilike('nombre', negocioNombre);
-
-  if (!negocios || !negocios.length) {
-    showAuthMessage('Negocio no encontrado', 'error');
-    btn.disabled = false;
-    btn.innerHTML = '<span>Ingresar</span>';
-    return;
-  }
-
-  // Buscar empleado con ese PIN en alguno de esos negocios
-  const negocioIds = negocios.map(n => n.id);
-  const { data: empleado } = await db
-    .from('empleados')
-    .select('*, negocios(*)')
-    .in('negocio_id', negocioIds)
-    .eq('pin', pin)
-    .single();
-
-  if (!empleado) {
-    showAuthMessage('PIN incorrecto', 'error');
-    btn.disabled = false;
-    btn.innerHTML = '<span>Ingresar</span>';
-    return;
-  }
-
-  // Guardar sesión de empleado en localStorage
-  localStorage.setItem('empleadoSession', JSON.stringify({
-    id: empleado.id,
-    nombre: empleado.nombre,
-    rol: empleado.rol,
-    negocio_id: empleado.negocio_id,
-    negocio: empleado.negocios
-  }));
-
-  window.location.href = 'dashboard.html';
 }
 
 // Tabs login/registro

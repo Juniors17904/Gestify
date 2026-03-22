@@ -1,13 +1,15 @@
 // ===== DASHBOARD =====
 
 async function loadDashboard() {
-  const negocioId = currentBusiness?.id || currentUser.id;
+  const negocioId = currentBusiness?.id;
+  if (!negocioId) return;
+
   const hoy = new Date().toISOString().split('T')[0];
 
   // Ventas de hoy
   const { data: ventasHoy } = await db
     .from('ventas')
-    .select('total, cantidad, productos(nombre), created_at, vendedor_nombre')
+    .select('id, total, created_at')
     .eq('negocio_id', negocioId)
     .gte('created_at', hoy + 'T00:00:00')
     .order('created_at', { ascending: false });
@@ -15,8 +17,15 @@ async function loadDashboard() {
   const totalVentasHoy = (ventasHoy || []).reduce((s, v) => s + v.total, 0);
   document.getElementById('statVentasHoy').textContent = formatMoney(totalVentasHoy);
 
-  // Últimas 5 ventas
-  renderUltimasVentas((ventasHoy || []).slice(0, 5));
+  // Últimas 5 ventas con items
+  const { data: ultimasVentas } = await db
+    .from('ventas')
+    .select('id, total, created_at, venta_items(cantidad, precio_unitario, productos(nombre))')
+    .eq('negocio_id', negocioId)
+    .order('created_at', { ascending: false })
+    .limit(5);
+
+  renderUltimasVentas(ultimasVentas || []);
 
   // Total productos
   const { count: totalProductos } = await db
@@ -28,13 +37,13 @@ async function loadDashboard() {
 
   // Saldo en caja
   const { data: ingresos } = await db
-    .from('caja_movimientos')
+    .from('caja')
     .select('monto')
     .eq('negocio_id', negocioId)
     .eq('tipo', 'ingreso');
 
   const { data: egresos } = await db
-    .from('caja_movimientos')
+    .from('caja')
     .select('monto')
     .eq('negocio_id', negocioId)
     .eq('tipo', 'egreso');
@@ -47,9 +56,9 @@ async function loadDashboard() {
   // Stock bajo
   const { data: stockBajo } = await db
     .from('productos')
-    .select('nombre, stock')
+    .select('nombre, stock, stock_minimo')
     .eq('negocio_id', negocioId)
-    .lte('stock', APP_CONFIG.stockMinimo);
+    .lte('stock', 5);
 
   document.getElementById('statStockBajo').textContent = stockBajo?.length || 0;
   renderStockBajo(stockBajo || []);
@@ -62,15 +71,19 @@ function renderUltimasVentas(ventas) {
     return;
   }
 
-  el.innerHTML = ventas.map(v => `
-    <div class="movimiento-item">
-      <div class="movimiento-info">
-        <span class="movimiento-desc">${v.productos?.nombre || 'Producto'}</span>
-        <span class="movimiento-hora">${formatTime(v.created_at)} · ${v.vendedor_nombre || ''}</span>
+  el.innerHTML = ventas.map(v => {
+    const item = v.venta_items?.[0];
+    const nombreProducto = item?.productos?.nombre || 'Venta';
+    return `
+      <div class="movimiento-item">
+        <div class="movimiento-info">
+          <span class="movimiento-desc">${nombreProducto}</span>
+          <span class="movimiento-hora">${formatTime(v.created_at)}</span>
+        </div>
+        <span class="movimiento-monto ingreso">${formatMoney(v.total)}</span>
       </div>
-      <span class="movimiento-monto ingreso">${formatMoney(v.total)}</span>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 function renderStockBajo(productos) {

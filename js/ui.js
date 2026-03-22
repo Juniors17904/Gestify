@@ -3,6 +3,7 @@
 let currentUser = null;
 let currentBusiness = null;
 let currentSection = 'dashboard';
+let userEmpresas = [];
 
 // Inicializar dashboard
 async function initDashboard() {
@@ -30,44 +31,35 @@ async function initDashboard() {
   }
 
   currentUser = session.user;
+  const nombre = currentUser.user_metadata?.name || currentUser.user_metadata?.full_name || currentUser.email;
 
-  // Cargar rol del usuario (empleados incluye al admin)
-  const { data: empleado } = await db
-    .from('empleados')
-    .select('*, negocios(*)')
-    .eq('user_id', currentUser.id)
-    .single();
+  // Cargar todas las empresas del usuario (propias + como empleado)
+  const [{ data: propias }, { data: comoEmpleado }] = await Promise.all([
+    db.from('negocios').select('*').eq('owner_id', currentUser.id),
+    db.from('empleados').select('*, negocios(*)').eq('user_id', currentUser.id)
+  ]);
 
-  const rol = empleado?.rol || 'empleado';
+  // Armar lista de empresas
+  userEmpresas = [];
+  (propias || []).forEach(n => userEmpresas.push({ negocio: n, rol: 'admin' }));
+  (comoEmpleado || []).forEach(e => { if (e.negocios) userEmpresas.push({ negocio: e.negocios, rol: e.rol }); });
 
-  // El negocio viene del empleado (funciona para admin y empleados)
-  if (empleado?.negocios) {
-    currentBusiness = empleado.negocios;
+  // Elegir empresa activa (última usada o la primera)
+  const ultimaId = localStorage.getItem('empresaActiva');
+  const activa = userEmpresas.find(e => e.negocio.id === ultimaId) || userEmpresas[0];
+
+  if (activa) {
+    currentBusiness = activa.negocio;
     APP_CONFIG.moneda = currentBusiness.moneda || 'S/';
     APP_CONFIG.stockMinimo = currentBusiness.stock_minimo || 5;
+    setupDashboardUI(nombre, currentBusiness.nombre, activa.rol);
   } else {
-    // Fallback: buscar por owner
-    const { data: negocio } = await db
-      .from('negocios')
-      .select('*')
-      .eq('owner_id', currentUser.id)
-      .single();
-    if (negocio) {
-      currentBusiness = negocio;
-      APP_CONFIG.moneda = negocio.moneda || 'S/';
-      APP_CONFIG.stockMinimo = negocio.stock_minimo || 5;
-    }
+    // Sin empresa → solo botón agregar
+    setupDashboardUI(nombre, 'Mi Negocio', 'admin');
+    document.getElementById('btnDemoWrap').style.display = 'flex';
+    document.getElementById('btnAgregarDemo').style.display = 'block';
+    document.getElementById('btnBorrarDemo').style.display = 'none';
   }
-  const nombre = currentUser.user_metadata?.name || currentUser.user_metadata?.full_name || currentUser.email;
-  const negocioNombre = currentBusiness?.nombre || 'Mi Negocio';
-
-  // Si no tiene negocio (entró por Google por primera vez), mostrar setup
-  if (!currentBusiness) {
-    mostrarSetup();
-    return;
-  }
-
-  setupDashboardUI(nombre, negocioNombre, rol);
 }
 
 function setupDashboardUI(nombre, negocioNombre, rol) {
@@ -102,15 +94,46 @@ function setupDashboardUI(nombre, negocioNombre, rol) {
     }
   });
 
-  // Configurar ajustes
+  // Configurar ajustes - negocio
   if (document.getElementById('ajusteNombreNegocio')) {
     document.getElementById('ajusteNombreNegocio').value = negocioNombre;
     document.getElementById('ajusteStockMinimo').value = APP_CONFIG.stockMinimo;
+    if (currentBusiness?.tipo) document.getElementById('ajusteTipo').value = currentBusiness.tipo;
+    if (currentBusiness?.moneda) document.getElementById('ajusteMoneda').value = currentBusiness.moneda;
+    if (currentBusiness?.ruc) document.getElementById('ajusteRuc').value = currentBusiness.ruc;
+    if (currentBusiness?.telefono) document.getElementById('ajusteTelefono').value = currentBusiness.telefono;
+    if (currentBusiness?.direccion) document.getElementById('ajusteDireccion').value = currentBusiness.direccion;
   }
+
+  // Configurar ajustes - cuenta
+  if (document.getElementById('cuentaNombreDisplay')) {
+    document.getElementById('cuentaNombreDisplay').textContent = nombre;
+    document.getElementById('cuentaEmailDisplay').textContent = currentUser?.email || '';
+    document.getElementById('cuentaAvatar').textContent = nombre[0].toUpperCase();
+    document.getElementById('ajusteNombreUsuario').value = nombre;
+  }
+
+  // Restaurar tema y color guardados
+  const temaGuardado = localStorage.getItem('tema');
+  if (temaGuardado) setTema(temaGuardado);
+  const colorGuardado = localStorage.getItem('colorPrimary');
+  if (colorGuardado) {
+    document.documentElement.style.setProperty('--primary', colorGuardado);
+    document.querySelectorAll('.color-dot').forEach(d => {
+      d.classList.toggle('active', d.style.background === colorGuardado);
+    });
+  }
+
+  // Mostrar solo botón borrar (ya tiene negocio)
+  document.getElementById('btnDemoWrap').style.display = 'flex';
+  document.getElementById('btnAgregarDemo').style.display = 'none';
+  document.getElementById('btnBorrarDemo').style.display = 'block';
+
+  // Selector de empresa en header
+  renderEmpresaSelector();
 
   // Cargar sección inicial
   showSection('dashboard');
-  showToast(`¡Bienvenido, ${nombre.split(' ')[0]}!`, 'success');
 }
 
 // Navegación entre secciones
@@ -235,29 +258,74 @@ function formatTime(dateStr) {
   });
 }
 
-// Guardar ajustes
+// Tabs de ajustes
+function showAjusteTab(tab) {
+  document.querySelectorAll('.ajuste-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.ajuste-panel').forEach(p => p.style.display = 'none');
+  document.querySelector(`.ajuste-tab[onclick="showAjusteTab('${tab}')"]`).classList.add('active');
+  document.getElementById('ajuste-' + tab).style.display = 'block';
+}
+
+// Guardar ajustes de negocio
 async function guardarAjustes() {
   const nombre = document.getElementById('ajusteNombreNegocio').value;
-  const moneda = document.getElementById('ajusteMoneda').value;
-  const stockMin = document.getElementById('ajusteStockMinimo').value;
+  const tipo = document.getElementById('ajusteTipo').value;
 
   const { error } = await db
     .from('negocios')
-    .update({ nombre, moneda, stock_minimo: parseInt(stockMin) })
+    .update({ nombre, tipo })
     .eq('owner_id', currentUser.id);
 
-  if (error) {
-    showToast('Error al guardar', 'error');
-    return;
-  }
+  if (error) { showToast('Error al guardar', 'error'); return; }
 
-  APP_CONFIG.moneda = moneda;
-  APP_CONFIG.stockMinimo = parseInt(stockMin);
   document.getElementById('businessName').textContent = nombre;
-  showToast('Ajustes guardados', 'success');
+  document.getElementById('businessAvatar').textContent = nombre[0].toUpperCase();
+  showToast('Negocio actualizado', 'success');
 }
 
-// Setup primer ingreso (usuarios Google sin negocio)
+// Guardar nombre de cuenta
+async function guardarCuenta() {
+  const nombre = document.getElementById('ajusteNombreUsuario').value;
+  const { error } = await db.auth.updateUser({ data: { name: nombre } });
+  if (error) { showToast('Error al guardar', 'error'); return; }
+  document.getElementById('headerAvatar').textContent = nombre[0].toUpperCase();
+  document.getElementById('cuentaAvatar').textContent = nombre[0].toUpperCase();
+  document.getElementById('cuentaNombreDisplay').textContent = nombre;
+  showToast('Nombre actualizado', 'success');
+}
+
+// Cambiar contraseña
+async function cambiarPassword() {
+  const pass = document.getElementById('nuevaPassword').value;
+  if (!pass || pass.length < 6) { showToast('Mínimo 6 caracteres', 'error'); return; }
+  const { error } = await db.auth.updateUser({ password: pass });
+  if (error) { showToast('Error al cambiar contraseña', 'error'); return; }
+  document.getElementById('nuevaPassword').value = '';
+  showToast('Contraseña actualizada', 'success');
+}
+
+// Tema
+function setTema(tema) {
+  document.querySelectorAll('.tema-option').forEach(o => o.classList.remove('active'));
+  document.getElementById('tema' + tema.charAt(0).toUpperCase() + tema.slice(1)).classList.add('active');
+  document.body.setAttribute('data-tema', tema);
+  localStorage.setItem('tema', tema);
+}
+
+// Color principal
+function setColor(color, el) {
+  document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+  el.classList.add('active');
+  document.documentElement.style.setProperty('--primary', color);
+  localStorage.setItem('colorPrimary', color);
+}
+
+// Mostrar Pro
+function mostrarPro() {
+  showToast('Próximamente disponible', 'success');
+}
+
+// Setup primer ingreso
 function mostrarSetup() {
   const modal = document.getElementById('modalSetup');
   if (modal) modal.style.display = 'flex';
@@ -285,7 +353,6 @@ async function completarSetup(e) {
     btn.disabled = false;
     btn.innerHTML = '<span>Comenzar</span>';
     showToast('Error: ' + error.message, 'error');
-    console.error('Error setup negocio:', error);
     return;
   }
 
@@ -298,11 +365,78 @@ async function completarSetup(e) {
   });
 
   currentBusiness = negocio;
-  APP_CONFIG.moneda = negocio.moneda || 'S/';
-  APP_CONFIG.stockMinimo = negocio.stock_minimo || 5;
-
   document.getElementById('modalSetup').style.display = 'none';
   setupDashboardUI(nombre, negocioNombre, 'admin');
+}
+
+// ===== SELECTOR DE EMPRESA =====
+const COLORES = ['#6C63FF','#22C55E','#3B82F6','#F59E0B','#EF4444','#EC4899','#8B5CF6','#14B8A6'];
+
+function renderEmpresaSelector() {
+  if (!currentBusiness) return;
+  document.getElementById('empresaSelectorNombre').textContent = currentBusiness.nombre;
+  document.getElementById('empresaSelectorDot').textContent = currentBusiness.nombre[0].toUpperCase();
+
+  if (userEmpresas.length <= 1) {
+    document.getElementById('empresaSelector').style.cursor = 'default';
+    document.querySelector('.empresa-selector-chevron').style.display = 'none';
+  }
+}
+
+function toggleEmpresaDropdown() {
+  if (userEmpresas.length <= 1) return;
+  const dd = document.getElementById('empresaDropdown');
+  if (dd.classList.contains('hidden')) {
+    renderEmpresaDropdown();
+    dd.classList.remove('hidden');
+    setTimeout(() => document.addEventListener('click', cerrarDropdownFuera), 10);
+  } else {
+    dd.classList.add('hidden');
+  }
+}
+
+function cerrarDropdownFuera(e) {
+  if (!e.target.closest('#empresaDropdown') && !e.target.closest('#empresaSelector')) {
+    document.getElementById('empresaDropdown').classList.add('hidden');
+    document.removeEventListener('click', cerrarDropdownFuera);
+  }
+}
+
+function renderEmpresaDropdown() {
+  const dd = document.getElementById('empresaDropdown');
+  dd.innerHTML = userEmpresas.map((e, i) => `
+    <div class="dropdown-empresa-item ${e.negocio.id === currentBusiness?.id ? 'active' : ''}"
+         onclick="cambiarEmpresa('${e.negocio.id}')">
+      <div class="dropdown-empresa-icon" style="background:${COLORES[i % COLORES.length]}">
+        ${e.negocio.nombre[0].toUpperCase()}
+      </div>
+      <div class="dropdown-empresa-info">
+        <p>${e.negocio.nombre}</p>
+        <span>${formatRol(e.rol)}</span>
+      </div>
+      ${e.negocio.id === currentBusiness?.id ? '<span class="dropdown-empresa-check">✓</span>' : ''}
+    </div>
+  `).join('');
+}
+
+async function cambiarEmpresa(negocioId) {
+  document.getElementById('empresaDropdown').classList.add('hidden');
+  const entrada = userEmpresas.find(e => e.negocio.id === negocioId);
+  if (!entrada) return;
+
+  currentBusiness = entrada.negocio;
+  APP_CONFIG.moneda = currentBusiness.moneda || 'S/';
+  APP_CONFIG.stockMinimo = currentBusiness.stock_minimo || 5;
+  localStorage.setItem('empresaActiva', negocioId);
+
+  const nombre = currentUser.user_metadata?.name || currentUser.user_metadata?.full_name || currentUser.email;
+  document.getElementById('empresaSelectorNombre').textContent = currentBusiness.nombre;
+  document.getElementById('empresaSelectorDot').textContent = currentBusiness.nombre[0].toUpperCase();
+  document.getElementById('businessName').textContent = currentBusiness.nombre;
+  document.getElementById('businessAvatar').textContent = currentBusiness.nombre[0].toUpperCase();
+
+  showSection('dashboard');
+  showToast(`Empresa: ${currentBusiness.nombre}`, 'success');
 }
 
 // Iniciar al cargar

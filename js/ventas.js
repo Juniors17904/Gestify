@@ -3,7 +3,6 @@
 async function loadVentas() {
   actualizarSelectProductos();
 
-  // Fecha de hoy por defecto
   const hoy = new Date().toISOString().split('T')[0];
   const filtro = document.getElementById('filtroFechaVenta');
   if (!filtro.value) filtro.value = hoy;
@@ -13,15 +12,13 @@ async function loadVentas() {
 
 async function filtrarVentas() {
   const fecha = document.getElementById('filtroFechaVenta').value;
-  const inicio = fecha + 'T00:00:00';
-  const fin = fecha + 'T23:59:59';
 
   const { data, error } = await db
     .from('ventas')
-    .select('*, productos(nombre)')
-    .eq('negocio_id', currentBusiness?.id || currentUser.id)
-    .gte('created_at', inicio)
-    .lte('created_at', fin)
+    .select('id, total, created_at, venta_items(cantidad, precio_unitario, productos(nombre))')
+    .eq('negocio_id', currentBusiness?.id)
+    .gte('created_at', fecha + 'T00:00:00')
+    .lte('created_at', fecha + 'T23:59:59')
     .order('created_at', { ascending: false });
 
   if (error) { showToast('Error al cargar ventas', 'error'); return; }
@@ -32,19 +29,21 @@ async function filtrarVentas() {
 function renderTablaVentas(ventas) {
   const tbody = document.getElementById('tablaVentas');
   if (!ventas.length) {
-    tbody.innerHTML = '<tr><td colspan="5" class="empty-row">Sin ventas para esta fecha</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" class="empty-row">Sin ventas para esta fecha</td></tr>';
     return;
   }
 
-  tbody.innerHTML = ventas.map(v => `
-    <tr>
-      <td>${formatTime(v.created_at)}</td>
-      <td>${v.productos?.nombre || 'Producto'}</td>
-      <td>${v.cantidad}</td>
-      <td><strong>${formatMoney(v.total)}</strong></td>
-      <td>${v.vendedor_nombre || '-'}</td>
-    </tr>
-  `).join('');
+  tbody.innerHTML = ventas.map(v => {
+    const item = v.venta_items?.[0];
+    return `
+      <tr>
+        <td>${formatTime(v.created_at)}</td>
+        <td>${item?.productos?.nombre || '-'}</td>
+        <td>${item?.cantidad || '-'}</td>
+        <td><strong>${formatMoney(v.total)}</strong></td>
+      </tr>
+    `;
+  }).join('');
 }
 
 function actualizarPrecioVenta() {
@@ -68,7 +67,7 @@ async function guardarVenta(e) {
   const productoId = document.getElementById('ventaProducto').value;
   const cantidad = parseInt(document.getElementById('ventaCantidad').value);
   const precio = parseFloat(document.getElementById('ventaPrecio').value);
-  const notas = document.getElementById('ventaNotas').value;
+  const negocioId = currentBusiness?.id;
 
   if (!productoId) { showToast('Selecciona un producto', 'error'); return; }
 
@@ -81,37 +80,31 @@ async function guardarVenta(e) {
     return;
   }
 
-  const negocioId = currentBusiness?.id || currentUser.id;
-  const { data: { user } } = await db.auth.getUser();
-  const vendedorNombre = user.user_metadata?.name || user.email;
-
   // Registrar venta
-  const { error } = await db.from('ventas').insert({
+  const { data: venta, error } = await db.from('ventas').insert({
     negocio_id: negocioId,
-    producto_id: productoId,
-    cantidad,
-    precio_unitario: precio,
-    total: cantidad * precio,
-    notas: notas || null,
-    vendedor_id: user.id,
-    vendedor_nombre: vendedorNombre
-  });
+    total: cantidad * precio
+  }).select().single();
 
   if (error) { showToast('Error al registrar venta', 'error'); return; }
 
-  // Actualizar stock del producto
-  await db.rpc('decrementar_stock', {
-    p_producto_id: productoId,
-    p_cantidad: cantidad
+  // Registrar item
+  await db.from('venta_items').insert({
+    venta_id: venta.id,
+    producto_id: productoId,
+    cantidad,
+    precio_unitario: precio
   });
 
-  // Registrar ingreso en caja automáticamente
-  await db.from('caja_movimientos').insert({
+  // Actualizar stock
+  await db.from('productos').update({ stock: stockActual - cantidad }).eq('id', productoId);
+
+  // Registrar ingreso en caja
+  await db.from('caja').insert({
     negocio_id: negocioId,
     tipo: 'ingreso',
     monto: cantidad * precio,
-    descripcion: `Venta: ${opt.text.split(' (')[0]}`,
-    user_id: user.id
+    descripcion: `Venta: ${opt.text.split(' (')[0]}`
   });
 
   showToast('Venta registrada', 'success');
@@ -119,3 +112,4 @@ async function guardarVenta(e) {
   filtrarVentas();
   loadDashboard();
 }
+
