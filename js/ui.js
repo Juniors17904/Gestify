@@ -58,8 +58,14 @@ async function initDashboard() {
       APP_CONFIG.stockMinimo = negocio.stock_minimo || 5;
     }
   }
-  const nombre = currentUser.user_metadata?.name || currentUser.email;
+  const nombre = currentUser.user_metadata?.name || currentUser.user_metadata?.full_name || currentUser.email;
   const negocioNombre = currentBusiness?.nombre || 'Mi Negocio';
+
+  // Si no tiene negocio (entró por Google por primera vez), mostrar setup
+  if (!currentBusiness) {
+    mostrarSetup();
+    return;
+  }
 
   setupDashboardUI(nombre, negocioNombre, rol);
 }
@@ -249,6 +255,53 @@ async function guardarAjustes() {
   APP_CONFIG.stockMinimo = parseInt(stockMin);
   document.getElementById('businessName').textContent = nombre;
   showToast('Ajustes guardados', 'success');
+}
+
+// Setup primer ingreso (usuarios Google sin negocio)
+function mostrarSetup() {
+  const modal = document.getElementById('modalSetup');
+  if (modal) modal.style.display = 'flex';
+}
+
+async function completarSetup(e) {
+  e.preventDefault();
+  const negocioNombre = document.getElementById('setupNegocio').value;
+  const tipo = document.getElementById('setupTipo').value;
+  const btn = document.getElementById('setupBtn');
+
+  btn.disabled = true;
+  btn.innerHTML = '<span>Guardando...</span>';
+
+  const nombre = currentUser.user_metadata?.name || currentUser.user_metadata?.full_name || currentUser.email;
+
+  const { data: negocio, error } = await db.from('negocios').insert({
+    nombre: negocioNombre,
+    owner_id: currentUser.id,
+    tipo: tipo,
+    plan: 'gratis'
+  }).select().single();
+
+  if (error) {
+    btn.disabled = false;
+    btn.innerHTML = '<span>Comenzar</span>';
+    showToast('Error al guardar', 'error');
+    return;
+  }
+
+  await db.from('empleados').insert({
+    negocio_id: negocio.id,
+    user_id: currentUser.id,
+    nombre: nombre,
+    email: currentUser.email,
+    rol: 'admin'
+  });
+
+  currentBusiness = negocio;
+  APP_CONFIG.moneda = negocio.moneda || 'S/';
+  APP_CONFIG.stockMinimo = negocio.stock_minimo || 5;
+
+  document.getElementById('modalSetup').style.display = 'none';
+  setupDashboardUI(nombre, negocioNombre, 'admin');
 }
 
 // Iniciar al cargar

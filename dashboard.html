@@ -489,6 +489,36 @@
     </div>
   </nav>
 
+  <!-- Modal setup primer ingreso -->
+  <div id="modalSetup" class="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;">
+    <div style="background:white;border-radius:20px;padding:32px 24px;width:calc(100% - 48px);max-width:400px">
+      <h2 style="margin:0 0 4px;font-size:20px;font-weight:800;color:#1E293B">¡Bienvenido a Gestify!</h2>
+      <p style="margin:0 0 24px;font-size:13px;color:#94A3B8">Cuéntanos sobre tu negocio para comenzar</p>
+      <form onsubmit="completarSetup(event)">
+        <div class="form-group">
+          <label>Nombre del negocio</label>
+          <input type="text" id="setupNegocio" placeholder="Ej: Bodega San Juan" required />
+        </div>
+        <div class="form-group">
+          <label>Tipo de negocio</label>
+          <select id="setupTipo" required>
+            <option value="">Selecciona...</option>
+            <option value="bodega">Bodega / Abarrotes</option>
+            <option value="farmacia">Farmacia / Botica</option>
+            <option value="restaurante">Restaurante / Comida</option>
+            <option value="ropa">Tienda de Ropa</option>
+            <option value="electronica">Electrónica / Celulares</option>
+            <option value="ferreteria">Ferretería</option>
+            <option value="panaderia">Panadería / Pastelería</option>
+            <option value="salon">Salón / Peluquería</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary" id="setupBtn"><span>Comenzar</span></button>
+      </form>
+    </div>
+  </div>
+
   <!-- Toast de notificación -->
   <div id="toast" class="toast hidden"></div>
 
