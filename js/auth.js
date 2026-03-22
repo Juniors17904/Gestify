@@ -140,38 +140,16 @@ async function showForgot() {
   }
 }
 
-// ===== NUEVO FLUJO ESTILO TIKTOK =====
+// Tabs login/registro
+function showTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.auth-form').forEach(f => f.classList.add('hidden'));
 
-let currentAuthMode = 'register'; // 'login' | 'register'
+  document.querySelector(`.tab-btn[onclick="showTab('${tab}')"]`).classList.add('active');
+  const formMap = { login: 'loginForm', register: 'registerForm', empleado: 'empleadoForm' };
+  document.getElementById(formMap[tab])?.classList.remove('hidden');
 
-function showMethods() {
-  document.getElementById('viewMethods').classList.remove('hidden');
-  document.getElementById('viewLoginForm').classList.add('hidden');
-  document.getElementById('viewRegisterForm').classList.add('hidden');
   hideAuthMessage();
-}
-
-function showEmailForm() {
-  document.getElementById('viewMethods').classList.add('hidden');
-  if (currentAuthMode === 'login') {
-    document.getElementById('viewLoginForm').classList.remove('hidden');
-    document.getElementById('viewRegisterForm').classList.add('hidden');
-  } else {
-    document.getElementById('viewRegisterForm').classList.remove('hidden');
-    document.getElementById('viewLoginForm').classList.add('hidden');
-  }
-  hideAuthMessage();
-}
-
-function toggleMode() {
-  currentAuthMode = currentAuthMode === 'register' ? 'login' : 'register';
-  const isLogin = currentAuthMode === 'login';
-  document.getElementById('authTitle').textContent    = isLogin ? 'Inicia sesión en Gestify' : 'Regístrate en Gestify';
-  document.getElementById('authSubtitle').textContent = isLogin ? 'Bienvenido de vuelta' : 'Controla tu inventario, ventas y caja';
-  document.getElementById('emailBtnText').textContent = isLogin ? 'Usar correo y contraseña' : 'Usar correo electrónico';
-  document.getElementById('switchText').textContent   = isLogin ? '¿No tienes una cuenta?' : '¿Ya tienes una cuenta?';
-  document.getElementById('switchLink').textContent   = isLogin ? 'Regístrate' : 'Iniciar sesión';
-  showMethods();
 }
 
 function showAuthMessage(msg, type) {
