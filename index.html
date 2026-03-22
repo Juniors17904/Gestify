@@ -8,6 +8,7 @@
     <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="icon" href="icons/icon-192.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap" rel="stylesheet" />
     <style>
       * {
         box-sizing: border-box;
@@ -97,18 +98,29 @@
 
     <!-- HEADER -->
     <div class="login-header" style="background:white;padding:36px 24px 20px">
-      <div
-        style="
-          width: 330px;
-          position: relative;
-          overflow: hidden;
-          height: 148px;
-        "
-      >
-        <canvas id="logoCanvas" style="width: 330px; height: auto"></canvas>
-      </div>
-      <h1 style="margin:10px 0 4px;font-size:26px;font-weight:800;color:#6C63FF;letter-spacing:1px">GESTIFY</h1>
-    <p style="margin:0;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#94A3B8">Bienvenido</p>
+      <svg width="220" height="240" viewBox="0 0 220 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bar1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8B83FF"/><stop offset="100%" stop-color="#4A43CC"/></linearGradient>
+          <linearGradient id="bar2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7B73FF"/><stop offset="100%" stop-color="#3A33BB"/></linearGradient>
+          <linearGradient id="bar3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6C63FF"/><stop offset="100%" stop-color="#4A43CC"/></linearGradient>
+          <linearGradient id="bar4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9B93FF"/><stop offset="100%" stop-color="#5A53DD"/></linearGradient>
+          <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#4A43CC" flood-opacity="0.3"/>
+          </filter>
+        </defs>
+        <rect x="42" y="130" width="22" height="50" rx="4" fill="url(#bar1)" filter="url(#shadow)"/>
+        <rect x="70" y="100" width="22" height="80" rx="4" fill="url(#bar2)" filter="url(#shadow)"/>
+        <rect x="98" y="62" width="22" height="118" rx="4" fill="url(#bar3)" filter="url(#shadow)"/>
+        <rect x="126" y="82" width="22" height="98" rx="4" fill="url(#bar4)" filter="url(#shadow)"/>
+        <rect x="154" y="48" width="22" height="132" rx="4" fill="url(#bar1)" filter="url(#shadow)"/>
+        <polyline points="53,128 81,98 109,60 137,80 165,44" stroke="white" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline points="53,128 81,98 109,60 137,80 165,44" stroke="#6C63FF" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <polygon points="171,36 157,43 168,51" fill="white"/>
+        <polygon points="171,36 158,44 167,50" fill="#6C63FF"/>
+        <line x1="35" y1="188" x2="185" y2="188" stroke="#6C63FF" stroke-width="3" stroke-linecap="round"/>
+        <text x="110" y="212" text-anchor="middle" font-family="'Poppins', sans-serif" font-size="22" font-weight="800" fill="#6C63FF" letter-spacing="3">GESTIFY</text>
+        <text x="110" y="230" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="600" fill="#94A3B8" letter-spacing="2">TU NEGOCIO BAJO CONTROL</text>
+      </svg>
     </div>
 
     <!-- CARD FORMULARIO -->
@@ -264,32 +276,7 @@
 
     </div>
 
-    <script>
-      const img = new Image();
-      img.src = "logos/LOGOv3.png";
-      img.onload = function () {
-        const canvas = document.getElementById("logoCanvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
-        const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < data.data.length; i += 4) {
-          const r = data.data[i],
-            g = data.data[i + 1],
-            b = data.data[i + 2];
-          if (r < 40 && g < 40 && b < 40) {
-            data.data[i + 3] = 0;
-          } else if (r > 200 && g > 200 && b > 200) {
-            data.data[i] = 108;
-            data.data[i + 1] = 99;
-            data.data[i + 2] = 255;
-          }
-        }
-        ctx.putImageData(data, 0, 0);
-      };
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/pwa.js"></script>
