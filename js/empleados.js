@@ -51,18 +51,16 @@ async function crearEmpleado(e) {
   btn.disabled = true;
   btn.textContent = 'Enviando...';
 
-  // Invitar usuario por correo via Supabase Admin (requiere service_role)
-  // Como estamos en el cliente, insertamos el registro y marcamos como pendiente
-  // El email de invitación se maneja desde un edge function o manualmente
-  const { error } = await db.from('empleados').insert({
-    negocio_id: negocioId,
-    nombre,
-    email,
-    rol
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/invitar-empleado`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+    body: JSON.stringify({ email, nombre, rol, negocio_id: negocioId })
   });
 
-  if (error) {
-    showToast('Error al invitar empleado', 'error');
+  const result = await res.json();
+
+  if (!res.ok || result.error) {
+    showToast(result.error || 'Error al invitar empleado', 'error');
     btn.disabled = false;
     btn.textContent = 'Enviar invitación';
     return;
