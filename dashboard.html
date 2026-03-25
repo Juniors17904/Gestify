@@ -43,9 +43,6 @@
           🗑️ Borrar data de ejemplo
         </button>
       </div>
-      <a href="#" class="nav-item" onclick="mostrarSetup()">
-        <span class="nav-icon"><i data-lucide="rocket"></i></span> Setup
-      </a>
       <a href="#" class="nav-item" onclick="showSection('ajustes')">
         <span class="nav-icon"><i data-lucide="settings"></i></span> Ajustes
       </a>
@@ -232,6 +229,7 @@
       <!-- Tabs de ajustes -->
       <div class="ajustes-tabs">
         <button class="ajuste-tab active" onclick="showAjusteTab('negocio')">Negocio</button>
+        <button class="ajuste-tab" onclick="showAjusteTab('misnegocios')">Mis Negocios</button>
         <button class="ajuste-tab" onclick="showAjusteTab('cuenta')">Mi Cuenta</button>
         <button class="ajuste-tab" onclick="showAjusteTab('apariencia')">Apariencia</button>
         <button class="ajuste-tab" onclick="showAjusteTab('plan')">Plan</button>
@@ -342,6 +340,13 @@
       </div>
 
       <!-- TAB: Plan -->
+      <!-- TAB: Mis Negocios -->
+      <div id="ajuste-misnegocios" class="ajuste-panel card ajustes-card" style="display:none">
+        <h3 style="margin-bottom:1rem">Mis Negocios</h3>
+        <div id="misNegociosList" style="display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.25rem"></div>
+        <button class="btn-primary" onclick="mostrarSetup()" style="width:100%">+ Agregar negocio</button>
+      </div>
+
       <div id="ajuste-plan" class="ajuste-panel card ajustes-card" style="display:none">
         <h3>Tu Plan</h3>
         <div class="plan-actual">

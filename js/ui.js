@@ -304,6 +304,54 @@ function showAjusteTab(tab) {
   document.querySelectorAll('.ajuste-panel').forEach(p => p.style.display = 'none');
   document.querySelector(`.ajuste-tab[onclick="showAjusteTab('${tab}')"]`).classList.add('active');
   document.getElementById('ajuste-' + tab).style.display = 'block';
+  if (tab === 'misnegocios') renderMisNegocios();
+}
+
+function renderMisNegocios() {
+  const lista = document.getElementById('misNegociosList');
+  lista.innerHTML = userEmpresas.map(e => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;border:1px solid var(--border);border-radius:10px;background:${e.negocio.id === currentBusiness?.id ? 'var(--primary-light)' : ''}">
+      <div style="display:flex;align-items:center;gap:.75rem">
+        <div style="width:36px;height:36px;border-radius:8px;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-weight:700">
+          ${e.negocio.nombre[0].toUpperCase()}
+        </div>
+        <div>
+          <p style="font-weight:600;font-size:.9rem">${e.negocio.nombre}</p>
+          <span style="font-size:.75rem;color:var(--text-secondary)">${formatRol(e.rol)}</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:.5rem;align-items:center">
+        ${e.negocio.id === currentBusiness?.id ? '<span style="font-size:.75rem;color:var(--primary);font-weight:600">Activo</span>' : `<button onclick="cambiarEmpresa('${e.negocio.id}')" style="font-size:.75rem;padding:.3rem .7rem;border:1px solid var(--primary);color:var(--primary);border-radius:6px;background:none;cursor:pointer">Usar</button>`}
+        ${e.rol === 'admin' ? `<button onclick="eliminarNegocio('${e.negocio.id}')" style="font-size:.75rem;padding:.3rem .7rem;border:1px solid #EF4444;color:#EF4444;border-radius:6px;background:none;cursor:pointer">Eliminar</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+async function eliminarNegocio(negocioId) {
+  if (!confirm('¿Eliminar este negocio y todos sus datos? Esta acción no se puede deshacer.')) return;
+
+  const { data: ventas } = await db.from('ventas').select('id').eq('negocio_id', negocioId);
+  const ventaIds = (ventas || []).map(v => v.id);
+  if (ventaIds.length) await db.from('venta_items').delete().in('venta_id', ventaIds);
+
+  await db.from('ventas').delete().eq('negocio_id', negocioId);
+  await db.from('productos').delete().eq('negocio_id', negocioId);
+  await db.from('caja').delete().eq('negocio_id', negocioId);
+  await db.from('empleados').delete().eq('negocio_id', negocioId);
+  const { error } = await db.from('negocios').delete().eq('id', negocioId);
+
+  if (error) { showToast('Error al eliminar', 'error'); return; }
+
+  userEmpresas = userEmpresas.filter(e => e.negocio.id !== negocioId);
+
+  if (currentBusiness?.id === negocioId) {
+    currentBusiness = null;
+    location.reload();
+  } else {
+    showToast('Negocio eliminado', 'success');
+    renderMisNegocios();
+  }
 }
 
 // Guardar ajustes de negocio
