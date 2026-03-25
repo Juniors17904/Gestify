@@ -36,10 +36,11 @@ async function initDashboard() {
     db.from('empleados').select('*, negocios(*)').eq('user_id', currentUser.id)
   ]);
 
-  // Armar lista de empresas
+  // Armar lista de empresas (sin duplicados)
   userEmpresas = [];
-  (propias || []).forEach(n => userEmpresas.push({ negocio: n, rol: 'admin' }));
-  (comoEmpleado || []).forEach(e => { if (e.negocios) userEmpresas.push({ negocio: e.negocios, rol: e.rol }); });
+  const vistas = new Set();
+  (propias || []).forEach(n => { vistas.add(n.id); userEmpresas.push({ negocio: n, rol: 'admin' }); });
+  (comoEmpleado || []).forEach(e => { if (e.negocios && !vistas.has(e.negocios.id)) { vistas.add(e.negocios.id); userEmpresas.push({ negocio: e.negocios, rol: e.rol }); } });
 
   // Elegir empresa activa (última usada o la primera)
   const ultimaId = localStorage.getItem('empresaActiva');
