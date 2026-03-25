@@ -16,13 +16,21 @@ function togglePwd(inputId, btn) {
 // Verificar sesión al cargar
 async function checkSession() {
   const { data: { session } } = await db.auth.getSession();
+  const pagina = window.location.pathname;
+
+  console.log('Página actual:', pagina);
+  console.log('Sesión:', session ? session.user.email : 'Sin sesión');
 
   if (session) {
-    if (window.location.pathname.includes('index') || window.location.pathname === '/') {
+    console.log('Sesión activa — usuario:', session.user.email);
+    if (pagina.includes('index') || pagina === '/') {
+      console.log('Redirigiendo a dashboard.html');
       window.location.href = 'dashboard.html';
     }
   } else {
-    if (window.location.pathname.includes('dashboard')) {
+    console.log('Sin sesión');
+    if (pagina.includes('dashboard')) {
+      console.log('Redirigiendo a index.html');
       window.location.href = 'index.html';
     }
   }

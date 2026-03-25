@@ -4,64 +4,122 @@ async function loadDashboard() {
   const negocioId = currentBusiness?.id;
   if (!negocioId) return;
 
+  const modulos = currentBusiness?.modulos || [];
   const hoy = new Date().toISOString().split('T')[0];
 
-  // Ventas de hoy
-  const { data: ventasHoy } = await db
-    .from('ventas')
-    .select('id, total, created_at')
-    .eq('negocio_id', negocioId)
-    .gte('created_at', hoy + 'T00:00:00')
-    .order('created_at', { ascending: false });
+  // Renderizar stats según módulos activos
+  const statsGrid = document.getElementById('statsGrid');
+  statsGrid.innerHTML = '';
 
-  const totalVentasHoy = (ventasHoy || []).reduce((s, v) => s + v.total, 0);
-  document.getElementById('statVentasHoy').textContent = formatMoney(totalVentasHoy);
+  const STATS = [
+    { modulo: 'ventas',     color: 'purple', icon: 'trending-up',   label: 'Ventas Hoy',     id: 'statVentasHoy',  valor: formatMoney(0) },
+    { modulo: 'inventario', color: 'blue',   icon: 'package',       label: 'Productos',      id: 'statProductos',  valor: '0' },
+    { modulo: 'caja',       color: 'green',  icon: 'wallet',        label: 'En Caja',        id: 'statCaja',       valor: formatMoney(0) },
+    { modulo: 'inventario', color: 'orange', icon: 'alert-triangle',label: 'Stock Bajo',     id: 'statStockBajo',  valor: '0' },
+    { modulo: 'clientes',   color: 'blue',   icon: 'users',         label: 'Clientes',       id: 'statClientes',   valor: '0' },
+    { modulo: 'agenda',     color: 'purple', icon: 'calendar',      label: 'Citas Hoy',      id: 'statAgenda',     valor: '0' },
+    { modulo: 'empleados',  color: 'green',  icon: 'shield-check',  label: 'Empleados',      id: 'statEmpleados',  valor: '0' },
+  ];
 
-  // Últimas 5 ventas con items
-  const { data: ultimasVentas } = await db
-    .from('ventas')
-    .select('id, total, created_at, venta_items(cantidad, precio_unitario, productos(nombre))')
-    .eq('negocio_id', negocioId)
-    .order('created_at', { ascending: false })
-    .limit(5);
+  STATS.forEach(s => {
+    if (!modulos.includes(s.modulo)) return;
+    if (statsGrid.querySelector('#' + s.id)) return;
+    const div = document.createElement('div');
+    div.className = `stat-card ${s.color}`;
+    div.innerHTML = `
+      <div class="stat-icon"><i data-lucide="${s.icon}"></i></div>
+      <div class="stat-info">
+        <span class="stat-label">${s.label}</span>
+        <span class="stat-value" id="${s.id}">${s.valor}</span>
+      </div>`;
+    statsGrid.appendChild(div);
+  });
 
-  renderUltimasVentas(ultimasVentas || []);
+  // Renderizar cards según módulos activos
+  const dashGrid = document.getElementById('dashboardGrid');
+  dashGrid.innerHTML = '';
 
-  // Total productos
-  const { count: totalProductos } = await db
-    .from('productos')
-    .select('*', { count: 'exact', head: true })
-    .eq('negocio_id', negocioId);
+  if (modulos.includes('ventas')) {
+    dashGrid.innerHTML += `
+      <div class="card">
+        <div class="card-header">
+          <h3>Últimas Ventas</h3>
+          <a href="#" onclick="showSection('ventas')" class="ver-mas">Ver todas</a>
+        </div>
+        <div id="ultimasVentas" class="list-empty"><p>No hay ventas hoy</p></div>
+      </div>`;
+  }
 
-  document.getElementById('statProductos').textContent = totalProductos || 0;
+  if (modulos.includes('inventario')) {
+    dashGrid.innerHTML += `
+      <div class="card">
+        <div class="card-header">
+          <h3>Stock Bajo</h3>
+          <a href="#" onclick="showSection('inventario')" class="ver-mas">Ver todos</a>
+        </div>
+        <div id="stockBajoList" class="list-empty"><p>Todo en orden</p></div>
+      </div>`;
+  }
 
-  // Saldo en caja
-  const { data: ingresos } = await db
-    .from('caja')
-    .select('monto')
-    .eq('negocio_id', negocioId)
-    .eq('tipo', 'ingreso');
+  if (modulos.includes('clientes')) {
+    dashGrid.innerHTML += `
+      <div class="card">
+        <div class="card-header">
+          <h3>Últimos Clientes</h3>
+          <a href="#" onclick="showSection('clientes')" class="ver-mas">Ver todos</a>
+        </div>
+        <div id="ultimosClientes" class="list-empty"><p>No hay clientes aún</p></div>
+      </div>`;
+  }
 
-  const { data: egresos } = await db
-    .from('caja')
-    .select('monto')
-    .eq('negocio_id', negocioId)
-    .eq('tipo', 'egreso');
+  if (modulos.includes('agenda')) {
+    dashGrid.innerHTML += `
+      <div class="card">
+        <div class="card-header">
+          <h3>Citas de Hoy</h3>
+          <a href="#" onclick="showSection('agenda')" class="ver-mas">Ver todas</a>
+        </div>
+        <div id="citasHoy" class="list-empty"><p>No hay citas hoy</p></div>
+      </div>`;
+  }
 
-  const saldo = (ingresos || []).reduce((s, r) => s + r.monto, 0)
-              - (egresos || []).reduce((s, r) => s + r.monto, 0);
+  if (typeof lucide !== 'undefined') lucide.createIcons();
 
-  document.getElementById('statCaja').textContent = formatMoney(saldo);
+  // Cargar datos según módulos activos
+  if (modulos.includes('ventas')) {
+    const { data: ventasHoy } = await db.from('ventas').select('total')
+      .eq('negocio_id', negocioId).gte('created_at', hoy + 'T00:00:00');
+    const total = (ventasHoy || []).reduce((s, v) => s + v.total, 0);
+    document.getElementById('statVentasHoy')?.textContent && (document.getElementById('statVentasHoy').textContent = formatMoney(total));
 
-  // Stock bajo
-  const { data: stockBajo } = await db
-    .from('productos')
-    .select('nombre, stock, stock_minimo')
-    .eq('negocio_id', negocioId)
-    .lte('stock', 5);
+    const { data: ultimas } = await db.from('ventas')
+      .select('id, total, created_at, venta_items(cantidad, precio_unitario, productos(nombre))')
+      .eq('negocio_id', negocioId).order('created_at', { ascending: false }).limit(5);
+    renderUltimasVentas(ultimas || []);
+  }
 
-  document.getElementById('statStockBajo').textContent = stockBajo?.length || 0;
-  renderStockBajo(stockBajo || []);
+  if (modulos.includes('inventario')) {
+    const { count: totalProductos } = await db.from('productos')
+      .select('*', { count: 'exact', head: true }).eq('negocio_id', negocioId);
+    document.getElementById('statProductos') && (document.getElementById('statProductos').textContent = totalProductos || 0);
+
+    const { data: stockBajo } = await db.from('productos')
+      .select('nombre, stock, stock_minimo').eq('negocio_id', negocioId).lte('stock', 5);
+    document.getElementById('statStockBajo') && (document.getElementById('statStockBajo').textContent = stockBajo?.length || 0);
+    renderStockBajo(stockBajo || []);
+  }
+
+  if (modulos.includes('caja')) {
+    const { data: ingresos } = await db.from('caja').select('monto').eq('negocio_id', negocioId).eq('tipo', 'ingreso');
+    const { data: egresos }  = await db.from('caja').select('monto').eq('negocio_id', negocioId).eq('tipo', 'egreso');
+    const saldo = (ingresos || []).reduce((s, r) => s + r.monto, 0) - (egresos || []).reduce((s, r) => s + r.monto, 0);
+    document.getElementById('statCaja') && (document.getElementById('statCaja').textContent = formatMoney(saldo));
+  }
+
+  if (modulos.includes('empleados')) {
+    const { count } = await db.from('empleados').select('*', { count: 'exact', head: true }).eq('negocio_id', negocioId);
+    document.getElementById('statEmpleados') && (document.getElementById('statEmpleados').textContent = count || 0);
+  }
 }
 
 function renderUltimasVentas(ventas) {

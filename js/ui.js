@@ -25,10 +25,7 @@ async function initDashboard() {
 
   // Sesión normal (admin/dueño vía Supabase Auth)
   const { data: { session } } = await db.auth.getSession();
-  if (!session) {
-    window.location.href = 'index.html';
-    return;
-  }
+  if (!session) return; // auth.js ya redirige a index.html
 
   currentUser = session.user;
   const nombre = currentUser.user_metadata?.name || currentUser.user_metadata?.full_name || currentUser.email;
@@ -54,11 +51,8 @@ async function initDashboard() {
     APP_CONFIG.stockMinimo = currentBusiness.stock_minimo || 5;
     setupDashboardUI(nombre, currentBusiness.nombre, activa.rol);
   } else {
-    // Sin empresa → solo botón agregar
-    setupDashboardUI(nombre, 'Mi Negocio', 'admin');
-    document.getElementById('btnDemoWrap').style.display = 'flex';
-    document.getElementById('btnAgregarDemo').style.display = 'block';
-    document.getElementById('btnBorrarDemo').style.display = 'none';
+    // Sin empresa → mostrar dashboard vacío
+    setupDashboardUI(nombre, 'Mi empresa', 'admin');
   }
 }
 
@@ -71,27 +65,65 @@ function setupDashboardUI(nombre, negocioNombre, rol) {
 
   // Permisos por rol
   const permisos = {
-    admin:    ['dashboard','inventario','ventas','caja','empleados','reportes','ajustes'],
-    empleado: ['dashboard','inventario','ventas'],
+    admin:    ['dashboard','inventario','ventas','caja','clientes','agenda','empleados','reportes','ajustes'],
+    empleado: ['dashboard','inventario','ventas','clientes','agenda'],
     readonly: ['dashboard','reportes']
   };
-
   const permitidos = permisos[rol] || permisos['empleado'];
 
-  // Ocultar nav items no permitidos
-  document.querySelectorAll('.nav-item[onclick]').forEach(item => {
-    const match = item.getAttribute('onclick').match(/showSection\('(\w+)'\)/);
-    if (match && !permitidos.includes(match[1])) {
-      item.style.display = 'none';
-    }
+  // Módulos activos (solo si hay negocio configurado)
+  const modulosActivos = currentBusiness ? (currentBusiness.modulos || ['inventario','ventas','caja','reportes']) : [];
+
+  // Config de cada módulo
+  const NAV_MODULOS = [
+    { id: 'inventario', label: 'Inventario', icon: 'package' },
+    { id: 'ventas',     label: 'Ventas',     icon: 'shopping-cart' },
+    { id: 'caja',       label: 'Caja',       icon: 'wallet' },
+    { id: 'clientes',   label: 'Clientes',   icon: 'users' },
+    { id: 'agenda',     label: 'Agenda',     icon: 'calendar' },
+    { id: 'empleados',  label: 'Accesos',    icon: 'shield-check' },
+    { id: 'reportes',   label: 'Reportes',   icon: 'bar-chart-2' },
+  ];
+  const BOTTOM_MODULOS = [
+    { id: 'inventario', label: 'Inventario', icon: 'package' },
+    { id: 'ventas',     label: 'Ventas',     icon: 'shopping-cart' },
+    { id: 'clientes',   label: 'Clientes',   icon: 'users' },
+    { id: 'agenda',     label: 'Agenda',     icon: 'calendar' },
+    { id: 'caja',       label: 'Caja',       icon: 'wallet' },
+    { id: 'reportes',   label: 'Reportes',   icon: 'bar-chart-2' },
+  ];
+
+  // Insertar módulos en sidebar
+  const sidebarNav = document.getElementById('sidebarNav');
+  sidebarNav.querySelectorAll('.nav-modulo').forEach(el => el.remove());
+  NAV_MODULOS.forEach(m => {
+    if (!permitidos.includes(m.id) || !modulosActivos.includes(m.id)) return;
+    const a = document.createElement('a');
+    a.href = '#';
+    a.className = 'nav-item nav-modulo';
+    a.setAttribute('onclick', `showSection('${m.id}')`);
+    a.innerHTML = `<span class="nav-icon"><i data-lucide="${m.icon}"></i></span> ${m.label}`;
+    sidebarNav.appendChild(a);
   });
 
-  // Ocultar bottom nav items no permitidos
-  document.querySelectorAll('.bottom-nav-item[onclick]').forEach(item => {
-    const match = item.getAttribute('onclick').match(/showSection\('(\w+)'\)/);
-    if (match && !permitidos.includes(match[1])) {
-      item.style.display = 'none';
-    }
+  // Insertar módulos en bottom nav
+  const bottomNav = document.querySelector('.bottom-nav-items');
+  bottomNav.querySelectorAll('.bottom-modulo').forEach(el => el.remove());
+  BOTTOM_MODULOS.forEach(m => {
+    if (!permitidos.includes(m.id) || !modulosActivos.includes(m.id)) return;
+    const a = document.createElement('a');
+    a.className = 'bottom-nav-item bottom-modulo';
+    a.href = '#';
+    a.setAttribute('onclick', `showSection('${m.id}')`);
+    a.innerHTML = `<i data-lucide="${m.icon}"></i><span>${m.label}</span>`;
+    bottomNav.appendChild(a);
+  });
+
+  // Cargar módulos en checkboxes de ajustes
+  document.querySelectorAll('#ajusteModulos input[type=checkbox]').forEach(cb => {
+    cb.checked = modulosActivos.includes(cb.value);
+    const card = cb.closest('.modulo-card');
+    if (card) card.classList.toggle('selected', cb.checked);
   });
 
   // Configurar ajustes - negocio
@@ -124,10 +156,17 @@ function setupDashboardUI(nombre, negocioNombre, rol) {
     });
   }
 
-  // Mostrar solo botón borrar (ya tiene negocio)
-  document.getElementById('btnDemoWrap').style.display = 'flex';
-  document.getElementById('btnAgregarDemo').style.display = 'none';
-  document.getElementById('btnBorrarDemo').style.display = 'block';
+  // Estado vacío vs contenido del dashboard
+  const hasNegocio = !!currentBusiness;
+  const emptyState = document.getElementById('dashboardEmptyState');
+  const dashContent = document.getElementById('dashboardContent');
+  if (emptyState) emptyState.classList.toggle('hidden', hasNegocio);
+  if (dashContent) dashContent.style.display = hasNegocio ? '' : 'none';
+
+  // Botones demo: mostrar "Agregar" si hay negocio
+  document.getElementById('btnDemoWrap').style.display = hasNegocio ? 'flex' : 'none';
+  document.getElementById('btnAgregarDemo').style.display = hasNegocio ? 'block' : 'none';
+  document.getElementById('btnBorrarDemo').style.display = 'none';
 
   // Selector de empresa en header
   renderEmpresaSelector();
@@ -268,16 +307,25 @@ function showAjusteTab(tab) {
 
 // Guardar ajustes de negocio
 async function guardarAjustes() {
-  const nombre = document.getElementById('ajusteNombreNegocio').value;
-  const tipo = document.getElementById('ajusteTipo').value;
+  const nombre      = document.getElementById('ajusteNombreNegocio').value;
+  const tipo        = document.getElementById('ajusteTipo').value;
+  const moneda      = document.getElementById('ajusteMoneda').value;
+  const ruc         = document.getElementById('ajusteRuc').value;
+  const telefono    = document.getElementById('ajusteTelefono').value;
+  const direccion   = document.getElementById('ajusteDireccion').value;
+  const stockMinimo = parseInt(document.getElementById('ajusteStockMinimo').value) || 5;
+  const modulos     = Array.from(document.querySelectorAll('#ajusteModulos input:checked')).map(c => c.value);
 
   const { error } = await db
     .from('negocios')
-    .update({ nombre, tipo })
+    .update({ nombre, tipo, moneda, ruc, telefono, direccion, stock_minimo: stockMinimo, modulos })
     .eq('owner_id', currentUser.id);
 
   if (error) { showToast('Error al guardar', 'error'); return; }
 
+  currentBusiness = { ...currentBusiness, nombre, tipo, moneda, ruc, telefono, direccion, stock_minimo: stockMinimo, modulos };
+  APP_CONFIG.moneda = moneda;
+  APP_CONFIG.stockMinimo = stockMinimo;
   document.getElementById('businessName').textContent = nombre;
   document.getElementById('businessAvatar').textContent = nombre[0].toUpperCase();
   showToast('Negocio actualizado', 'success');
@@ -326,32 +374,80 @@ function mostrarPro() {
 }
 
 // Setup primer ingreso
+const LABEL_MODULO = {
+  inventario:'Inventario', ventas:'Ventas', caja:'Caja',
+  clientes:'Clientes', agenda:'Agenda', empleados:'Accesos', reportes:'Reportes'
+};
+
 function mostrarSetup() {
-  const modal = document.getElementById('modalSetup');
-  if (modal) modal.style.display = 'flex';
+  const modal = document.getElementById('modalSetupWizard');
+  if (modal) {
+    modal.style.display = 'flex';
+    wizardSpaso(1);
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  }
 }
 
-async function completarSetup(e) {
-  e.preventDefault();
-  const negocioNombre = document.getElementById('setupNegocio').value;
-  const tipo = document.getElementById('setupTipo').value;
-  const btn = document.getElementById('setupBtn');
+function wizardSpaso(n) {
+  ['wpaso1','wpaso2','wpaso3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  const paso = document.getElementById('wpaso' + n);
+  if (paso) paso.style.display = 'block';
+  for (let i = 1; i <= 3; i++) {
+    const d = document.getElementById('wdot' + i);
+    if (d) d.className = 'sdot' + (i < n ? ' done' : i === n ? ' active' : '');
+  }
+  for (let i = 1; i <= 2; i++) {
+    const l = document.getElementById('wline' + i);
+    if (l) l.className = 'sline' + (i < n ? ' done' : '');
+  }
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
 
+function wizardPaso2() {
+  if (!document.getElementById('wNombre').value.trim()) {
+    document.getElementById('wNombre').value = 'Mi empresa';
+  }
+  if (!document.getElementById('wTipo').value.trim()) {
+    document.getElementById('wTipo').value = 'Sin especificar';
+  }
+  wizardSpaso(2);
+}
+
+function wizardPaso3() {
+  const mods = Array.from(document.querySelectorAll('#wModulosGrid input:checked')).map(c => c.value);
+  if (!mods.length) { showToast('Selecciona al menos un módulo'); return; }
+  document.getElementById('wRNombre').textContent = document.getElementById('wNombre').value.trim();
+  document.getElementById('wRTipo').textContent   = document.getElementById('wTipo').value.trim() || '—';
+  document.getElementById('wRMoneda').textContent  = document.getElementById('wMoneda').value;
+  document.getElementById('wRModulos').innerHTML   = mods.map(m => `<span class="rbadge">${LABEL_MODULO[m]||m}</span>`).join('');
+  wizardSpaso(3);
+}
+
+async function completarSetup() {
+  const negocioNombre = document.getElementById('wNombre').value.trim() || 'Mi empresa';
+  const tipo    = document.getElementById('wTipo').value.trim() || 'Sin especificar';
+  const moneda  = document.getElementById('wMoneda').value;
+  const modulos = Array.from(document.querySelectorAll('#wModulosGrid input:checked')).map(c => c.value);
+
+  const btn = document.getElementById('wBtnFinalizar');
   btn.disabled = true;
-  btn.innerHTML = '<span>Guardando...</span>';
+  btn.textContent = 'Guardando...';
 
   const nombre = currentUser.user_metadata?.name || currentUser.user_metadata?.full_name || currentUser.email;
 
   const { data: negocio, error } = await db.from('negocios').insert({
     nombre: negocioNombre,
     owner_id: currentUser.id,
-    tipo: tipo,
+    tipo, moneda, modulos,
     plan: 'gratis'
   }).select().single();
 
   if (error) {
     btn.disabled = false;
-    btn.innerHTML = '<span>Comenzar</span>';
+    btn.textContent = 'Comenzar';
     showToast('Error: ' + error.message, 'error');
     return;
   }
@@ -359,14 +455,15 @@ async function completarSetup(e) {
   await db.from('empleados').insert({
     negocio_id: negocio.id,
     user_id: currentUser.id,
-    nombre: nombre,
-    email: currentUser.email,
-    rol: 'admin'
+    nombre, email: currentUser.email, rol: 'admin'
   });
 
   currentBusiness = negocio;
-  document.getElementById('modalSetup').style.display = 'none';
+  document.getElementById('modalSetupWizard').style.display = 'none';
   setupDashboardUI(nombre, negocioNombre, 'admin');
+  showToast('¡Configuración guardada!', 'success');
+  btn.disabled = false;
+  btn.textContent = 'Comenzar';
 }
 
 // ===== SELECTOR DE EMPRESA =====
@@ -429,7 +526,6 @@ async function cambiarEmpresa(negocioId) {
   APP_CONFIG.stockMinimo = currentBusiness.stock_minimo || 5;
   localStorage.setItem('empresaActiva', negocioId);
 
-  const nombre = currentUser.user_metadata?.name || currentUser.user_metadata?.full_name || currentUser.email;
   document.getElementById('empresaSelectorNombre').textContent = currentBusiness.nombre;
   document.getElementById('empresaSelectorDot').textContent = currentBusiness.nombre[0].toUpperCase();
   document.getElementById('businessName').textContent = currentBusiness.nombre;

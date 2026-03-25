@@ -27,25 +27,11 @@
       </div>
     </div>
 
-    <nav class="sidebar-nav">
+    <nav class="sidebar-nav" id="sidebarNav">
       <a href="#" class="nav-item active" onclick="showSection('dashboard')">
         <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span> Dashboard
       </a>
-      <a href="#" class="nav-item" onclick="showSection('inventario')">
-        <span class="nav-icon"><i data-lucide="package"></i></span> Inventario
-      </a>
-      <a href="#" class="nav-item" onclick="showSection('ventas')">
-        <span class="nav-icon"><i data-lucide="shopping-cart"></i></span> Ventas
-      </a>
-      <a href="#" class="nav-item" onclick="showSection('caja')">
-        <span class="nav-icon"><i data-lucide="wallet"></i></span> Caja
-      </a>
-      <a href="#" class="nav-item" id="navEmpleados" onclick="showSection('empleados')">
-        <span class="nav-icon"><i data-lucide="shield-check"></i></span> Accesos
-      </a>
-      <a href="#" class="nav-item" onclick="showSection('reportes')">
-        <span class="nav-icon"><i data-lucide="bar-chart-2"></i></span> Reportes
-      </a>
+      <!-- módulos se insertan dinámicamente -->
     </nav>
 
     <div class="sidebar-footer">
@@ -57,6 +43,9 @@
           🗑️ Borrar data de ejemplo
         </button>
       </div>
+      <a href="#" class="nav-item" onclick="mostrarSetup()">
+        <span class="nav-icon"><i data-lucide="rocket"></i></span> Setup
+      </a>
       <a href="#" class="nav-item" onclick="showSection('ajustes')">
         <span class="nav-icon"><i data-lucide="settings"></i></span> Ajustes
       </a>
@@ -96,57 +85,22 @@
 
     <!-- DASHBOARD -->
     <section id="section-dashboard" class="section active">
-      <div class="stats-grid">
-        <div class="stat-card purple">
-          <div class="stat-icon"><i data-lucide="trending-up"></i></div>
-          <div class="stat-info">
-            <span class="stat-label">Ventas Hoy</span>
-            <span class="stat-value" id="statVentasHoy">S/ 0.00</span>
-          </div>
+      <!-- Estado vacío cuando no hay negocio configurado -->
+      <div id="dashboardEmptyState" class="hidden" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:1.5rem;text-align:center;padding:2rem;">
+        <div style="width:72px;height:72px;background:var(--primary-light,#ede9fe);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+          <i data-lucide="building-2" style="width:36px;height:36px;color:var(--primary);"></i>
         </div>
-        <div class="stat-card blue">
-          <div class="stat-icon"><i data-lucide="package"></i></div>
-          <div class="stat-info">
-            <span class="stat-label">Productos</span>
-            <span class="stat-value" id="statProductos">0</span>
-          </div>
+        <div>
+          <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:.5rem;">Configura tu negocio</h2>
+          <p style="color:var(--text-secondary);font-size:.95rem;">Completa la configuración inicial para empezar a usar el sistema.</p>
         </div>
-        <div class="stat-card green">
-          <div class="stat-icon"><i data-lucide="wallet"></i></div>
-          <div class="stat-info">
-            <span class="stat-label">En Caja</span>
-            <span class="stat-value" id="statCaja">S/ 0.00</span>
-          </div>
-        </div>
-        <div class="stat-card orange">
-          <div class="stat-icon"><i data-lucide="alert-triangle"></i></div>
-          <div class="stat-info">
-            <span class="stat-label">Stock Bajo</span>
-            <span class="stat-value" id="statStockBajo">0</span>
-          </div>
-        </div>
+        <button class="btn-primary" onclick="mostrarSetup()" style="padding:.75rem 2rem;font-size:1rem;">Comenzar configuración</button>
       </div>
 
-      <div class="dashboard-grid">
-        <div class="card">
-          <div class="card-header">
-            <h3>Últimas Ventas</h3>
-            <a href="#" onclick="showSection('ventas')" class="ver-mas">Ver todas</a>
-          </div>
-          <div id="ultimasVentas" class="list-empty">
-            <p>No hay ventas hoy</p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <h3>Stock Bajo</h3>
-            <a href="#" onclick="showSection('inventario')" class="ver-mas">Ver todos</a>
-          </div>
-          <div id="stockBajoList" class="list-empty">
-            <p>Todo en orden</p>
-          </div>
-        </div>
-      </div>
+      <div id="dashboardContent" style="display:none">
+        <div id="statsGrid" class="stats-grid"></div>
+        <div id="dashboardGrid" class="dashboard-grid"></div>
+      </div><!-- /dashboardContent -->
     </section>
 
     <!-- INVENTARIO -->
@@ -304,17 +258,7 @@
         </div>
         <div class="form-group">
           <label>Tipo de negocio</label>
-          <select id="ajusteTipo">
-            <option value="bodega">Bodega / Abarrotes</option>
-            <option value="farmacia">Farmacia / Botica</option>
-            <option value="restaurante">Restaurante / Comida</option>
-            <option value="ropa">Tienda de Ropa</option>
-            <option value="electronica">Electrónica / Celulares</option>
-            <option value="ferreteria">Ferretería</option>
-            <option value="panaderia">Panadería / Pastelería</option>
-            <option value="salon">Salón / Peluquería</option>
-            <option value="otro">Otro</option>
-          </select>
+          <input type="text" id="ajusteTipo" placeholder="Describe tu actividad" maxlength="60">
         </div>
         <div class="form-group">
           <label>Moneda</label>
@@ -327,6 +271,20 @@
           <label>Stock mínimo (alerta)</label>
           <input type="number" id="ajusteStockMinimo" placeholder="5" value="5">
         </div>
+
+        <div class="form-group">
+          <label>Módulos activos</label>
+          <div id="ajusteModulos" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">
+            <label class="modulo-card"><input type="checkbox" value="inventario"><div class="mcheck"></div><div class="mnombre">Inventario</div></label>
+            <label class="modulo-card"><input type="checkbox" value="ventas"><div class="mcheck"></div><div class="mnombre">Ventas</div></label>
+            <label class="modulo-card"><input type="checkbox" value="caja"><div class="mcheck"></div><div class="mnombre">Caja</div></label>
+            <label class="modulo-card"><input type="checkbox" value="clientes"><div class="mcheck"></div><div class="mnombre">Clientes</div></label>
+            <label class="modulo-card"><input type="checkbox" value="agenda"><div class="mcheck"></div><div class="mnombre">Agenda</div></label>
+            <label class="modulo-card"><input type="checkbox" value="empleados"><div class="mcheck"></div><div class="mnombre">Accesos</div></label>
+            <label class="modulo-card"><input type="checkbox" value="reportes"><div class="mcheck"></div><div class="mnombre">Reportes</div></label>
+          </div>
+        </div>
+
         <button class="btn-primary" onclick="guardarAjustes()">Guardar cambios</button>
       </div>
 
@@ -581,50 +539,124 @@
       <a class="bottom-nav-item active" onclick="showSection('dashboard')" href="#">
         <i data-lucide="layout-dashboard"></i><span>Inicio</span>
       </a>
-      <a class="bottom-nav-item" onclick="showSection('inventario')" href="#">
-        <i data-lucide="package"></i><span>Inventario</span>
-      </a>
-      <a class="bottom-nav-item" onclick="showSection('ventas')" href="#">
-        <i data-lucide="shopping-cart"></i><span>Ventas</span>
-      </a>
-      <a class="bottom-nav-item" onclick="showSection('caja')" href="#">
-        <i data-lucide="wallet"></i><span>Caja</span>
-      </a>
-      <a class="bottom-nav-item" onclick="showSection('reportes')" href="#">
-        <i data-lucide="bar-chart-2"></i><span>Reportes</span>
-      </a>
+      <!-- módulos se insertan dinámicamente -->
     </div>
   </nav>
 
-  <!-- Modal setup primer ingreso -->
-  <div id="modalSetup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
-    <div style="background:white;border-radius:20px;padding:32px 24px;width:calc(100% - 48px);max-width:400px">
-      <h2 style="margin:0 0 4px;font-size:20px;font-weight:800;color:#1E293B">Configura tu negocio</h2>
-      <p style="margin:0 0 24px;font-size:13px;color:#94A3B8">Cuéntanos sobre tu negocio para comenzar</p>
-      <form onsubmit="completarSetup(event)">
+  <!-- Modal Setup Wizard -->
+  <div id="modalSetupWizard" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)this.style.display='none'">
+    <div style="background:white;border-radius:24px;padding:32px 24px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;">
+
+      <!-- Progress -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:28px">
+        <div class="sdot active" id="wdot1">1</div>
+        <div class="sline" id="wline1"></div>
+        <div class="sdot" id="wdot2">2</div>
+        <div class="sline" id="wline2"></div>
+        <div class="sdot" id="wdot3">3</div>
+      </div>
+
+      <!-- Paso 1 -->
+      <div id="wpaso1">
+        <h2 style="font-size:20px;font-weight:800;color:#1E293B;margin:0 0 4px">Tu empresa</h2>
+        <p style="font-size:13px;color:#94A3B8;margin:0 0 24px">Cuéntanos cómo se llama y a qué se dedica</p>
         <div class="form-group">
-          <label>Nombre del negocio</label>
-          <input type="text" id="setupNegocio" placeholder="Ej: Bodega San Juan" required />
+          <label>Nombre</label>
+          <input type="text" id="wNombre" placeholder="Mi empresa" maxlength="60">
         </div>
         <div class="form-group">
           <label>Tipo de negocio</label>
-          <select id="setupTipo" required>
-            <option value="">Selecciona...</option>
-            <option value="bodega">Bodega / Abarrotes</option>
-            <option value="farmacia">Farmacia / Botica</option>
-            <option value="restaurante">Restaurante / Comida</option>
-            <option value="ropa">Tienda de Ropa</option>
-            <option value="electronica">Electrónica / Celulares</option>
-            <option value="ferreteria">Ferretería</option>
-            <option value="panaderia">Panadería / Pastelería</option>
-            <option value="salon">Salón / Peluquería</option>
-            <option value="otro">Otro</option>
+          <input type="text" id="wTipo" placeholder="Describe tu actividad" maxlength="60">
+        </div>
+        <div class="form-group">
+          <label>Moneda</label>
+          <select id="wMoneda">
+            <option value="S/">Soles (S/)</option>
+            <option value="$">Dólares ($)</option>
+            <option value="€">Euros (€)</option>
+            <option value="COP">Pesos colombianos (COP)</option>
+            <option value="MXN">Pesos mexicanos (MXN)</option>
           </select>
         </div>
-        <button type="submit" class="btn-primary" id="setupBtn"><span>Comenzar</span></button>
-      </form>
+        <button class="btn-primary" style="width:100%;margin-top:8px" onclick="wizardPaso2()">Siguiente →</button>
+      </div>
+
+      <!-- Paso 2 -->
+      <div id="wpaso2" style="display:none">
+        <h2 style="font-size:20px;font-weight:800;color:#1E293B;margin:0 0 4px">¿Qué quieres gestionar?</h2>
+        <p style="font-size:13px;color:#94A3B8;margin:0 0 20px">Activa los módulos que necesitas. Puedes cambiarlos después.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px" id="wModulosGrid">
+          <label class="modulo-card selected"><input type="checkbox" value="inventario" checked><div class="mcheck"></div><div class="micon" style="background:#EEF0FF"><i data-lucide="package" style="color:#6C63FF"></i></div><div class="mnombre">Inventario</div><div class="mdesc">Productos y stock</div></label>
+          <label class="modulo-card selected"><input type="checkbox" value="ventas" checked><div class="mcheck"></div><div class="micon" style="background:#DBEAFE"><i data-lucide="shopping-cart" style="color:#3B82F6"></i></div><div class="mnombre">Ventas</div><div class="mdesc">Cobros y transacciones</div></label>
+          <label class="modulo-card selected"><input type="checkbox" value="caja" checked><div class="mcheck"></div><div class="micon" style="background:#DCFCE7"><i data-lucide="wallet" style="color:#22C55E"></i></div><div class="mnombre">Caja</div><div class="mdesc">Ingresos y egresos</div></label>
+          <label class="modulo-card"><input type="checkbox" value="clientes"><div class="mcheck"></div><div class="micon" style="background:#FEF9C3"><i data-lucide="users" style="color:#CA8A04"></i></div><div class="mnombre">Clientes</div><div class="mdesc">Pacientes o clientes</div></label>
+          <label class="modulo-card"><input type="checkbox" value="agenda"><div class="mcheck"></div><div class="micon" style="background:#FEE2E2"><i data-lucide="calendar" style="color:#EF4444"></i></div><div class="mnombre">Agenda</div><div class="mdesc">Citas y horarios</div></label>
+          <label class="modulo-card"><input type="checkbox" value="empleados"><div class="mcheck"></div><div class="micon" style="background:#F3E8FF"><i data-lucide="shield-check" style="color:#9333EA"></i></div><div class="mnombre">Accesos</div><div class="mdesc">Empleados y roles</div></label>
+          <label class="modulo-card selected"><input type="checkbox" value="reportes" checked><div class="mcheck"></div><div class="micon" style="background:#FFEDD5"><i data-lucide="bar-chart-2" style="color:#F97316"></i></div><div class="mnombre">Reportes</div><div class="mdesc">Estadísticas</div></label>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-secondary" style="flex:1" onclick="wizardSpaso(1)">← Atrás</button>
+          <button class="btn-primary" style="flex:2" onclick="wizardPaso3()">Siguiente →</button>
+        </div>
+      </div>
+
+      <!-- Paso 3: Resumen -->
+      <div id="wpaso3" style="display:none">
+        <h2 style="font-size:20px;font-weight:800;color:#1E293B;margin:0 0 4px">¡Todo listo!</h2>
+        <p style="font-size:13px;color:#94A3B8;margin:0 0 20px">Revisa los datos antes de empezar</p>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px">
+            <i data-lucide="store" style="width:16px;height:16px;color:#6C63FF;flex-shrink:0"></i>
+            <span style="color:#475569">Nombre</span>
+            <strong style="margin-left:auto;color:#1E293B" id="wRNombre">—</strong>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px">
+            <i data-lucide="tag" style="width:16px;height:16px;color:#6C63FF;flex-shrink:0"></i>
+            <span style="color:#475569">Actividad</span>
+            <strong style="margin-left:auto;color:#1E293B" id="wRTipo">—</strong>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px">
+            <i data-lucide="coins" style="width:16px;height:16px;color:#6C63FF;flex-shrink:0"></i>
+            <span style="color:#475569">Moneda</span>
+            <strong style="margin-left:auto;color:#1E293B" id="wRMoneda">—</strong>
+          </div>
+          <div style="padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+              <i data-lucide="layout-grid" style="width:16px;height:16px;color:#6C63FF;flex-shrink:0"></i>
+              <span style="color:#475569">Módulos activos</span>
+            </div>
+            <div id="wRModulos" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-secondary" style="flex:1" onclick="wizardSpaso(2)">← Atrás</button>
+          <button class="btn-primary" style="flex:2" id="wBtnFinalizar" onclick="completarSetup()">Comenzar</button>
+        </div>
+      </div>
+
     </div>
   </div>
+
+  <style>
+    .sdot { width:30px;height:30px;border-radius:50%;background:#E2E8F0;color:#94A3B8;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s; }
+    .sdot.active { background:#6C63FF;color:white; }
+    .sdot.done   { background:#22C55E;color:white; }
+    .sline { flex:1;height:2px;background:#E2E8F0;max-width:60px;transition:background .3s; }
+    .sline.done { background:#22C55E; }
+    .modulo-card { border:2px solid #E2E8F0;border-radius:14px;padding:14px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;background:#F8FAFC;position:relative;transition:all .2s; }
+    .modulo-card:hover { border-color:#6C63FF;background:#EEF0FF; }
+    .modulo-card.selected { border-color:#6C63FF;background:#EEF0FF; }
+    .modulo-card input { position:absolute;opacity:0;width:0;height:0; }
+    .mcheck { position:absolute;top:7px;right:7px;width:16px;height:16px;border-radius:50%;border:2px solid #CBD5E1;background:white;display:flex;align-items:center;justify-content:center;transition:all .2s; }
+    .modulo-card.selected .mcheck { background:#6C63FF;border-color:#6C63FF; }
+    .mcheck::after { content:'✓';color:white;font-size:9px;font-weight:700;opacity:0;transition:opacity .2s; }
+    .modulo-card.selected .mcheck::after { opacity:1; }
+    .micon { width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center; }
+    .micon i, .micon svg { width:18px;height:18px;stroke-width:2; }
+    .mnombre { font-size:11px;font-weight:700;color:#1E293B; }
+    .mdesc { font-size:10px;color:#94A3B8;line-height:1.3; }
+    .rbadge { padding:4px 10px;background:#EEF0FF;color:#6C63FF;border-radius:20px;font-size:11px;font-weight:600; }
+  </style>
 
   <!-- Toast de notificación -->
   <div id="toast" class="toast hidden"></div>
@@ -642,6 +674,24 @@
   <script src="js/dashboard.js"></script>
   <script src="js/demo.js"></script>
   <script src="js/pwa.js"></script>
-  <script>lucide.createIcons();</script>
+  <script>
+    lucide.createIcons();
+    // Toggle módulos wizard
+    document.querySelectorAll('#wModulosGrid .modulo-card').forEach(card => {
+      card.addEventListener('click', function() {
+        const cb = this.querySelector('input');
+        cb.checked = !cb.checked;
+        this.classList.toggle('selected', cb.checked);
+      });
+    });
+    // Toggle módulos ajustes
+    document.querySelectorAll('#ajusteModulos .modulo-card').forEach(card => {
+      card.addEventListener('click', function() {
+        const cb = this.querySelector('input');
+        cb.checked = !cb.checked;
+        this.classList.toggle('selected', cb.checked);
+      });
+    });
+  </script>
 </body>
 </html>
