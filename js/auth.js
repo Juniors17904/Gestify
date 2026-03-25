@@ -142,9 +142,9 @@ async function showForgot() {
 
   const { error } = await db.auth.resetPasswordForEmail(email);
   if (error) {
-    alert('Error: ' + error.message);
+    showAuthMessage('Error: ' + error.message, 'error');
   } else {
-    alert('Te enviamos un correo para restablecer tu contraseña.');
+    showAuthMessage('Te enviamos un correo para restablecer tu contraseña.', 'success');
   }
 }
 

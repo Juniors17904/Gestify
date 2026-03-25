@@ -74,7 +74,7 @@ async function crearEmpleado(e) {
 }
 
 async function eliminarEmpleado(id) {
-  if (!confirm('¿Eliminar este empleado?')) return;
+  if (!await showConfirm('¿Eliminar este empleado?')) return;
 
   const { error } = await db.from('empleados').delete().eq('id', id);
   if (error) { showToast('Error al eliminar', 'error'); return; }

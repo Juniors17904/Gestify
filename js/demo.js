@@ -1,7 +1,7 @@
 // ===== MODO DEMO =====
 
 async function cargarDataDemo() {
-  if (!confirm('¿Cargar datos de ejemplo?')) return;
+  if (!await showConfirm('¿Cargar datos de ejemplo?', 'Cargar', 'var(--primary)')) return;
 
   const btn = document.getElementById('btnAgregarDemo');
   btn.disabled = true;
@@ -108,7 +108,7 @@ async function cargarDataDemo() {
 }
 
 async function borrarDataDemo() {
-  if (!confirm('¿Borrar todos los datos de ejemplo?')) return;
+  if (!await showConfirm('¿Borrar todos los datos de ejemplo?')) return;
 
   const negocioId = currentBusiness?.id;
   if (!negocioId) { showToast('No hay negocio', 'error'); return; }

@@ -666,6 +666,17 @@
   <!-- Toast de notificación -->
   <div id="toast" class="toast hidden"></div>
 
+  <!-- Modal de confirmación -->
+  <div id="modalConfirm" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;padding:1.5rem">
+    <div style="background:var(--card-bg,#fff);border-radius:16px;padding:1.5rem;width:100%;max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,.2)">
+      <p id="modalConfirmMsg" style="font-size:.95rem;line-height:1.5;margin-bottom:1.25rem;color:var(--text)"></p>
+      <div style="display:flex;gap:.75rem;justify-content:flex-end">
+        <button onclick="resolveConfirm(false)" style="padding:.6rem 1.2rem;border:1px solid var(--border);border-radius:8px;background:none;cursor:pointer;font-size:.9rem;color:var(--text)">Cancelar</button>
+        <button id="modalConfirmOk" onclick="resolveConfirm(true)" style="padding:.6rem 1.2rem;border:none;border-radius:8px;background:#EF4444;color:white;cursor:pointer;font-size:.9rem;font-weight:600">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>

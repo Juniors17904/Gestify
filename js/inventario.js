@@ -96,7 +96,7 @@ function editarProducto(id) {
 }
 
 async function eliminarProducto(id) {
-  if (!confirm('¿Eliminar este producto?')) return;
+  if (!await showConfirm('¿Eliminar este producto?')) return;
   const { error } = await db.from('productos').delete().eq('id', id);
   if (error) { showToast('Error al eliminar', 'error'); return; }
   showToast('Producto eliminado', 'success');

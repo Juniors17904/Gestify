@@ -267,6 +267,24 @@ function showModalEgreso() {
   modal?.classList.remove('hidden');
 }
 
+// Modal de confirmación
+let _confirmResolve = null;
+
+function showConfirm(msg, okLabel = 'Eliminar', okColor = '#EF4444') {
+  return new Promise(resolve => {
+    _confirmResolve = resolve;
+    document.getElementById('modalConfirmMsg').textContent = msg;
+    document.getElementById('modalConfirmOk').textContent = okLabel;
+    document.getElementById('modalConfirmOk').style.background = okColor;
+    document.getElementById('modalConfirm').style.display = 'flex';
+  });
+}
+
+function resolveConfirm(result) {
+  document.getElementById('modalConfirm').style.display = 'none';
+  if (_confirmResolve) { _confirmResolve(result); _confirmResolve = null; }
+}
+
 // Toast
 function showToast(msg, type = '') {
   const toast = document.getElementById('toast');
@@ -329,7 +347,7 @@ function renderMisNegocios() {
 }
 
 async function eliminarNegocio(negocioId) {
-  if (!confirm('¿Eliminar este negocio y todos sus datos? Esta acción no se puede deshacer.')) return;
+  if (!await showConfirm('¿Eliminar este negocio y todos sus datos? Esta acción no se puede deshacer.')) return;
 
   const { data: ventas } = await db.from('ventas').select('id').eq('negocio_id', negocioId);
   const ventaIds = (ventas || []).map(v => v.id);
