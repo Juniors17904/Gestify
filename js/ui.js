@@ -204,6 +204,8 @@ function showSection(name) {
     inventario: 'Inventario',
     ventas: 'Ventas',
     caja: 'Caja',
+    clientes: 'Clientes',
+    agenda: 'Agenda',
     empleados: 'Empleados',
     reportes: 'Reportes',
     ajustes: 'Ajustes'
@@ -228,6 +230,8 @@ function loadSection(name) {
     case 'inventario': loadInventario(); break;
     case 'ventas': loadVentas(); break;
     case 'caja': loadCaja(); break;
+    case 'clientes': loadClientes(); break;
+    case 'agenda': loadAgenda(); break;
     case 'empleados': loadEmpleados(); break;
     case 'reportes': cargarReporte(); break;
   }
@@ -423,7 +427,7 @@ async function cambiarPassword() {
 function setTema(tema) {
   document.querySelectorAll('.tema-option').forEach(o => o.classList.remove('active'));
   document.getElementById('tema' + tema.charAt(0).toUpperCase() + tema.slice(1)).classList.add('active');
-  document.body.setAttribute('data-tema', tema);
+  document.documentElement.setAttribute('data-tema', tema);
   localStorage.setItem('tema', tema);
 }
 
