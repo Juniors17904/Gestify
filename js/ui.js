@@ -354,12 +354,12 @@ function renderMisNegocios() {
           ${e.negocio.nombre[0].toUpperCase()}
         </div>
         <div>
-          <p style="font-weight:600;font-size:.9rem">${e.negocio.nombre}</p>
-          <span style="font-size:.75rem;color:var(--text-secondary)">${formatRol(e.rol)}</span>
+          <p style="font-weight:600;font-size:.9rem;color:${e.negocio.id === currentBusiness?.id ? 'white' : 'var(--text-primary)'}">${e.negocio.nombre}</p>
+          <span style="font-size:.75rem;color:${e.negocio.id === currentBusiness?.id ? 'rgba(255,255,255,0.75)' : 'var(--text-secondary)'}">${formatRol(e.rol)}</span>
         </div>
       </div>
       <div style="display:flex;gap:.5rem;align-items:center">
-        ${e.negocio.id === currentBusiness?.id ? '<span style="font-size:.75rem;color:var(--primary);font-weight:600">Activo</span>' : `<button onclick="cambiarEmpresa('${e.negocio.id}')" style="font-size:.75rem;padding:.3rem .7rem;border:1px solid var(--primary);color:var(--primary);border-radius:6px;background:none;cursor:pointer">Usar</button>`}
+        ${e.negocio.id === currentBusiness?.id ? '<span style="font-size:.75rem;color:white;font-weight:600;opacity:0.9">Activo</span>' : `<button onclick="cambiarEmpresa('${e.negocio.id}')" style="font-size:.75rem;padding:.3rem .7rem;border:1px solid var(--primary);color:var(--primary);border-radius:6px;background:none;cursor:pointer">Usar</button>`}
         ${e.rol === 'admin' ? `<button onclick="eliminarNegocio('${e.negocio.id}')" style="font-size:.75rem;padding:.3rem .7rem;border:1px solid #EF4444;color:#EF4444;border-radius:6px;background:none;cursor:pointer">Eliminar</button>` : ''}
       </div>
     </div>
