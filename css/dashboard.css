@@ -595,7 +595,8 @@
 
 /* ===== AJUSTES ===== */
 .ajustes-tabs {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 6px;
   margin-bottom: 16px;
   background: white;
@@ -605,16 +606,16 @@
 }
 
 .ajuste-tab {
-  flex: 1;
-  padding: 9px 10px;
+  padding: 10px 6px;
   border: none;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  background: none;
-  color: var(--gray-400);
+  background: #F1F5F9;
+  color: var(--gray-500);
   transition: all 0.15s;
+  text-align: center;
 }
 
 .ajuste-tab.active {
@@ -887,16 +888,6 @@
 
   .bottom-nav { display: block; }
 
-  /* Ajustes: tabs scrollables en móvil */
-  .ajustes-tabs {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    flex-wrap: nowrap;
-  }
-  .ajuste-tab {
-    flex-shrink: 0;
-    white-space: nowrap;
-  }
 }
 
 /* ===== FAB NUEVA CITA ===== */
