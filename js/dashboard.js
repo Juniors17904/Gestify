@@ -120,6 +120,25 @@ async function loadDashboard() {
     const { count } = await db.from('empleados').select('*', { count: 'exact', head: true }).eq('negocio_id', negocioId);
     document.getElementById('statEmpleados') && (document.getElementById('statEmpleados').textContent = count || 0);
   }
+
+  if (modulos.includes('clientes')) {
+    const { count } = await db.from('clientes').select('*', { count: 'exact', head: true }).eq('negocio_id', negocioId);
+    document.getElementById('statClientes') && (document.getElementById('statClientes').textContent = count || 0);
+
+    const { data: ultimos } = await db.from('clientes')
+      .select('id, nombre, telefono').eq('negocio_id', negocioId)
+      .order('created_at', { ascending: false }).limit(5);
+    renderUltimosClientes(ultimos || []);
+  }
+
+  if (modulos.includes('agenda')) {
+    const { data: citasHoy } = await db.from('citas')
+      .select('id, hora, duracion, servicio, estado, clientes(nombre)')
+      .eq('negocio_id', negocioId).eq('fecha', hoy).order('hora');
+    const lista = citasHoy || [];
+    document.getElementById('statAgenda') && (document.getElementById('statAgenda').textContent = lista.length);
+    renderCitasHoy(lista);
+  }
 }
 
 function renderUltimasVentas(ventas) {
@@ -139,6 +158,47 @@ function renderUltimasVentas(ventas) {
           <span class="movimiento-hora">${formatTime(v.created_at)}</span>
         </div>
         <span class="movimiento-monto ingreso">${formatMoney(v.total)}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderUltimosClientes(lista) {
+  const el = document.getElementById('ultimosClientes');
+  if (!el) return;
+  if (!lista.length) {
+    el.innerHTML = '<p class="empty-text">No hay pacientes aún</p>';
+    return;
+  }
+  el.innerHTML = lista.map(c => `
+    <div class="movimiento-item">
+      <div class="movimiento-info">
+        <span class="movimiento-desc">${c.nombre}</span>
+        <span class="movimiento-hora">${c.telefono || ''}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderCitasHoy(lista) {
+  const el = document.getElementById('citasHoy');
+  if (!el) return;
+  if (!lista.length) {
+    el.innerHTML = '<p class="empty-text">No hay citas hoy</p>';
+    return;
+  }
+  const estadoLabel = { pendiente: '🕐', confirmada: '✅', completada: '✔️', cancelada: '❌' };
+  el.innerHTML = lista.map(c => {
+    const hora = c.hora ? c.hora.slice(0, 5) : '--:--';
+    const nombre = c.clientes?.nombre || 'Paciente';
+    const icono = estadoLabel[c.estado] || '🕐';
+    return `
+      <div class="movimiento-item">
+        <div class="movimiento-info">
+          <span class="movimiento-desc">${icono} ${nombre}</span>
+          <span class="movimiento-hora">${c.servicio || 'Cita'}</span>
+        </div>
+        <span class="movimiento-monto" style="color:var(--text-secondary);font-size:13px">${hora}</span>
       </div>
     `;
   }).join('');

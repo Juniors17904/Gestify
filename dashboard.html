@@ -9,6 +9,15 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="icon" href="icons/icon-192.png">
+  <script>
+    (function(){
+      var c=localStorage.getItem('colorPrimary');
+      var p={'#6C63FF':['#5A52D5','#EEF0FF'],'#3B82F6':['#2563EB','#DBEAFE'],'#22C55E':['#16A34A','#D1FAE5'],'#F59E0B':['#D97706','#FEF3C7'],'#EF4444':['#DC2626','#FEE2E2'],'#EC4899':['#DB2777','#FCE7F3']};
+      if(c){var t=p[c]||[c,c];document.documentElement.style.setProperty('--primary',c);document.documentElement.style.setProperty('--primary-dark',t[0]);document.documentElement.style.setProperty('--primary-light',t[1]);}
+      var m=localStorage.getItem('tema');
+      if(m)document.documentElement.setAttribute('data-tema',m);
+    })();
+  </script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="app-page">
@@ -220,6 +229,46 @@
       <div class="card">
         <div class="card-header"><h3>Top Productos</h3></div>
         <div id="topProductos" class="list-empty"><p>Sin datos</p></div>
+      </div>
+    </section>
+
+    <!-- CLIENTES -->
+    <section id="section-clientes" class="section hidden">
+      <div class="section-toolbar">
+        <input type="text" class="search-input" placeholder="Buscar cliente..." oninput="buscarCliente(this.value)">
+        <button class="btn-primary" onclick="showModal('modalCliente')">+ Agregar</button>
+      </div>
+      <div class="card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Teléfono</th>
+              <th>Email</th>
+              <th>Notas</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tablaClientes">
+            <tr><td colspan="5" class="empty-row">Sin clientes aún</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- AGENDA -->
+    <section id="section-agenda" class="section hidden">
+      <div class="section-toolbar">
+        <div class="agenda-nav">
+          <button class="btn-icon" onclick="agendaCambiarDia(-1)"><i data-lucide="chevron-left"></i></button>
+          <span id="agendaFechaLabel" class="agenda-fecha-label">Hoy</span>
+          <button class="btn-icon" onclick="agendaCambiarDia(1)"><i data-lucide="chevron-right"></i></button>
+          <button class="btn-secondary btn-sm" onclick="agendaIrHoy()">Hoy</button>
+        </div>
+        <button class="btn-primary" onclick="abrirModalCita()">+ Nueva Cita</button>
+      </div>
+      <div id="agendaLista" class="agenda-lista">
+        <div class="list-empty"><p>No hay citas este día</p></div>
       </div>
     </section>
 
@@ -538,6 +587,106 @@
     </div>
   </div>
 
+  <!-- Modal Cliente -->
+  <div id="modalCliente" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalClienteTitle">Agregar Cliente</h3>
+        <button onclick="closeModal('modalCliente')">✕</button>
+      </div>
+      <form onsubmit="guardarCliente(event)">
+        <div class="form-group">
+          <label>Nombre completo</label>
+          <input type="text" id="clienteNombre" placeholder="Nombre del cliente" required>
+        </div>
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="tel" id="clienteTelefono" placeholder="Ej: 987654321">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="clienteEmail" placeholder="correo@ejemplo.com">
+        </div>
+        <div class="form-group">
+          <label>Notas</label>
+          <textarea id="clienteNotas" placeholder="Observaciones, historial..." rows="3" style="resize:vertical"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modalCliente')">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Cita -->
+  <div id="modalCita" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalCitaTitle">Nueva Cita</h3>
+        <button onclick="closeModal('modalCita')">✕</button>
+      </div>
+      <form onsubmit="guardarCita(event)">
+        <div class="form-group">
+          <label>Cliente</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select id="citaClienteId" required style="flex:1">
+              <option value="">Selecciona un cliente</option>
+            </select>
+            <button type="button" class="btn-add-cliente" onclick="toggleNuevoClienteInline()" title="Nuevo cliente">+</button>
+          </div>
+          <!-- Mini form inline -->
+          <div id="nuevoClienteInline" style="display:none;margin-top:8px;background:var(--gray-50);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
+            <input type="text" id="inlineClienteNombre" placeholder="Nombre *" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;outline:none">
+            <input type="tel" id="inlineClienteTelefono" placeholder="Teléfono (opcional)" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;outline:none">
+            <button type="button" class="btn-primary" style="padding:8px;font-size:13px" onclick="guardarClienteInline()">Agregar cliente</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="form-group">
+            <label>Fecha</label>
+            <input type="date" id="citaFecha" required>
+          </div>
+          <div class="form-group">
+            <label>Hora</label>
+            <input type="time" id="citaHora" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Duración (minutos)</label>
+          <select id="citaDuracion">
+            <option value="30">30 min</option>
+            <option value="45">45 min</option>
+            <option value="60" selected>1 hora</option>
+            <option value="90">1h 30min</option>
+            <option value="120">2 horas</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Servicio / Motivo</label>
+          <input type="text" id="citaServicio" placeholder="Ej: Consulta, Terapia, Control...">
+        </div>
+        <div class="form-group">
+          <label>Estado</label>
+          <select id="citaEstado">
+            <option value="pendiente">Pendiente</option>
+            <option value="confirmada">Confirmada</option>
+            <option value="completada">Completada</option>
+            <option value="cancelada">Cancelada</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Notas</label>
+          <textarea id="citaNotas" placeholder="Observaciones adicionales..." rows="2" style="resize:vertical"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modalCita')">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar Cita</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Bottom Nav (solo móvil) -->
   <nav class="bottom-nav">
     <div class="bottom-nav-items">
@@ -687,11 +836,14 @@
   <script src="js/caja.js"></script>
   <script src="js/empleados.js"></script>
   <script src="js/reportes.js"></script>
+  <script src="js/clientes.js"></script>
+  <script src="js/agenda.js"></script>
   <script src="js/dashboard.js"></script>
   <script src="js/demo.js"></script>
   <script src="js/pwa.js"></script>
   <script>
     lucide.createIcons();
+
     // Toggle módulos wizard
     document.querySelectorAll('#wModulosGrid .modulo-card').forEach(card => {
       card.addEventListener('click', function() {

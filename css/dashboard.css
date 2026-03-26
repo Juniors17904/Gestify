@@ -879,6 +879,145 @@
   .bottom-nav { display: block; }
 }
 
+/* Botón + agregar cliente inline */
+.btn-add-cliente {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1.5px dashed var(--primary);
+  background: none;
+  color: var(--primary);
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.btn-add-cliente:hover { background: var(--primary-light); }
+
+/* ===== BADGE ESTADO (agenda) ===== */
+.badge-estado {
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.badge-estado.warning  { background: #FEF3C7; color: #92400E; }
+.badge-estado.blue     { background: #DBEAFE; color: #1E40AF; }
+.badge-estado.success  { background: #D1FAE5; color: #065F46; }
+.badge-estado.danger   { background: #FEE2E2; color: #991B1B; }
+
+/* ===== AGENDA ===== */
+.agenda-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.agenda-fecha-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-800);
+  min-width: 120px;
+  text-align: center;
+}
+
+.btn-icon {
+  background: var(--gray-100);
+  border: none;
+  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.btn-icon:hover { background: var(--gray-200); }
+.btn-icon svg { width: 16px; height: 16px; stroke: var(--gray-600); }
+
+.btn-sm {
+  padding: 7px 12px !important;
+  font-size: 12px !important;
+}
+
+.agenda-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cita-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: white;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--primary);
+  transition: box-shadow 0.15s;
+}
+
+.cita-item:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.12); }
+
+.cita-cancelada {
+  opacity: 0.55;
+  border-left-color: var(--gray-300);
+}
+
+.cita-hora {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--primary);
+  min-width: 52px;
+  text-align: center;
+}
+
+.cita-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cita-nombre {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--gray-800);
+}
+
+.cita-servicio {
+  font-size: 12px;
+  color: var(--gray-500);
+  margin-top: 2px;
+}
+
+.cita-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.cita-duracion, .cita-tel {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--gray-400);
+}
+
+.cita-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
 @media (max-width: 480px) {
   .stats-grid {
     grid-template-columns: 1fr 1fr;
