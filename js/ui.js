@@ -62,7 +62,11 @@ async function initDashboard() {
 }
 
 function renderAvatar(el, nombre) {
-  const avatarUrl = currentUser?.user_metadata?.avatar_url || currentUser?.user_metadata?.picture;
+  const meta = currentUser?.user_metadata || {};
+  const googleIdentity = currentUser?.identities?.find(i => i.provider === 'google');
+  const avatarUrl = meta.avatar_url || meta.picture ||
+    googleIdentity?.identity_data?.avatar_url ||
+    googleIdentity?.identity_data?.picture;
   const inicial = nombre?.[0]?.toUpperCase() || '?';
   if (avatarUrl) {
     el.innerHTML = `<img src="${avatarUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='${inicial}'">`;
