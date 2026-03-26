@@ -281,6 +281,7 @@
     <!-- AGENDA -->
     <section id="section-agenda" class="section hidden">
       <div class="section-toolbar">
+        <h2 style="font-size:1.1rem;font-weight:700;color:var(--gray-800);margin:0">Citas</h2>
         <div class="agenda-nav">
           <button class="btn-icon" onclick="agendaCambiarDia(-1)"><i data-lucide="chevron-left"></i></button>
           <span id="agendaFechaLabel" class="agenda-fecha-label">Hoy</span>
@@ -500,29 +501,35 @@
         <button onclick="closeModal('modalVenta')">✕</button>
       </div>
       <form onsubmit="guardarVenta(event)">
-        <div class="form-group">
+        <!-- Con inventario: select de productos -->
+        <div class="form-group" id="ventaProductoSelectGroup">
           <label>Producto</label>
-          <select id="ventaProducto" required onchange="actualizarPrecioVenta()">
+          <select id="ventaProducto" onchange="actualizarPrecioVenta()">
             <option value="">Selecciona un producto</option>
           </select>
         </div>
+        <!-- Sin inventario: texto libre -->
+        <div class="form-group" id="ventaProductoLibreGroup" style="display:none">
+          <label>Descripción</label>
+          <input type="text" id="ventaDescripcion" placeholder="Ej: Corte de cabello, Consulta...">
+        </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Cantidad</label>
-            <input type="number" id="ventaCantidad" placeholder="1" min="1" value="1" required onchange="calcularTotalVenta()">
+          <div class="fl-group">
+            <input type="number" id="ventaCantidad" class="fl-input" placeholder=" " min="1" value="1" required onchange="calcularTotalVenta()">
+            <label class="fl-label">Cantidad</label>
           </div>
-          <div class="form-group">
-            <label>Precio unitario</label>
-            <input type="number" id="ventaPrecio" placeholder="0.00" step="0.01" min="0" required onchange="calcularTotalVenta()">
+          <div class="fl-group">
+            <input type="number" id="ventaPrecio" class="fl-input" placeholder=" " step="0.01" min="0" required onchange="calcularTotalVenta()">
+            <label class="fl-label">Precio unitario</label>
           </div>
         </div>
         <div class="form-group">
           <label>Total</label>
           <input type="text" id="ventaTotal" placeholder="S/ 0.00" readonly class="total-display">
         </div>
-        <div class="form-group">
-          <label>Notas (opcional)</label>
-          <input type="text" id="ventaNotas" placeholder="Ej: Venta al fiado">
+        <div class="fl-group">
+          <input type="text" id="ventaNotas" class="fl-input" placeholder=" ">
+          <label class="fl-label">Notas (opcional)</label>
         </div>
         <div class="modal-actions">
           <button type="button" class="btn-secondary" onclick="closeModal('modalVenta')">Cancelar</button>
@@ -652,64 +659,101 @@
         <h3 id="modalCitaTitle">Nueva Cita</h3>
         <button onclick="closeModal('modalCita')">✕</button>
       </div>
-      <form onsubmit="guardarCita(event)">
-        <div class="form-group">
-          <label>Cliente</label>
-          <div style="display:flex;gap:8px;align-items:center">
-            <select id="citaClienteId" required style="flex:1">
-              <option value="">Selecciona un cliente</option>
-            </select>
-            <button type="button" class="btn-add-cliente" onclick="toggleNuevoClienteInline()" title="Nuevo cliente">+</button>
-          </div>
-          <!-- Mini form inline -->
-          <div id="nuevoClienteInline" style="display:none;margin-top:8px;background:var(--gray-50);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px">
-            <input type="text" id="inlineClienteNombre" placeholder="Nombre *" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;outline:none">
-            <input type="tel" id="inlineClienteTelefono" placeholder="Teléfono (opcional)" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;outline:none">
-            <button type="button" class="btn-primary" style="padding:8px;font-size:13px" onclick="guardarClienteInline()">Agregar cliente</button>
-          </div>
+
+      <!-- Indicador de pasos -->
+      <div id="citaStepIndicator" style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+        <div id="citaStep1Dot" style="width:28px;height:28px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">1</div>
+        <div style="flex:1;height:2px;background:var(--gray-200)" id="citaStepLine"></div>
+        <div id="citaStep2Dot" style="width:28px;height:28px;border-radius:50%;background:var(--gray-200);color:var(--gray-400);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">2</div>
+      </div>
+
+      <!-- PASO 1: Cliente -->
+      <div id="citaPaso1">
+        <p style="font-size:13px;color:var(--gray-400);margin-bottom:16px">¿Quién es el cliente?</p>
+
+        <!-- Botones de opción -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+          <button type="button" id="btnOpcionNuevo" onclick="citaMostrarOpcion('nuevo')"
+            style="padding:14px;border:2px solid var(--gray-200);border-radius:12px;background:var(--white);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all 0.2s">
+            <span style="font-size:22px">👤</span>
+            <span style="font-size:13px;font-weight:600;color:var(--gray-800)">Nuevo cliente</span>
+          </button>
+          <button type="button" id="btnOpcionExistente" onclick="citaMostrarOpcion('existente')"
+            style="padding:14px;border:2px solid var(--gray-200);border-radius:12px;background:var(--white);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all 0.2s">
+            <span style="font-size:22px">🔍</span>
+            <span style="font-size:13px;font-weight:600;color:var(--gray-800)">Cliente existente</span>
+          </button>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div class="form-group">
-            <label>Fecha</label>
-            <input type="date" id="citaFecha" required>
-          </div>
-          <div class="form-group">
-            <label>Hora</label>
-            <input type="time" id="citaHora" required>
-          </div>
+
+        <!-- Form nuevo cliente -->
+        <div id="nuevoClienteInline" style="display:none;background:var(--gray-50);border-radius:10px;padding:12px;flex-direction:column;gap:8px">
+          <input type="text" id="inlineClienteNombre" placeholder="Nombre *" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;outline:none;background:var(--white);color:var(--gray-800)">
+          <input type="tel" id="inlineClienteTelefono" placeholder="Teléfono (opcional)" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;outline:none;background:var(--white);color:var(--gray-800)">
+          <button type="button" class="btn-primary" style="padding:8px;font-size:13px" onclick="guardarClienteInline()">+ Agregar y continuar</button>
         </div>
-        <div class="form-group">
-          <label>Duración (minutos)</label>
-          <select id="citaDuracion">
-            <option value="30">30 min</option>
-            <option value="45">45 min</option>
-            <option value="60" selected>1 hora</option>
-            <option value="90">1h 30min</option>
-            <option value="120">2 horas</option>
-          </select>
+
+        <!-- Select cliente existente -->
+        <div id="selectClienteExistente" style="display:none">
+          <input type="text" id="citaBuscarCliente" placeholder="Buscar cliente..." oninput="filtrarClientesLista()"
+            style="width:100%;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:10px;font-size:14px;outline:none;background:var(--white);color:var(--gray-800);box-sizing:border-box;margin-bottom:8px">
+          <div id="citaClientesLista" style="max-height:180px;overflow-y:auto;border:1.5px solid var(--gray-200);border-radius:10px;background:var(--white)"></div>
+          <input type="hidden" id="citaClienteId">
         </div>
-        <div class="form-group">
-          <label>Servicio / Motivo</label>
-          <input type="text" id="citaServicio" placeholder="Ej: Consulta, Terapia, Control...">
-        </div>
-        <div class="form-group">
-          <label>Estado</label>
-          <select id="citaEstado">
-            <option value="pendiente">Pendiente</option>
-            <option value="confirmada">Confirmada</option>
-            <option value="completada">Completada</option>
-            <option value="cancelada">Cancelada</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Notas</label>
-          <textarea id="citaNotas" placeholder="Observaciones adicionales..." rows="2" style="resize:vertical"></textarea>
-        </div>
-        <div class="modal-actions">
+
+        <div class="modal-actions" style="margin-top:20px">
           <button type="button" class="btn-secondary" onclick="closeModal('modalCita')">Cancelar</button>
-          <button type="submit" class="btn-primary">Guardar Cita</button>
+          <button type="button" class="btn-primary" onclick="citaIrPaso2()">Siguiente →</button>
         </div>
-      </form>
+      </div>
+
+      <!-- PASO 2: Detalles -->
+      <div id="citaPaso2" style="display:none">
+        <p style="font-size:13px;color:var(--gray-400);margin-bottom:16px" id="citaClienteSeleccionado"></p>
+        <form onsubmit="guardarCita(event)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="form-group">
+              <label>Fecha</label>
+              <input type="date" id="citaFecha" required>
+            </div>
+            <div class="form-group">
+              <label>Hora</label>
+              <input type="time" id="citaHora" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Duración</label>
+            <select id="citaDuracion">
+              <option value="30">30 min</option>
+              <option value="45">45 min</option>
+              <option value="60" selected>1 hora</option>
+              <option value="90">1h 30min</option>
+              <option value="120">2 horas</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Servicio / Motivo</label>
+            <input type="text" id="citaServicio" placeholder="Ej: Consulta, Terapia, Control...">
+          </div>
+          <div class="form-group">
+            <label>Estado</label>
+            <select id="citaEstado">
+              <option value="pendiente">Pendiente</option>
+              <option value="confirmada">Confirmada</option>
+              <option value="completada">Completada</option>
+              <option value="cancelada">Cancelada</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Notas</label>
+            <textarea id="citaNotas" placeholder="Observaciones adicionales..." rows="2" style="resize:vertical"></textarea>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" onclick="citaIrPaso1()">← Volver</button>
+            <button type="submit" class="btn-primary">Guardar Cita</button>
+          </div>
+        </form>
+      </div>
+
     </div>
   </div>
 
@@ -870,20 +914,39 @@
   <script>
     lucide.createIcons();
 
+    function toggleModulo(cb, checked, grid) {
+      cb.checked = checked;
+      cb.closest('.modulo-card').classList.toggle('selected', checked);
+      // Si se activa Agenda, activar Clientes automáticamente
+      if (cb.value === 'agenda' && checked) {
+        const clientesCb = grid.querySelector('input[value="clientes"]');
+        if (clientesCb && !clientesCb.checked) {
+          clientesCb.checked = true;
+          clientesCb.closest('.modulo-card').classList.add('selected');
+        }
+      }
+      // Si se desactiva Clientes, desactivar Agenda también
+      if (cb.value === 'clientes' && !checked) {
+        const agendaCb = grid.querySelector('input[value="agenda"]');
+        if (agendaCb && agendaCb.checked) {
+          agendaCb.checked = false;
+          agendaCb.closest('.modulo-card').classList.remove('selected');
+        }
+      }
+    }
+
     // Toggle módulos wizard
     document.querySelectorAll('#wModulosGrid .modulo-card').forEach(card => {
       card.addEventListener('click', function() {
         const cb = this.querySelector('input');
-        cb.checked = !cb.checked;
-        this.classList.toggle('selected', cb.checked);
+        toggleModulo(cb, !cb.checked, document.getElementById('wModulosGrid'));
       });
     });
     // Toggle módulos ajustes
     document.querySelectorAll('#ajusteModulos .modulo-card').forEach(card => {
       card.addEventListener('click', function() {
         const cb = this.querySelector('input');
-        cb.checked = !cb.checked;
-        this.classList.toggle('selected', cb.checked);
+        toggleModulo(cb, !cb.checked, document.getElementById('ajusteModulos'));
       });
     });
   </script>

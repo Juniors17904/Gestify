@@ -377,6 +377,8 @@ async function eliminarNegocio(negocioId) {
   await db.from('productos').delete().eq('negocio_id', negocioId);
   await db.from('caja').delete().eq('negocio_id', negocioId);
   await db.from('empleados').delete().eq('negocio_id', negocioId);
+  await db.from('citas').delete().eq('negocio_id', negocioId);
+  await db.from('clientes').delete().eq('negocio_id', negocioId);
   const { error } = await db.from('negocios').delete().eq('id', negocioId);
 
   if (error) { showToast('Error al eliminar', 'error'); return; }
@@ -406,7 +408,7 @@ async function guardarAjustes() {
   const { error } = await db
     .from('negocios')
     .update({ nombre, tipo, moneda, ruc, telefono, direccion, stock_minimo: stockMinimo, modulos })
-    .eq('owner_id', currentUser.id);
+    .eq('id', currentBusiness.id);
 
   if (error) { showToast('Error al guardar', 'error'); return; }
 

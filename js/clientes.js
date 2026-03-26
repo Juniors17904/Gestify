@@ -36,6 +36,7 @@ function renderTablaClientes(lista) {
       </td>
     </tr>
   `).join('');
+  if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
 function buscarCliente(query) {
@@ -95,20 +96,43 @@ async function eliminarCliente(id) {
   loadClientes();
 }
 
-async function actualizarSelectClientes() {
-  const select = document.getElementById('citaClienteId');
-  if (!select) return;
+let _clientesLista = [];
 
+async function actualizarSelectClientes() {
   const { data } = await db
     .from('clientes')
     .select('id, nombre')
     .eq('negocio_id', currentBusiness?.id)
     .order('nombre');
 
-  const valorActual = select.value;
-  select.innerHTML = '<option value="">Selecciona un cliente</option>' +
-    (data || []).map(c =>
-      `<option value="${c.id}">${c.nombre}</option>`
-    ).join('');
-  if (valorActual) select.value = valorActual;
+  _clientesLista = data || [];
+  renderClientesLista(_clientesLista);
+}
+
+function renderClientesLista(lista) {
+  const el = document.getElementById('citaClientesLista');
+  if (!el) return;
+  if (!lista.length) {
+    el.innerHTML = '<p style="padding:12px;font-size:13px;color:var(--gray-400);text-align:center">Sin clientes</p>';
+    return;
+  }
+  el.innerHTML = lista.map(c => `
+    <div onclick="seleccionarClienteCita('${c.id}', '${c.nombre.replace(/'/g, "\\'")}')"
+      style="padding:10px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--gray-100);color:var(--gray-800);transition:background 0.15s"
+      onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background=''">
+      ${c.nombre}
+    </div>
+  `).join('');
+}
+
+function filtrarClientesLista() {
+  const q = document.getElementById('citaBuscarCliente').value.toLowerCase();
+  const filtrados = _clientesLista.filter(c => c.nombre.toLowerCase().includes(q));
+  renderClientesLista(filtrados);
+}
+
+function seleccionarClienteCita(id, nombre) {
+  document.getElementById('citaClienteId').value = id;
+  document.getElementById('citaBuscarCliente').value = nombre;
+  document.getElementById('citaClientesLista').innerHTML = '';
 }

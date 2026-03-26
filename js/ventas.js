@@ -1,7 +1,12 @@
 // ===== VENTAS =====
 
 async function loadVentas() {
-  actualizarSelectProductos();
+  const tieneInventario = currentBusiness?.modulos?.includes('inventario');
+
+  document.getElementById('ventaProductoSelectGroup').style.display = tieneInventario ? '' : 'none';
+  document.getElementById('ventaProductoLibreGroup').style.display  = tieneInventario ? 'none' : '';
+
+  if (tieneInventario) actualizarSelectProductos();
 
   const hoy = new Date().toISOString().split('T')[0];
   const filtro = document.getElementById('filtroFechaVenta');
@@ -35,10 +40,11 @@ function renderTablaVentas(ventas) {
 
   tbody.innerHTML = ventas.map(v => {
     const item = v.venta_items?.[0];
+    const nombreProducto = item?.productos?.nombre || item?.descripcion || '-';
     return `
       <tr>
         <td>${formatTime(v.created_at)}</td>
-        <td>${item?.productos?.nombre || '-'}</td>
+        <td>${nombreProducto}</td>
         <td>${item?.cantidad || '-'}</td>
         <td><strong>${formatMoney(v.total)}</strong></td>
       </tr>
@@ -64,48 +70,79 @@ function calcularTotalVenta() {
 async function guardarVenta(e) {
   e.preventDefault();
 
-  const productoId = document.getElementById('ventaProducto').value;
+  const tieneInventario = currentBusiness?.modulos?.includes('inventario');
   const cantidad = parseInt(document.getElementById('ventaCantidad').value);
-  const precio = parseFloat(document.getElementById('ventaPrecio').value);
+  const precio   = parseFloat(document.getElementById('ventaPrecio').value);
   const negocioId = currentBusiness?.id;
 
-  if (!productoId) { showToast('Selecciona un producto', 'error'); return; }
+  if (!cantidad || !precio) { showToast('Completa cantidad y precio', 'error'); return; }
 
-  const select = document.getElementById('ventaProducto');
-  const opt = select.options[select.selectedIndex];
-  const stockActual = parseInt(opt.dataset.stock);
+  let productoId = null;
+  let descripcion = '';
 
-  if (cantidad > stockActual) {
-    showToast(`Stock insuficiente (disponible: ${stockActual})`, 'error');
-    return;
+  if (tieneInventario) {
+    productoId = document.getElementById('ventaProducto').value;
+    if (!productoId) { showToast('Selecciona un producto', 'error'); return; }
+
+    const select = document.getElementById('ventaProducto');
+    const opt = select.options[select.selectedIndex];
+    const stockActual = parseInt(opt.dataset.stock);
+
+    if (cantidad > stockActual) {
+      showToast(`Stock insuficiente (disponible: ${stockActual})`, 'error');
+      return;
+    }
+
+    descripcion = opt.text.split(' (')[0];
+
+    // Registrar venta
+    const { data: venta, error } = await db.from('ventas').insert({
+      negocio_id: negocioId,
+      total: cantidad * precio
+    }).select().single();
+    if (error) { showToast('Error al registrar venta', 'error'); return; }
+
+    await db.from('venta_items').insert({
+      venta_id: venta.id,
+      producto_id: productoId,
+      cantidad,
+      precio_unitario: precio
+    });
+
+    // Descontar stock
+    await db.from('productos').update({ stock: stockActual - cantidad }).eq('id', productoId);
+
+    if (currentBusiness?.modulos?.includes('caja')) {
+      await db.from('caja').insert({
+        negocio_id: negocioId, tipo: 'ingreso',
+        monto: cantidad * precio, descripcion: `Venta: ${descripcion}`
+      });
+    }
+
+  } else {
+    descripcion = document.getElementById('ventaDescripcion').value.trim() || 'Venta';
+
+    const { data: venta, error } = await db.from('ventas').insert({
+      negocio_id: negocioId,
+      total: cantidad * precio
+    }).select().single();
+    if (error) { showToast('Error al registrar venta', 'error'); return; }
+
+    await db.from('venta_items').insert({
+      venta_id: venta.id,
+      producto_id: null,
+      cantidad,
+      precio_unitario: precio,
+      descripcion
+    });
+
+    if (currentBusiness?.modulos?.includes('caja')) {
+      await db.from('caja').insert({
+        negocio_id: negocioId, tipo: 'ingreso',
+        monto: cantidad * precio, descripcion: `Venta: ${descripcion}`
+      });
+    }
   }
-
-  // Registrar venta
-  const { data: venta, error } = await db.from('ventas').insert({
-    negocio_id: negocioId,
-    total: cantidad * precio
-  }).select().single();
-
-  if (error) { showToast('Error al registrar venta', 'error'); return; }
-
-  // Registrar item
-  await db.from('venta_items').insert({
-    venta_id: venta.id,
-    producto_id: productoId,
-    cantidad,
-    precio_unitario: precio
-  });
-
-  // Actualizar stock
-  await db.from('productos').update({ stock: stockActual - cantidad }).eq('id', productoId);
-
-  // Registrar ingreso en caja
-  await db.from('caja').insert({
-    negocio_id: negocioId,
-    tipo: 'ingreso',
-    monto: cantidad * precio,
-    descripcion: `Venta: ${opt.text.split(' (')[0]}`
-  });
 
   showToast('Venta registrada', 'success');
   closeModal('modalVenta');

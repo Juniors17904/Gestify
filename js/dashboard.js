@@ -167,7 +167,7 @@ function renderUltimosClientes(lista) {
   const el = document.getElementById('ultimosClientes');
   if (!el) return;
   if (!lista.length) {
-    el.innerHTML = '<p class="empty-text">No hay pacientes aún</p>';
+    el.innerHTML = '<p class="empty-text">No hay clientes aún</p>';
     return;
   }
   el.innerHTML = lista.map(c => `
@@ -195,7 +195,7 @@ function renderCitasHoy(lista) {
   };
   el.innerHTML = lista.map(c => {
     const hora = c.hora ? c.hora.slice(0, 5) : '--:--';
-    const nombre = c.clientes?.nombre || 'Cliente';
+    const nombre = c.clientes?.nombre || 'Sin cliente asignado';
     const badge = estadoBadge[c.estado] || estadoBadge.pendiente;
     return `
       <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-100)">

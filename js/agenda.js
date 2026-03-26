@@ -74,7 +74,7 @@ function renderAgendaLista(lista) {
   }
 
   el.innerHTML = lista.map(c => {
-    const nombre = c.clientes?.nombre || 'Paciente sin nombre';
+    const nombre = c.clientes?.nombre || 'Sin cliente asignado';
     const telefono = c.clientes?.telefono || '';
     const hora = c.hora ? c.hora.slice(0, 5) : '--:--';
     const durMin = c.duracion || 60;
@@ -111,6 +111,70 @@ function renderAgendaLista(lista) {
   }).join('');
 
   if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function citaMostrarOpcion(opcion) {
+  const btnNuevo      = document.getElementById('btnOpcionNuevo');
+  const btnExistente  = document.getElementById('btnOpcionExistente');
+  const formNuevo     = document.getElementById('nuevoClienteInline');
+  const formExistente = document.getElementById('selectClienteExistente');
+
+  // Resetear estilos
+  btnNuevo.style.borderColor     = 'var(--gray-200)';
+  btnExistente.style.borderColor = 'var(--gray-200)';
+  btnNuevo.style.background      = 'var(--white)';
+  btnExistente.style.background  = 'var(--white)';
+  formNuevo.style.display        = 'none';
+  formExistente.style.display    = 'none';
+
+  if (opcion === 'nuevo') {
+    btnNuevo.style.borderColor = 'var(--primary)';
+    btnNuevo.style.background  = 'var(--primary-light)';
+    formNuevo.style.display    = 'flex';
+    document.getElementById('inlineClienteNombre').focus();
+  } else {
+    btnExistente.style.borderColor = 'var(--primary)';
+    btnExistente.style.background  = 'var(--primary-light)';
+    formExistente.style.display    = 'block';
+  }
+}
+
+function citaIrPaso2() {
+  const clienteId = document.getElementById('citaClienteId').value;
+  const nombre = document.getElementById('inlineClienteNombre').value.trim();
+  if (!clienteId && !nombre) {
+    showToast('Selecciona o crea un cliente', 'error');
+    return;
+  }
+  // Mostrar nombre del cliente seleccionado en paso 2
+  const buscar = document.getElementById('citaBuscarCliente');
+  const nombreCliente = clienteId
+    ? (buscar?.value || 'Cliente seleccionado')
+    : nombre;
+  document.getElementById('citaClienteSeleccionado').textContent = '👤 ' + nombreCliente;
+
+  document.getElementById('citaPaso1').style.display = 'none';
+  document.getElementById('citaPaso2').style.display = 'block';
+  // Actualizar indicador
+  document.getElementById('citaStep2Dot').style.background = 'var(--primary)';
+  document.getElementById('citaStep2Dot').style.color = 'white';
+  document.getElementById('citaStepLine').style.background = 'var(--primary)';
+}
+
+function citaIrPaso1() {
+  document.getElementById('citaPaso1').style.display = 'block';
+  document.getElementById('citaPaso2').style.display = 'none';
+  // Resetear indicador
+  document.getElementById('citaStep2Dot').style.background = 'var(--gray-200)';
+  document.getElementById('citaStep2Dot').style.color = 'var(--gray-400)';
+  document.getElementById('citaStepLine').style.background = 'var(--gray-200)';
+  // Resetear opciones
+  document.getElementById('nuevoClienteInline').style.display = 'none';
+  document.getElementById('selectClienteExistente').style.display = 'none';
+  document.getElementById('btnOpcionNuevo').style.borderColor = 'var(--gray-200)';
+  document.getElementById('btnOpcionExistente').style.borderColor = 'var(--gray-200)';
+  document.getElementById('btnOpcionNuevo').style.background = 'var(--white)';
+  document.getElementById('btnOpcionExistente').style.background = 'var(--white)';
 }
 
 function toggleNuevoClienteInline() {
@@ -161,9 +225,10 @@ function abrirModalCita(fechaStr) {
   document.getElementById('citaEstado').value = 'pendiente';
   document.getElementById('citaNotas').value = '';
   document.getElementById('citaClienteId').value = '';
-  document.getElementById('nuevoClienteInline').style.display = 'none';
   document.getElementById('inlineClienteNombre').value = '';
   document.getElementById('inlineClienteTelefono').value = '';
+  // Resetear wizard al paso 1
+  citaIrPaso1();
   actualizarSelectClientes();
   showModal('modalCita');
 }
@@ -214,6 +279,14 @@ async function editarCita(id) {
   document.getElementById('citaServicio').value = c.servicio || '';
   document.getElementById('citaEstado').value = c.estado || 'pendiente';
   document.getElementById('citaNotas').value = c.notas || '';
+  // Al editar ir directo al paso 2
+  const nombre = c.clientes?.nombre || 'Sin cliente asignado';
+  document.getElementById('citaClienteSeleccionado').textContent = '👤 ' + nombre;
+  document.getElementById('citaPaso1').style.display = 'none';
+  document.getElementById('citaPaso2').style.display = 'block';
+  document.getElementById('citaStep2Dot').style.background = 'var(--primary)';
+  document.getElementById('citaStep2Dot').style.color = 'white';
+  document.getElementById('citaStepLine').style.background = 'var(--primary)';
   showModal('modalCita');
 }
 
