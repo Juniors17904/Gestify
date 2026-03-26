@@ -7,6 +7,10 @@
 }
 
 /* Comportamiento de app nativa */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
 body {
   -webkit-user-select: none;
   user-select: none;

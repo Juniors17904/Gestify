@@ -3,6 +3,8 @@
   display: flex;
   min-height: 100vh;
   background: #F0F2F5;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 /* ===== SIDEBAR ===== */
