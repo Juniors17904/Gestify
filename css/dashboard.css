@@ -888,10 +888,12 @@
 
   /* Ajustes: tabs scrollables en móvil */
   .ajustes-tabs {
+    width: 100%;
+    max-width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     flex-wrap: nowrap;
-    max-width: 100%;
+    box-sizing: border-box;
   }
   .ajuste-tab {
     flex-shrink: 0;
@@ -904,6 +906,11 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+  }
+
+  /* Section ajustes sin overflow */
+  #section-ajustes {
+    overflow-x: hidden;
   }
 }
 
