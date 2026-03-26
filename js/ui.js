@@ -526,6 +526,8 @@ async function completarSetup() {
   });
 
   currentBusiness = negocio;
+  localStorage.setItem('empresaActiva', negocio.id);
+  userEmpresas.push({ negocio, rol: 'admin' });
   document.getElementById('modalSetupWizard').style.display = 'none';
   setupDashboardUI(nombre, negocioNombre, 'admin');
   showToast('¡Configuración guardada!', 'success');
