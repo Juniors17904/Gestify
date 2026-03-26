@@ -148,6 +148,7 @@
 /* ===== MAIN CONTENT ===== */
 .main-content {
   flex: 1;
+  min-width: 0;
   margin-left: var(--sidebar-width);
   min-height: 100vh;
   display: flex;
@@ -888,29 +889,13 @@
 
   /* Ajustes: tabs scrollables en móvil */
   .ajustes-tabs {
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: auto !important;
+    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     flex-wrap: nowrap;
-    box-sizing: border-box !important;
   }
   .ajuste-tab {
     flex-shrink: 0;
     white-space: nowrap;
-  }
-
-  /* Panels ajustes: no exceder ancho del viewport */
-  .ajuste-panel.card,
-  .ajustes-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Section ajustes sin overflow */
-  #section-ajustes {
-    overflow-x: hidden !important;
   }
 }
 
