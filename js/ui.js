@@ -29,7 +29,9 @@ async function initDashboard() {
   const { data: { session } } = await db.auth.getSession();
   if (!session) return; // auth.js ya redirige a index.html
 
-  currentUser = session.user;
+  // getUser() trae user_metadata fresco del servidor (para sincronizar tema/color)
+  const { data: { user: freshUser } } = await db.auth.getUser();
+  currentUser = freshUser || session.user;
   const nombre = currentUser.user_metadata?.name || currentUser.user_metadata?.full_name || currentUser.email;
 
   // Cargar todas las empresas del usuario (propias + como empleado)
