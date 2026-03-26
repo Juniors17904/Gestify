@@ -509,6 +509,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group label {
@@ -520,6 +522,8 @@ body {
 .form-group input,
 .form-group select,
 .form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
   padding: 12px 14px;
   border: 1.5px solid var(--gray-200);
   border-radius: 10px;
