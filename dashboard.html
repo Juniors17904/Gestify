@@ -265,11 +265,15 @@
           <button class="btn-icon" onclick="agendaCambiarDia(1)"><i data-lucide="chevron-right"></i></button>
           <button class="btn-secondary btn-sm" onclick="agendaIrHoy()">Hoy</button>
         </div>
-        <button class="btn-primary" onclick="abrirModalCita()">+ Nueva Cita</button>
       </div>
-      <div id="agendaLista" class="agenda-lista">
-        <div class="list-empty"><p>No hay citas este día</p></div>
+      <div class="card agenda-card">
+        <div id="agendaLista" class="agenda-lista">
+          <div class="list-empty"><p>No hay citas este día</p></div>
+        </div>
       </div>
+      <button class="fab-nueva-cita" onclick="abrirModalCita()" title="Nueva Cita">
+        <i data-lucide="plus"></i>
+      </button>
     </section>
 
     <!-- AJUSTES -->

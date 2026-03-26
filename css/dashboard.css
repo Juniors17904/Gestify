@@ -448,6 +448,7 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 12px;
+  width: 100%;
 }
 
 .section-toolbar .btn-primary {
@@ -788,6 +789,11 @@
 .action-btn:hover { background: var(--gray-100); }
 .action-btn.edit:hover { background: #EEF0FF; }
 .action-btn.delete:hover { background: #FEE2E2; }
+.action-btn svg { width: 15px; height: 15px; stroke-width: 2; pointer-events: none; }
+.action-btn.edit svg { stroke: var(--gray-500); }
+.action-btn.edit:hover svg { stroke: var(--primary); }
+.action-btn.delete svg { stroke: var(--gray-500); }
+.action-btn.delete:hover svg { stroke: #EF4444; }
 
 .badge-stock {
   padding: 3px 8px;
@@ -879,6 +885,40 @@
   .bottom-nav { display: block; }
 }
 
+/* ===== FAB NUEVA CITA ===== */
+.fab-nueva-cita {
+  position: fixed;
+  bottom: 84px; /* sobre el bottom nav */
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: none; /* solo visible en sección agenda */
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(108,99,255,0.45);
+  z-index: 90;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.fab-nueva-cita svg { width: 26px; height: 26px; stroke-width: 2.5; }
+.fab-nueva-cita:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(108,99,255,0.55); }
+.fab-nueva-cita:active { transform: scale(0.95); }
+
+/* Mostrar FAB solo cuando la sección agenda está activa */
+#section-agenda.active .fab-nueva-cita { display: flex; }
+
+/* En desktop, posición relativa a main-content */
+@media (min-width: 769px) {
+  .fab-nueva-cita {
+    bottom: 28px;
+    right: 32px;
+  }
+}
+
 /* Botón + agregar cliente inline */
 .btn-add-cliente {
   width: 36px;
@@ -916,6 +956,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
+  justify-content: center;
 }
 
 .agenda-fecha-label {
@@ -944,6 +986,19 @@
 .btn-sm {
   padding: 7px 12px !important;
   font-size: 12px !important;
+}
+
+.agenda-card {
+  padding: 12px;
+  min-height: 160px;
+  border-left: none;
+}
+
+.agenda-card .list-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
 }
 
 .agenda-lista {

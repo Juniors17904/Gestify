@@ -28,7 +28,7 @@ function renderEmpleados(lista) {
         ${emp.email ? `<br><span style="font-size:11px;color:var(--gray-400)">${emp.email}</span>` : ''}
       </div>
       ${emp.rol !== 'admin' ? `
-        <button class="action-btn delete" onclick="eliminarEmpleado('${emp.id}')">🗑️</button>
+        <button class="action-btn delete" onclick="eliminarEmpleado('${emp.id}')"><i data-lucide="trash-2"></i></button>
       ` : ''}
     </div>
   `).join('');

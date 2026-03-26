@@ -103,8 +103,8 @@ function renderAgendaLista(lista) {
         </div>
         <div class="cita-actions">
           <span class="badge-estado ${est.cls}">${est.label}</span>
-          <button class="action-btn edit" onclick="editarCita('${c.id}')">✏️</button>
-          <button class="action-btn delete" onclick="eliminarCita('${c.id}')">🗑️</button>
+          <button class="action-btn edit" onclick="editarCita('${c.id}')"><i data-lucide="pencil"></i></button>
+          <button class="action-btn delete" onclick="eliminarCita('${c.id}')"><i data-lucide="trash-2"></i></button>
         </div>
       </div>
     `;

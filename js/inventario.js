@@ -31,8 +31,8 @@ function renderTablaInventario(lista) {
       <td>${renderStock(p.stock, p.stock_minimo)}</td>
       <td>${p.categoria || '-'}</td>
       <td>
-        <button class="action-btn edit" onclick="editarProducto('${p.id}')">✏️</button>
-        <button class="action-btn delete" onclick="eliminarProducto('${p.id}')">🗑️</button>
+        <button class="action-btn edit" onclick="editarProducto('${p.id}')"><i data-lucide="pencil"></i></button>
+        <button class="action-btn delete" onclick="eliminarProducto('${p.id}')"><i data-lucide="trash-2"></i></button>
       </td>
     </tr>
   `).join('');

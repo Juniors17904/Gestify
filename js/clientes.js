@@ -31,8 +31,8 @@ function renderTablaClientes(lista) {
       <td>${c.email || '-'}</td>
       <td style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.notas || '-'}</td>
       <td>
-        <button class="action-btn edit" onclick="editarCliente('${c.id}')">✏️</button>
-        <button class="action-btn delete" onclick="eliminarCliente('${c.id}')">🗑️</button>
+        <button class="action-btn edit" onclick="editarCliente('${c.id}')"><i data-lucide="pencil"></i></button>
+        <button class="action-btn delete" onclick="eliminarCliente('${c.id}')"><i data-lucide="trash-2"></i></button>
       </td>
     </tr>
   `).join('');
