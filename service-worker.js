@@ -1,6 +1,6 @@
 // ===== SERVICE WORKER (PWA) =====
 
-const CACHE_NAME = 'ctrl-negocio-v4';
+const CACHE_NAME = 'ctrl-negocio-v5';
 const ASSETS = [
   '/',
   '/index.html',
