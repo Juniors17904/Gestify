@@ -1,0 +1,4 @@
+node_modules/
+.claude/
+copia.html
+package-lock.json
