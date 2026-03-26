@@ -151,7 +151,7 @@ function setupDashboardUI(nombre, negocioNombre, rol) {
   if (temaGuardado) setTema(temaGuardado);
   const colorGuardado = localStorage.getItem('colorPrimary');
   if (colorGuardado) {
-    document.documentElement.style.setProperty('--primary', colorGuardado);
+    setColor(colorGuardado, null);
     document.querySelectorAll('.color-dot').forEach(d => {
       d.classList.toggle('active', d.style.background === colorGuardado);
     });
@@ -428,10 +428,22 @@ function setTema(tema) {
 }
 
 // Color principal
+const COLOR_PALETTE = {
+  '#6C63FF': { dark: '#5A52D5', light: '#EEF0FF' },
+  '#3B82F6': { dark: '#2563EB', light: '#DBEAFE' },
+  '#22C55E': { dark: '#16A34A', light: '#D1FAE5' },
+  '#F59E0B': { dark: '#D97706', light: '#FEF3C7' },
+  '#EF4444': { dark: '#DC2626', light: '#FEE2E2' },
+  '#EC4899': { dark: '#DB2777', light: '#FCE7F3' },
+};
+
 function setColor(color, el) {
   document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-  el.classList.add('active');
+  if (el) el.classList.add('active');
+  const palette = COLOR_PALETTE[color] || { dark: color, light: color + '20' };
   document.documentElement.style.setProperty('--primary', color);
+  document.documentElement.style.setProperty('--primary-dark', palette.dark);
+  document.documentElement.style.setProperty('--primary-light', palette.light);
   localStorage.setItem('colorPrimary', color);
 }
 
