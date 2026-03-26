@@ -61,13 +61,22 @@ async function initDashboard() {
   }
 }
 
+function renderAvatar(el, nombre) {
+  const avatarUrl = currentUser?.user_metadata?.avatar_url || currentUser?.user_metadata?.picture;
+  if (avatarUrl) {
+    el.innerHTML = `<img src="${avatarUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" referrerpolicy="no-referrer">`;
+  } else {
+    el.textContent = nombre[0].toUpperCase();
+  }
+}
+
 function setupDashboardUI(nombre, negocioNombre, rol) {
   currentRol = rol;
   currentNombre = nombre;
   // Actualizar UI
   document.getElementById('businessName').textContent = negocioNombre;
   document.getElementById('businessAvatar').textContent = negocioNombre[0].toUpperCase();
-  document.getElementById('headerAvatar').textContent = nombre[0].toUpperCase();
+  renderAvatar(document.getElementById('headerAvatar'), nombre);
   document.getElementById('userRole').textContent = formatRol(rol);
 
   // Permisos por rol
@@ -148,7 +157,7 @@ function setupDashboardUI(nombre, negocioNombre, rol) {
   if (document.getElementById('cuentaNombreDisplay')) {
     document.getElementById('cuentaNombreDisplay').textContent = nombre;
     document.getElementById('cuentaEmailDisplay').textContent = currentUser?.email || '';
-    document.getElementById('cuentaAvatar').textContent = nombre[0].toUpperCase();
+    renderAvatar(document.getElementById('cuentaAvatar'), nombre);
     document.getElementById('ajusteNombreUsuario').value = nombre;
   }
 
@@ -413,7 +422,7 @@ async function guardarCuenta() {
   const nombre = document.getElementById('ajusteNombreUsuario').value;
   const { error } = await db.auth.updateUser({ data: { name: nombre } });
   if (error) { showToast('Error al guardar', 'error'); return; }
-  document.getElementById('headerAvatar').textContent = nombre[0].toUpperCase();
+  renderAvatar(document.getElementById('headerAvatar'), nombre);
   document.getElementById('cuentaAvatar').textContent = nombre[0].toUpperCase();
   document.getElementById('cuentaNombreDisplay').textContent = nombre;
   showToast('Nombre actualizado', 'success');
