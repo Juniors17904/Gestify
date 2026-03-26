@@ -213,6 +213,36 @@ body {
 }
 
 /* Movimientos */
+.movimiento-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.movimiento-item:last-child { border-bottom: none; }
+.movimiento-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.movimiento-desc {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+.movimiento-hora {
+  font-size: 11px;
+  color: var(--gray-400);
+}
+.movimiento-monto {
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.movimiento-monto.ingreso { color: #22c55e; }
+.movimiento-monto.egreso  { color: #ef4444; }
+
 [data-tema="oscuro"] .movimiento-item {
   border-bottom-color: #374151;
 }
@@ -489,7 +519,7 @@ body {
   padding: 12px 14px;
   border: 1.5px solid var(--gray-200);
   border-radius: 10px;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--gray-800);
   background: var(--white);
   transition: border-color 0.2s;
