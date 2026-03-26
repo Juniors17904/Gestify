@@ -150,12 +150,13 @@ function setupDashboardUI(nombre, negocioNombre, rol) {
     document.getElementById('ajusteNombreUsuario').value = nombre;
   }
 
-  // Restaurar tema y color guardados
-  const temaGuardado = localStorage.getItem('tema');
-  if (temaGuardado) setTema(temaGuardado);
-  const colorGuardado = localStorage.getItem('colorPrimary');
+  // Restaurar tema y color — Supabase tiene prioridad sobre localStorage
+  const meta = currentUser?.user_metadata || {};
+  const temaGuardado = meta.tema || localStorage.getItem('tema');
+  if (temaGuardado) setTema(temaGuardado, false);
+  const colorGuardado = meta.colorPrimary || localStorage.getItem('colorPrimary');
   if (colorGuardado) {
-    setColor(colorGuardado, null);
+    setColor(colorGuardado, null, false);
     document.querySelectorAll('.color-dot').forEach(d => {
       d.classList.toggle('active', d.style.background === colorGuardado);
     });
@@ -427,11 +428,14 @@ async function cambiarPassword() {
 }
 
 // Tema
-function setTema(tema) {
+function setTema(tema, sincronizar = true) {
   document.querySelectorAll('.tema-option').forEach(o => o.classList.remove('active'));
   document.getElementById('tema' + tema.charAt(0).toUpperCase() + tema.slice(1)).classList.add('active');
   document.documentElement.setAttribute('data-tema', tema);
   localStorage.setItem('tema', tema);
+  if (sincronizar && currentUser) {
+    db.auth.updateUser({ data: { tema } });
+  }
 }
 
 // Color principal
@@ -444,7 +448,7 @@ const COLOR_PALETTE = {
   '#EC4899': { dark: '#DB2777', light: '#FCE7F3' },
 };
 
-function setColor(color, el) {
+function setColor(color, el, sincronizar = true) {
   document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
   if (el) el.classList.add('active');
   const palette = COLOR_PALETTE[color] || { dark: color, light: color + '20' };
@@ -452,6 +456,9 @@ function setColor(color, el) {
   document.documentElement.style.setProperty('--primary-dark', palette.dark);
   document.documentElement.style.setProperty('--primary-light', palette.light);
   localStorage.setItem('colorPrimary', color);
+  if (sincronizar && currentUser) {
+    db.auth.updateUser({ data: { colorPrimary: color } });
+  }
 }
 
 // Mostrar Pro
