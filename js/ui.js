@@ -63,10 +63,11 @@ async function initDashboard() {
 
 function renderAvatar(el, nombre) {
   const avatarUrl = currentUser?.user_metadata?.avatar_url || currentUser?.user_metadata?.picture;
+  const inicial = nombre?.[0]?.toUpperCase() || '?';
   if (avatarUrl) {
-    el.innerHTML = `<img src="${avatarUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" referrerpolicy="no-referrer">`;
+    el.innerHTML = `<img src="${avatarUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='${inicial}'">`;
   } else {
-    el.textContent = nombre[0].toUpperCase();
+    el.textContent = inicial;
   }
 }
 
