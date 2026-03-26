@@ -790,9 +790,9 @@
 .action-btn.edit:hover { background: #EEF0FF; }
 .action-btn.delete:hover { background: #FEE2E2; }
 .action-btn svg { width: 15px; height: 15px; stroke-width: 2; pointer-events: none; }
-.action-btn.edit svg { stroke: var(--gray-500); }
+.action-btn.edit svg { stroke: var(--gray-600); }
 .action-btn.edit:hover svg { stroke: var(--primary); }
-.action-btn.delete svg { stroke: var(--gray-500); }
+.action-btn.delete svg { stroke: var(--gray-600); }
 .action-btn.delete:hover svg { stroke: #EF4444; }
 
 .badge-stock {

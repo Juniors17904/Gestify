@@ -97,14 +97,14 @@ function renderAgendaLista(lista) {
           <div class="cita-nombre">${nombre}</div>
           ${c.servicio ? `<div class="cita-servicio">${c.servicio}</div>` : ''}
           <div class="cita-meta">
-            <span class="cita-duracion"><i data-lucide="clock" style="width:12px;height:12px"></i> ${durLabel}</span>
-            ${telefono ? `<span class="cita-tel"><i data-lucide="phone" style="width:12px;height:12px"></i> ${telefono}</span>` : ''}
+            <span class="cita-duracion"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${durLabel}</span>
+            ${telefono ? `<span class="cita-tel"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.1a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> ${telefono}</span>` : ''}
           </div>
         </div>
         <div class="cita-actions">
           <span class="badge-estado ${est.cls}">${est.label}</span>
-          <button class="action-btn edit" onclick="editarCita('${c.id}')"><i data-lucide="pencil"></i></button>
-          <button class="action-btn delete" onclick="eliminarCita('${c.id}')"><i data-lucide="trash-2"></i></button>
+          <button class="action-btn edit" onclick="editarCita('${c.id}')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="action-btn delete" onclick="eliminarCita('${c.id}')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
         </div>
       </div>
     `;
