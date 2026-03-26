@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#6C63FF">
+  <title>Dashboard - Gestify</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="icon" href="icons/icon-192.png">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="app-page">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <img src="logos/LOGOv3.png" style="width:200px;height:auto" alt="Gestify">
+    </div>
+
+    <div class="business-info">
+      <div class="business-avatar" id="businessAvatar">B</div>
+      <div>
+        <p class="business-name" id="businessName">Mi Negocio</p>
+        <span class="role-badge" id="userRole">Admin</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" onclick="showSection('dashboard')">
+        <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span> Dashboard
+      </a>
+      <a href="#" class="nav-item" onclick="showSection('inventario')">
+        <span class="nav-icon"><i data-lucide="package"></i></span> Inventario
+      </a>
+      <a href="#" class="nav-item" onclick="showSection('ventas')">
+        <span class="nav-icon"><i data-lucide="shopping-cart"></i></span> Ventas
+      </a>
+      <a href="#" class="nav-item" onclick="showSection('caja')">
+        <span class="nav-icon"><i data-lucide="wallet"></i></span> Caja
+      </a>
+      <a href="#" class="nav-item" id="navEmpleados" onclick="showSection('empleados')">
+        <span class="nav-icon"><i data-lucide="shield-check"></i></span> Accesos
+      </a>
+      <a href="#" class="nav-item" onclick="showSection('reportes')">
+        <span class="nav-icon"><i data-lucide="bar-chart-2"></i></span> Reportes
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div id="btnDemoWrap" style="display:none;padding:8px;flex-direction:column;gap:6px">
+        <button id="btnAgregarDemo" onclick="cargarDataDemo()" style="width:100%;padding:10px;background:linear-gradient(135deg,#6C63FF,#F59E0B);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer">
+          ✨ Agregar data de ejemplo
+        </button>
+        <button id="btnBorrarDemo" onclick="borrarDataDemo()" style="width:100%;padding:10px;background:#FEE2E2;color:#DC2626;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:none">
+          🗑️ Borrar data de ejemplo
+        </button>
+      </div>
+      <a href="#" class="nav-item" onclick="mostrarSetup()">
+        <span class="nav-icon"><i data-lucide="rocket"></i></span> Setup
+      </a>
+      <a href="#" class="nav-item" onclick="showSection('ajustes')">
+        <span class="nav-icon"><i data-lucide="settings"></i></span> Ajustes
+      </a>
+      <a href="#" class="nav-item logout" onclick="handleLogout()">
+        <span class="nav-icon"><i data-lucide="log-out"></i></span> Cerrar Sesión
+      </a>
+    </div>
+  </aside>
+
+  <!-- Overlay para móvil -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- Contenido principal -->
+  <main class="main-content">
+
+    <!-- Header -->
+    <header class="app-header">
+      <button class="menu-btn" onclick="toggleSidebar()"><i data-lucide="menu"></i></button>
+
+      <!-- Selector de empresa -->
+      <div class="empresa-selector" id="empresaSelector" onclick="toggleEmpresaDropdown()">
+        <div class="empresa-selector-dot" id="empresaSelectorDot">N</div>
+        <span class="empresa-selector-nombre" id="empresaSelectorNombre">Mi Negocio</span>
+        <span class="empresa-selector-chevron">▾</span>
+      </div>
+
+      <!-- Dropdown -->
+      <div class="empresa-dropdown hidden" id="empresaDropdown"></div>
+
+      <h2 class="page-title" id="pageTitle" style="display:none">Dashboard</h2>
+      <div style="margin-left:auto">
+        <div class="user-avatar" id="headerAvatar">U</div>
+      </div>
+    </header>
+
+    <!-- Secciones -->
+
+    <!-- DASHBOARD -->
+    <section id="section-dashboard" class="section active">
+      <div class="stats-grid">
+        <div class="stat-card purple">
+          <div class="stat-icon"><i data-lucide="trending-up"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Ventas Hoy</span>
+            <span class="stat-value" id="statVentasHoy">S/ 0.00</span>
+          </div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon"><i data-lucide="package"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Productos</span>
+            <span class="stat-value" id="statProductos">0</span>
+          </div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon"><i data-lucide="wallet"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">En Caja</span>
+            <span class="stat-value" id="statCaja">S/ 0.00</span>
+          </div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-icon"><i data-lucide="alert-triangle"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Stock Bajo</span>
+            <span class="stat-value" id="statStockBajo">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3>Últimas Ventas</h3>
+            <a href="#" onclick="showSection('ventas')" class="ver-mas">Ver todas</a>
+          </div>
+          <div id="ultimasVentas" class="list-empty">
+            <p>No hay ventas hoy</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Stock Bajo</h3>
+            <a href="#" onclick="showSection('inventario')" class="ver-mas">Ver todos</a>
+          </div>
+          <div id="stockBajoList" class="list-empty">
+            <p>Todo en orden</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INVENTARIO -->
+    <section id="section-inventario" class="section hidden">
+      <div class="section-toolbar">
+        <input type="text" class="search-input" placeholder="Buscar producto..." oninput="buscarProducto(this.value)">
+        <button class="btn-primary" onclick="showModal('modalProducto')">+ Agregar</button>
+      </div>
+      <div class="card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Categoría</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tablaInventario">
+            <tr><td colspan="5" class="empty-row">Sin productos aún</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- VENTAS -->
+    <section id="section-ventas" class="section hidden">
+      <div class="section-toolbar">
+        <input type="date" class="date-input" id="filtroFechaVenta" onchange="filtrarVentas()">
+        <button class="btn-primary" onclick="showModal('modalVenta')">+ Nueva Venta</button>
+      </div>
+      <div class="card">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Hora</th>
+              <th>Producto</th>
+              <th>Cant.</th>
+              <th>Total</th>
+              <th>Vendedor</th>
+            </tr>
+          </thead>
+          <tbody id="tablaVentas">
+            <tr><td colspan="5" class="empty-row">Sin ventas aún</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CAJA -->
+    <section id="section-caja" class="section hidden">
+      <div class="caja-grid">
+        <div class="card caja-resumen">
+          <h3>Estado de Caja</h3>
+          <div class="caja-monto">
+            <span>Saldo actual</span>
+            <strong id="cajaSaldo">S/ 0.00</strong>
+          </div>
+          <div class="caja-actions">
+            <button class="btn-success" onclick="showModal('modalIngreso')">+ Ingreso</button>
+            <button class="btn-danger" onclick="showModal('modalEgreso')">- Egreso</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Movimientos</h3>
+          </div>
+          <div id="movimientosCaja" class="list-empty">
+            <p>Sin movimientos hoy</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EMPLEADOS -->
+    <section id="section-empleados" class="section hidden">
+      <div class="section-toolbar">
+        <h3>Accesos y Roles</h3>
+        <button class="btn-primary" onclick="showModal('modalEmpleado')">+ Invitar</button>
+      </div>
+      <div id="listaEmpleados" class="empleados-grid">
+        <p class="empty-text">Sin empleados aún</p>
+      </div>
+    </section>
+
+    <!-- REPORTES -->
+    <section id="section-reportes" class="section hidden">
+      <div class="reportes-toolbar">
+        <select id="reportePeriodo" onchange="cargarReporte()">
+          <option value="hoy">Hoy</option>
+          <option value="semana">Esta semana</option>
+          <option value="mes" selected>Este mes</option>
+        </select>
+        <button class="btn-secondary" onclick="exportarReporte()">📥 Exportar</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card purple">
+          <div class="stat-icon">💰</div>
+          <div class="stat-info">
+            <span class="stat-label">Total Ventas</span>
+            <span class="stat-value" id="reporteTotalVentas">S/ 0.00</span>
+          </div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon">🧾</div>
+          <div class="stat-info">
+            <span class="stat-label">N° Transacciones</span>
+            <span class="stat-value" id="reporteTransacciones">0</span>
+          </div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon">📦</div>
+          <div class="stat-info">
+            <span class="stat-label">Productos Vendidos</span>
+            <span class="stat-value" id="reporteProductosVendidos">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Top Productos</h3></div>
+        <div id="topProductos" class="list-empty"><p>Sin datos</p></div>
+      </div>
+    </section>
+
+    <!-- AJUSTES -->
+    <section id="section-ajustes" class="section hidden">
+
+      <!-- Tabs de ajustes -->
+      <div class="ajustes-tabs">
+        <button class="ajuste-tab active" onclick="showAjusteTab('negocio')">Negocio</button>
+        <button class="ajuste-tab" onclick="showAjusteTab('cuenta')">Mi Cuenta</button>
+        <button class="ajuste-tab" onclick="showAjusteTab('apariencia')">Apariencia</button>
+        <button class="ajuste-tab" onclick="showAjusteTab('plan')">Plan</button>
+      </div>
+
+      <!-- TAB: Negocio -->
+      <div id="ajuste-negocio" class="ajuste-panel card ajustes-card">
+        <h3>Información del Negocio</h3>
+        <div class="form-group">
+          <label>Nombre del negocio</label>
+          <input type="text" id="ajusteNombreNegocio" placeholder="Nombre de tu negocio">
+        </div>
+        <div class="form-group">
+          <label>RUC / DNI</label>
+          <input type="text" id="ajusteRuc" placeholder="Ej: 20123456789">
+        </div>
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="tel" id="ajusteTelefono" placeholder="Ej: 999 888 777">
+        </div>
+        <div class="form-group">
+          <label>Dirección</label>
+          <input type="text" id="ajusteDireccion" placeholder="Av. Principal 123">
+        </div>
+        <div class="form-group">
+          <label>Tipo de negocio</label>
+          <input type="text" id="ajusteTipo" placeholder="Describe tu actividad" maxlength="60">
+        </div>
+        <div class="form-group">
+          <label>Moneda</label>
+          <select id="ajusteMoneda">
+            <option value="S/">Soles (S/)</option>
+            <option value="$">Dólares ($)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Stock mínimo (alerta)</label>
+          <input type="number" id="ajusteStockMinimo" placeholder="5" value="5">
+        </div>
+
+        <div class="form-group">
+          <label>Módulos activos</label>
+          <div id="ajusteModulos" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">
+            <label class="modulo-card"><input type="checkbox" value="inventario"><div class="mcheck"></div><div class="mnombre">Inventario</div></label>
+            <label class="modulo-card"><input type="checkbox" value="ventas"><div class="mcheck"></div><div class="mnombre">Ventas</div></label>
+            <label class="modulo-card"><input type="checkbox" value="caja"><div class="mcheck"></div><div class="mnombre">Caja</div></label>
+            <label class="modulo-card"><input type="checkbox" value="clientes"><div class="mcheck"></div><div class="mnombre">Clientes</div></label>
+            <label class="modulo-card"><input type="checkbox" value="agenda"><div class="mcheck"></div><div class="mnombre">Agenda</div></label>
+            <label class="modulo-card"><input type="checkbox" value="empleados"><div class="mcheck"></div><div class="mnombre">Accesos</div></label>
+            <label class="modulo-card"><input type="checkbox" value="reportes"><div class="mcheck"></div><div class="mnombre">Reportes</div></label>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="guardarAjustes()">Guardar cambios</button>
+      </div>
+
+      <!-- TAB: Mi Cuenta -->
+      <div id="ajuste-cuenta" class="ajuste-panel card ajustes-card" style="display:none">
+        <h3>Mi Cuenta</h3>
+        <div class="cuenta-avatar-section">
+          <div class="cuenta-avatar" id="cuentaAvatar">U</div>
+          <div>
+            <p id="cuentaNombreDisplay" style="font-weight:700;font-size:15px;margin:0 0 4px"></p>
+            <p id="cuentaEmailDisplay" style="font-size:13px;color:#94A3B8;margin:0"></p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Nombre visible</label>
+          <input type="text" id="ajusteNombreUsuario" placeholder="Tu nombre">
+        </div>
+        <button class="btn-primary" onclick="guardarCuenta()" style="margin-bottom:16px">Guardar nombre</button>
+        <hr style="border:none;border-top:1px solid #F0F2F5;margin:8px 0 20px">
+        <h3>Cambiar contraseña</h3>
+        <div class="form-group">
+          <label>Nueva contraseña</label>
+          <input type="password" id="nuevaPassword" placeholder="Mínimo 6 caracteres" minlength="6">
+        </div>
+        <button class="btn-primary" onclick="cambiarPassword()">Actualizar contraseña</button>
+      </div>
+
+      <!-- TAB: Apariencia -->
+      <div id="ajuste-apariencia" class="ajuste-panel card ajustes-card" style="display:none">
+        <h3>Apariencia</h3>
+        <div class="form-group">
+          <label>Tema</label>
+          <div class="tema-options">
+            <div class="tema-option active" id="temaClaro" onclick="setTema('claro')">
+              <div class="tema-preview claro"></div>
+              <span>Claro</span>
+            </div>
+            <div class="tema-option" id="temaOscuro" onclick="setTema('oscuro')">
+              <div class="tema-preview oscuro"></div>
+              <span>Oscuro</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Color principal</label>
+          <div class="color-options">
+            <div class="color-dot active" style="background:#6C63FF" onclick="setColor('#6C63FF', this)"></div>
+            <div class="color-dot" style="background:#3B82F6" onclick="setColor('#3B82F6', this)"></div>
+            <div class="color-dot" style="background:#22C55E" onclick="setColor('#22C55E', this)"></div>
+            <div class="color-dot" style="background:#F59E0B" onclick="setColor('#F59E0B', this)"></div>
+            <div class="color-dot" style="background:#EF4444" onclick="setColor('#EF4444', this)"></div>
+            <div class="color-dot" style="background:#EC4899" onclick="setColor('#EC4899', this)"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Plan -->
+      <div id="ajuste-plan" class="ajuste-panel card ajustes-card" style="display:none">
+        <h3>Tu Plan</h3>
+        <div class="plan-actual">
+          <div class="plan-badge-grande" id="planBadge">Gratis</div>
+          <p id="planDesc" style="color:#64748B;font-size:13px;margin-top:8px">Plan gratuito activo</p>
+        </div>
+        <div class="plan-limites">
+          <div class="limite-item">
+            <span>Productos</span><strong>Hasta 50</strong>
+          </div>
+          <div class="limite-item">
+            <span>Empleados</span><strong>Hasta 2</strong>
+          </div>
+          <div class="limite-item">
+            <span>Reportes</span><strong>Básicos</strong>
+          </div>
+          <div class="limite-item">
+            <span>Soporte</span><strong>Comunidad</strong>
+          </div>
+        </div>
+        <button class="btn-pro" onclick="mostrarPro()">⚡ Mejorar a Pro</button>
+      </div>
+
+    </section>
+    </section>
+
+  </main>
+
+  <!-- ===================== MODALES ===================== -->
+
+  <!-- Modal Producto -->
+  <div id="modalProducto" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalProductoTitle">Agregar Producto</h3>
+        <button onclick="closeModal('modalProducto')">✕</button>
+      </div>
+      <form onsubmit="guardarProducto(event)">
+        <div class="form-group">
+          <label>Nombre del producto</label>
+          <input type="text" id="prodNombre" placeholder="Ej: Arroz 1kg" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Precio de venta</label>
+            <input type="number" id="prodPrecio" placeholder="0.00" step="0.01" min="0" required>
+          </div>
+          <div class="form-group">
+            <label>Stock actual</label>
+            <input type="number" id="prodStock" placeholder="0" min="0" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Stock mínimo</label>
+            <input type="number" id="prodStockMinimo" placeholder="5" min="0" value="5">
+          </div>
+          <div class="form-group">
+            <label>Categoría</label>
+            <input type="text" id="prodCategoria" placeholder="Ej: Polos">
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modalProducto')">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Venta -->
+  <div id="modalVenta" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Registrar Venta</h3>
+        <button onclick="closeModal('modalVenta')">✕</button>
+      </div>
+      <form onsubmit="guardarVenta(event)">
+        <div class="form-group">
+          <label>Producto</label>
+          <select id="ventaProducto" required onchange="actualizarPrecioVenta()">
+            <option value="">Selecciona un producto</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Cantidad</label>
+            <input type="number" id="ventaCantidad" placeholder="1" min="1" value="1" required onchange="calcularTotalVenta()">
+          </div>
+          <div class="form-group">
+            <label>Precio unitario</label>
+            <input type="number" id="ventaPrecio" placeholder="0.00" step="0.01" min="0" required onchange="calcularTotalVenta()">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Total</label>
+          <input type="text" id="ventaTotal" placeholder="S/ 0.00" readonly class="total-display">
+        </div>
+        <div class="form-group">
+          <label>Notas (opcional)</label>
+          <input type="text" id="ventaNotas" placeholder="Ej: Venta al fiado">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modalVenta')">Cancelar</button>
+          <button type="submit" class="btn-primary">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Ingreso/Egreso Caja -->
+  <div id="modalIngreso" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalCajaTitulo">Registrar Ingreso</h3>
+        <button onclick="closeModal('modalIngreso')">✕</button>
+      </div>
+      <form onsubmit="guardarMovimientoCaja(event)">
+        <input type="hidden" id="cajaTipo" value="ingreso">
+        <div class="form-group">
+          <label>Monto</label>
+          <input type="number" id="cajaMonto" placeholder="0.00" step="0.01" min="0.01" required>
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <input type="text" id="cajaDescripcion" placeholder="Ej: Venta en efectivo" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modalIngreso')">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Egreso (mismo modal reutilizado) -->
+  <div id="modalEgreso" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Registrar Egreso</h3>
+        <button onclick="closeModal('modalEgreso')">✕</button>
+      </div>
+      <form onsubmit="guardarMovimientoCaja(event, 'egreso')">
+        <div class="form-group">
+          <label>Monto</label>
+          <input type="number" id="egresoMonto" placeholder="0.00" step="0.01" min="0.01" required>
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <input type="text" id="egresoDescripcion" placeholder="Ej: Pago a proveedor" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modalEgreso')">Cancelar</button>
+          <button type="submit" class="btn-danger">Registrar Egreso</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Empleado -->
+  <div id="modalEmpleado" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Invitar Empleado</h3>
+        <button onclick="closeModal('modalEmpleado')">✕</button>
+      </div>
+      <form onsubmit="crearEmpleado(event)">
+        <div class="form-group">
+          <label>Nombre del empleado</label>
+          <input type="text" id="empleadoNombre" placeholder="Nombre completo" required>
+        </div>
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" id="empleadoEmail" placeholder="correo@ejemplo.com" required>
+        </div>
+        <div class="form-group">
+          <label>Rol</label>
+          <select id="empleadoRol" required>
+            <option value="admin">Administrador (acceso total)</option>
+            <option value="empleado">Empleado (ventas e inventario)</option>
+            <option value="readonly">Solo lectura (reportes)</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modalEmpleado')">Cancelar</button>
+          <button type="submit" class="btn-primary">Enviar invitación</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Bottom Nav (solo móvil) -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav-items">
+      <a class="bottom-nav-item active" onclick="showSection('dashboard')" href="#">
+        <i data-lucide="layout-dashboard"></i><span>Inicio</span>
+      </a>
+      <a class="bottom-nav-item" onclick="showSection('inventario')" href="#">
+        <i data-lucide="package"></i><span>Inventario</span>
+      </a>
+      <a class="bottom-nav-item" onclick="showSection('ventas')" href="#">
+        <i data-lucide="shopping-cart"></i><span>Ventas</span>
+      </a>
+      <a class="bottom-nav-item" onclick="showSection('caja')" href="#">
+        <i data-lucide="wallet"></i><span>Caja</span>
+      </a>
+      <a class="bottom-nav-item" onclick="showSection('reportes')" href="#">
+        <i data-lucide="bar-chart-2"></i><span>Reportes</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Modal Setup Wizard -->
+  <div id="modalSetupWizard" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)this.style.display='none'">
+    <div style="background:white;border-radius:24px;padding:32px 24px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;">
+
+      <!-- Progress -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:28px">
+        <div class="sdot active" id="wdot1">1</div>
+        <div class="sline" id="wline1"></div>
+        <div class="sdot" id="wdot2">2</div>
+        <div class="sline" id="wline2"></div>
+        <div class="sdot" id="wdot3">3</div>
+      </div>
+
+      <!-- Paso 1 -->
+      <div id="wpaso1">
+        <h2 style="font-size:20px;font-weight:800;color:#1E293B;margin:0 0 4px">Tu empresa</h2>
+        <p style="font-size:13px;color:#94A3B8;margin:0 0 24px">Cuéntanos cómo se llama y a qué se dedica</p>
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" id="wNombre" placeholder="Mi empresa" maxlength="60">
+        </div>
+        <div class="form-group">
+          <label>Tipo de negocio</label>
+          <input type="text" id="wTipo" placeholder="Describe tu actividad" maxlength="60">
+        </div>
+        <div class="form-group">
+          <label>Moneda</label>
+          <select id="wMoneda">
+            <option value="S/">Soles (S/)</option>
+            <option value="$">Dólares ($)</option>
+            <option value="€">Euros (€)</option>
+            <option value="COP">Pesos colombianos (COP)</option>
+            <option value="MXN">Pesos mexicanos (MXN)</option>
+          </select>
+        </div>
+        <button class="btn-primary" style="width:100%;margin-top:8px" onclick="wizardPaso2()">Siguiente →</button>
+      </div>
+
+      <!-- Paso 2 -->
+      <div id="wpaso2" style="display:none">
+        <h2 style="font-size:20px;font-weight:800;color:#1E293B;margin:0 0 4px">¿Qué quieres gestionar?</h2>
+        <p style="font-size:13px;color:#94A3B8;margin:0 0 20px">Activa los módulos que necesitas. Puedes cambiarlos después.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px" id="wModulosGrid">
+          <label class="modulo-card selected"><input type="checkbox" value="inventario" checked><div class="mcheck"></div><div class="micon" style="background:#EEF0FF"><i data-lucide="package" style="color:#6C63FF"></i></div><div class="mnombre">Inventario</div><div class="mdesc">Productos y stock</div></label>
+          <label class="modulo-card selected"><input type="checkbox" value="ventas" checked><div class="mcheck"></div><div class="micon" style="background:#DBEAFE"><i data-lucide="shopping-cart" style="color:#3B82F6"></i></div><div class="mnombre">Ventas</div><div class="mdesc">Cobros y transacciones</div></label>
+          <label class="modulo-card selected"><input type="checkbox" value="caja" checked><div class="mcheck"></div><div class="micon" style="background:#DCFCE7"><i data-lucide="wallet" style="color:#22C55E"></i></div><div class="mnombre">Caja</div><div class="mdesc">Ingresos y egresos</div></label>
+          <label class="modulo-card"><input type="checkbox" value="clientes"><div class="mcheck"></div><div class="micon" style="background:#FEF9C3"><i data-lucide="users" style="color:#CA8A04"></i></div><div class="mnombre">Clientes</div><div class="mdesc">Pacientes o clientes</div></label>
+          <label class="modulo-card"><input type="checkbox" value="agenda"><div class="mcheck"></div><div class="micon" style="background:#FEE2E2"><i data-lucide="calendar" style="color:#EF4444"></i></div><div class="mnombre">Agenda</div><div class="mdesc">Citas y horarios</div></label>
+          <label class="modulo-card"><input type="checkbox" value="empleados"><div class="mcheck"></div><div class="micon" style="background:#F3E8FF"><i data-lucide="shield-check" style="color:#9333EA"></i></div><div class="mnombre">Accesos</div><div class="mdesc">Empleados y roles</div></label>
+          <label class="modulo-card selected"><input type="checkbox" value="reportes" checked><div class="mcheck"></div><div class="micon" style="background:#FFEDD5"><i data-lucide="bar-chart-2" style="color:#F97316"></i></div><div class="mnombre">Reportes</div><div class="mdesc">Estadísticas</div></label>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-secondary" style="flex:1" onclick="wizardSpaso(1)">← Atrás</button>
+          <button class="btn-primary" style="flex:2" onclick="wizardPaso3()">Siguiente →</button>
+        </div>
+      </div>
+
+      <!-- Paso 3: Resumen -->
+      <div id="wpaso3" style="display:none">
+        <h2 style="font-size:20px;font-weight:800;color:#1E293B;margin:0 0 4px">¡Todo listo!</h2>
+        <p style="font-size:13px;color:#94A3B8;margin:0 0 20px">Revisa los datos antes de empezar</p>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px">
+            <i data-lucide="store" style="width:16px;height:16px;color:#6C63FF;flex-shrink:0"></i>
+            <span style="color:#475569">Nombre</span>
+            <strong style="margin-left:auto;color:#1E293B" id="wRNombre">—</strong>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px">
+            <i data-lucide="tag" style="width:16px;height:16px;color:#6C63FF;flex-shrink:0"></i>
+            <span style="color:#475569">Actividad</span>
+            <strong style="margin-left:auto;color:#1E293B" id="wRTipo">—</strong>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px">
+            <i data-lucide="coins" style="width:16px;height:16px;color:#6C63FF;flex-shrink:0"></i>
+            <span style="color:#475569">Moneda</span>
+            <strong style="margin-left:auto;color:#1E293B" id="wRMoneda">—</strong>
+          </div>
+          <div style="padding:12px 14px;background:#F8FAFC;border-radius:10px;font-size:13px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+              <i data-lucide="layout-grid" style="width:16px;height:16px;color:#6C63FF;flex-shrink:0"></i>
+              <span style="color:#475569">Módulos activos</span>
+            </div>
+            <div id="wRModulos" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-secondary" style="flex:1" onclick="wizardSpaso(2)">← Atrás</button>
+          <button class="btn-primary" style="flex:2" id="wBtnFinalizar" onclick="completarSetup()">Comenzar</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <style>
+    .sdot { width:30px;height:30px;border-radius:50%;background:#E2E8F0;color:#94A3B8;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s; }
+    .sdot.active { background:#6C63FF;color:white; }
+    .sdot.done   { background:#22C55E;color:white; }
+    .sline { flex:1;height:2px;background:#E2E8F0;max-width:60px;transition:background .3s; }
+    .sline.done { background:#22C55E; }
+    .modulo-card { border:2px solid #E2E8F0;border-radius:14px;padding:14px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;background:#F8FAFC;position:relative;transition:all .2s; }
+    .modulo-card:hover { border-color:#6C63FF;background:#EEF0FF; }
+    .modulo-card.selected { border-color:#6C63FF;background:#EEF0FF; }
+    .modulo-card input { position:absolute;opacity:0;width:0;height:0; }
+    .mcheck { position:absolute;top:7px;right:7px;width:16px;height:16px;border-radius:50%;border:2px solid #CBD5E1;background:white;display:flex;align-items:center;justify-content:center;transition:all .2s; }
+    .modulo-card.selected .mcheck { background:#6C63FF;border-color:#6C63FF; }
+    .mcheck::after { content:'✓';color:white;font-size:9px;font-weight:700;opacity:0;transition:opacity .2s; }
+    .modulo-card.selected .mcheck::after { opacity:1; }
+    .micon { width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center; }
+    .micon i, .micon svg { width:18px;height:18px;stroke-width:2; }
+    .mnombre { font-size:11px;font-weight:700;color:#1E293B; }
+    .mdesc { font-size:10px;color:#94A3B8;line-height:1.3; }
+    .rbadge { padding:4px 10px;background:#EEF0FF;color:#6C63FF;border-radius:20px;font-size:11px;font-weight:600; }
+  </style>
+
+  <!-- Toast de notificación -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/inventario.js"></script>
+  <script src="js/ventas.js"></script>
+  <script src="js/caja.js"></script>
+  <script src="js/empleados.js"></script>
+  <script src="js/reportes.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/demo.js"></script>
+  <script src="js/pwa.js"></script>
+  <script>
+    lucide.createIcons();
+    // Toggle módulos wizard
+    document.querySelectorAll('#wModulosGrid .modulo-card').forEach(card => {
+      card.addEventListener('click', function() {
+        const cb = this.querySelector('input');
+        cb.checked = !cb.checked;
+        this.classList.toggle('selected', cb.checked);
+      });
+    });
+    // Toggle módulos ajustes
+    document.querySelectorAll('#ajusteModulos .modulo-card').forEach(card => {
+      card.addEventListener('click', function() {
+        const cb = this.querySelector('input');
+        cb.checked = !cb.checked;
+        this.classList.toggle('selected', cb.checked);
+      });
+    });
+  </script>
+</body>
+</html>

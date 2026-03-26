@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -command \"Get-PSDrive C | Select-Object Used,Free\")",
+      "Bash(powershell -command \"Get-WmiObject -Class Win32_Product | Where-Object { $_Name -like ''*Docker*'' } | Select-Object Name, Version\")",
+      "Bash(supabase --version)",
+      "Bash(node generate-icons.js)",
+      "Bash(npm install:*)",
+      "Bash(winget install:*)"
+    ]
+  }
+}

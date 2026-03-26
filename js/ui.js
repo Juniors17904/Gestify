@@ -4,6 +4,8 @@ let currentUser = null;
 let currentBusiness = null;
 let currentSection = 'dashboard';
 let userEmpresas = [];
+let currentRol = 'admin';
+let currentNombre = '';
 
 // Inicializar dashboard
 async function initDashboard() {
@@ -58,6 +60,8 @@ async function initDashboard() {
 }
 
 function setupDashboardUI(nombre, negocioNombre, rol) {
+  currentRol = rol;
+  currentNombre = nombre;
   // Actualizar UI
   document.getElementById('businessName').textContent = negocioNombre;
   document.getElementById('businessAvatar').textContent = negocioNombre[0].toUpperCase();
@@ -397,8 +401,7 @@ async function guardarAjustes() {
   currentBusiness = { ...currentBusiness, nombre, tipo, moneda, ruc, telefono, direccion, stock_minimo: stockMinimo, modulos };
   APP_CONFIG.moneda = moneda;
   APP_CONFIG.stockMinimo = stockMinimo;
-  document.getElementById('businessName').textContent = nombre;
-  document.getElementById('businessAvatar').textContent = nombre[0].toUpperCase();
+  setupDashboardUI(currentNombre, nombre, currentRol);
   showToast('Negocio actualizado', 'success');
 }
 

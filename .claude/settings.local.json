@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker --version)",
+      "Bash(npx supabase:*)",
+      "Bash(docker system:*)",
+      "Bash(winget search:*)",
+      "Bash(scoop install:*)",
+      "Bash(grep -n \"case ''clientes''\\\\|case ''agenda''\" /c/Proyectos/PuxoCDN/js/ui.js)"
+    ]
+  }
+}

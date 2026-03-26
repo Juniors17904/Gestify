@@ -187,21 +187,33 @@ function renderCitasHoy(lista) {
     el.innerHTML = '<p class="empty-text">No hay citas hoy</p>';
     return;
   }
-  const estadoLabel = { pendiente: '🕐', confirmada: '✅', completada: '✔️', cancelada: '❌' };
+  const estadoBadge = {
+    pendiente:  { bg: '#FEF3C7', color: '#92400E', label: 'Pendiente' },
+    confirmada: { bg: '#DBEAFE', color: '#1E40AF', label: 'Confirmada' },
+    completada: { bg: '#D1FAE5', color: '#065F46', label: 'Completada' },
+    cancelada:  { bg: '#FEE2E2', color: '#991B1B', label: 'Cancelada' },
+  };
   el.innerHTML = lista.map(c => {
     const hora = c.hora ? c.hora.slice(0, 5) : '--:--';
-    const nombre = c.clientes?.nombre || 'Paciente';
-    const icono = estadoLabel[c.estado] || '🕐';
+    const nombre = c.clientes?.nombre || 'Cliente';
+    const badge = estadoBadge[c.estado] || estadoBadge.pendiente;
     return `
-      <div class="movimiento-item">
-        <div class="movimiento-info">
-          <span class="movimiento-desc">${icono} ${nombre}</span>
-          <span class="movimiento-hora">${c.servicio || 'Cita'}</span>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-100)">
+        <div style="width:36px;height:36px;border-radius:10px;background:${badge.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i data-lucide="calendar" style="width:16px;height:16px;stroke:${badge.color}"></i>
         </div>
-        <span class="movimiento-monto" style="color:var(--text-secondary);font-size:13px">${hora}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:13px;color:var(--gray-800)">${nombre}</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+            <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:${badge.bg};color:${badge.color};font-weight:700">${badge.label}</span>
+            ${c.servicio ? `<span style="font-size:11px;color:var(--gray-400)">${c.servicio}</span>` : ''}
+          </div>
+        </div>
+        <span style="font-size:14px;font-weight:700;color:var(--gray-600);flex-shrink:0">${hora}</span>
       </div>
     `;
   }).join('');
+  if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
 function renderStockBajo(productos) {
