@@ -164,6 +164,10 @@ body {
 [data-tema="oscuro"] .logo-text-sub  { fill: rgba(255,255,255,0.4); }
 [data-tema="oscuro"] .logo-line      { stroke: rgba(255,255,255,0.3); }
 
+/* Mi Cuenta dark mode */
+[data-tema="oscuro"] .cuenta-avatar-section { background: #1F2937; }
+[data-tema="oscuro"] .cuenta-avatar-section p { color: #F9FAFB; }
+
 /* Agenda dark mode */
 [data-tema="oscuro"] .cita-item        { background: #1F2937; border-left-color: var(--primary); }
 [data-tema="oscuro"] .cita-nombre      { color: #F9FAFB; }
