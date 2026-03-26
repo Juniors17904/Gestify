@@ -885,6 +885,26 @@
   .data-table td:nth-child(4) { display: none; }
 
   .bottom-nav { display: block; }
+
+  /* Ajustes: tabs scrollables en móvil */
+  .ajustes-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    max-width: 100%;
+  }
+  .ajuste-tab {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* Panels ajustes: no exceder ancho del viewport */
+  .ajuste-panel.card,
+  .ajustes-card {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
 }
 
 /* ===== FAB NUEVA CITA ===== */
