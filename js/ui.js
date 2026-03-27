@@ -150,7 +150,6 @@ function setupDashboardUI(nombre, negocioNombre, rol) {
   // Configurar ajustes - negocio
   if (document.getElementById('ajusteNombreNegocio')) {
     document.getElementById('ajusteNombreNegocio').value = negocioNombre;
-    document.getElementById('ajusteStockMinimo').value = APP_CONFIG.stockMinimo;
     if (currentBusiness?.tipo) document.getElementById('ajusteTipo').value = currentBusiness.tipo;
     if (currentBusiness?.moneda) document.getElementById('ajusteMoneda').value = currentBusiness.moneda;
     if (currentBusiness?.ruc) document.getElementById('ajusteRuc').value = currentBusiness.ruc;
@@ -418,19 +417,17 @@ async function guardarAjustes() {
   const ruc         = document.getElementById('ajusteRuc').value;
   const telefono    = document.getElementById('ajusteTelefono').value;
   const direccion   = document.getElementById('ajusteDireccion').value;
-  const stockMinimo = parseInt(document.getElementById('ajusteStockMinimo').value) || 5;
-  const modulos     = Array.from(document.querySelectorAll('#ajusteModulos input:checked')).map(c => c.value);
+  const modulos = Array.from(document.querySelectorAll('#ajusteModulos input:checked')).map(c => c.value);
 
   const { error } = await db
     .from('negocios')
-    .update({ nombre, tipo, moneda, ruc, telefono, direccion, stock_minimo: stockMinimo, modulos })
+    .update({ nombre, tipo, moneda, ruc, telefono, direccion, modulos })
     .eq('id', currentBusiness.id);
 
   if (error) { showToast('Error al guardar', 'error'); return; }
 
-  currentBusiness = { ...currentBusiness, nombre, tipo, moneda, ruc, telefono, direccion, stock_minimo: stockMinimo, modulos };
+  currentBusiness = { ...currentBusiness, nombre, tipo, moneda, ruc, telefono, direccion, modulos };
   APP_CONFIG.moneda = moneda;
-  APP_CONFIG.stockMinimo = stockMinimo;
   setupDashboardUI(currentNombre, nombre, currentRol);
   showToast('Negocio actualizado', 'success');
 }
