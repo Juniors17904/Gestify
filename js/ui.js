@@ -341,6 +341,17 @@ function formatTime(dateStr) {
   });
 }
 
+// Acordeón "Ver más" en tab Negocio
+function toggleAcordeon() {
+  const extra = document.getElementById('acordeonExtra');
+  const icon  = document.getElementById('acordeonIcon');
+  const label = document.getElementById('acordeonLabel');
+  const abierto = extra.style.display !== 'none';
+  extra.style.display = abierto ? 'none' : 'block';
+  icon.style.transform = abierto ? '' : 'rotate(180deg)';
+  label.textContent = abierto ? 'Ver más datos' : 'Ver menos';
+}
+
 // Tabs de ajustes
 function showAjusteTab(tab) {
   document.querySelectorAll('.ajuste-tab').forEach(b => b.classList.remove('active'));

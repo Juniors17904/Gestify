@@ -329,52 +329,62 @@
       <!-- TAB: Negocio -->
       <div id="ajuste-negocio" class="ajuste-panel card ajustes-card">
         <h3>Información del Negocio</h3>
+
+        <!-- Campo visible siempre -->
         <div class="form-group">
           <label>Nombre del negocio</label>
           <input type="text" id="ajusteNombreNegocio" placeholder="Nombre de tu negocio">
         </div>
-        <div class="form-group">
-          <label>RUC / DNI</label>
-          <input type="text" id="ajusteRuc" placeholder="Ej: 20123456789">
-        </div>
-        <div class="form-group">
-          <label>Teléfono</label>
-          <input type="tel" id="ajusteTelefono" placeholder="Ej: 999 888 777">
-        </div>
-        <div class="form-group">
-          <label>Dirección</label>
-          <input type="text" id="ajusteDireccion" placeholder="Av. Principal 123">
-        </div>
-        <div class="form-group">
-          <label>Tipo de negocio</label>
-          <input type="text" id="ajusteTipo" placeholder="Describe tu actividad" maxlength="60">
-        </div>
-        <div class="form-group">
-          <label>Moneda</label>
-          <select id="ajusteMoneda">
-            <option value="S/">Soles (S/)</option>
-            <option value="$">Dólares ($)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Stock mínimo (alerta)</label>
-          <input type="number" id="ajusteStockMinimo" placeholder="5" value="5">
-        </div>
 
-        <div class="form-group">
-          <label>Módulos activos</label>
-          <div id="ajusteModulos" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">
-            <label class="modulo-card"><input type="checkbox" value="inventario"><div class="mcheck"></div><div class="mnombre">Inventario</div></label>
-            <label class="modulo-card"><input type="checkbox" value="ventas"><div class="mcheck"></div><div class="mnombre">Ventas</div></label>
-            <label class="modulo-card"><input type="checkbox" value="caja"><div class="mcheck"></div><div class="mnombre">Caja</div></label>
-            <label class="modulo-card"><input type="checkbox" value="clientes"><div class="mcheck"></div><div class="mnombre">Clientes</div></label>
-            <label class="modulo-card"><input type="checkbox" value="agenda"><div class="mcheck"></div><div class="mnombre">Agenda</div></label>
-            <label class="modulo-card"><input type="checkbox" value="empleados"><div class="mcheck"></div><div class="mnombre">Accesos</div></label>
-            <label class="modulo-card"><input type="checkbox" value="reportes"><div class="mcheck"></div><div class="mnombre">Reportes</div></label>
+        <!-- Acordeón: Ver más -->
+        <button class="acordeon-btn" id="btnVerMas" onclick="toggleAcordeon()" type="button">
+          <span id="acordeonLabel">Ver más datos</span>
+          <svg id="acordeonIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;transition:transform 0.2s"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+
+        <div id="acordeonExtra" style="display:none;overflow:hidden">
+          <div class="form-group" style="margin-top:12px">
+            <label>RUC / DNI</label>
+            <input type="text" id="ajusteRuc" placeholder="Ej: 20123456789">
+          </div>
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" id="ajusteTelefono" placeholder="Ej: 999 888 777">
+          </div>
+          <div class="form-group">
+            <label>Dirección</label>
+            <input type="text" id="ajusteDireccion" placeholder="Av. Principal 123">
+          </div>
+          <div class="form-group">
+            <label>Tipo de negocio</label>
+            <input type="text" id="ajusteTipo" placeholder="Describe tu actividad" maxlength="60">
+          </div>
+          <div class="form-group">
+            <label>Moneda</label>
+            <select id="ajusteMoneda">
+              <option value="S/">Soles (S/)</option>
+              <option value="$">Dólares ($)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Stock mínimo (alerta)</label>
+            <input type="number" id="ajusteStockMinimo" placeholder="5" value="5">
+          </div>
+          <div class="form-group">
+            <label>Módulos activos</label>
+            <div id="ajusteModulos" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">
+              <label class="modulo-card"><input type="checkbox" value="inventario"><div class="mcheck"></div><div class="mnombre">Inventario</div></label>
+              <label class="modulo-card"><input type="checkbox" value="ventas"><div class="mcheck"></div><div class="mnombre">Ventas</div></label>
+              <label class="modulo-card"><input type="checkbox" value="caja"><div class="mcheck"></div><div class="mnombre">Caja</div></label>
+              <label class="modulo-card"><input type="checkbox" value="clientes"><div class="mcheck"></div><div class="mnombre">Clientes</div></label>
+              <label class="modulo-card"><input type="checkbox" value="agenda"><div class="mcheck"></div><div class="mnombre">Agenda</div></label>
+              <label class="modulo-card"><input type="checkbox" value="empleados"><div class="mcheck"></div><div class="mnombre">Accesos</div></label>
+              <label class="modulo-card"><input type="checkbox" value="reportes"><div class="mcheck"></div><div class="mnombre">Reportes</div></label>
+            </div>
           </div>
         </div>
 
-        <button class="btn-primary" onclick="guardarAjustes()">Guardar cambios</button>
+        <button class="btn-primary" onclick="guardarAjustes()" style="margin-top:16px">Guardar cambios</button>
       </div>
 
       <!-- TAB: Mi Cuenta -->
