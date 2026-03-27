@@ -348,7 +348,7 @@ function toggleAcordeon() {
   const abierto = extra.style.display !== 'none';
   extra.style.display = abierto ? 'none' : 'block';
   icon.style.transform = abierto ? '' : 'rotate(180deg)';
-  label.textContent = abierto ? 'Ver más datos' : 'Ver menos';
+  label.textContent = abierto ? 'Más información' : 'Menos información';
 }
 
 // Tabs de ajustes
