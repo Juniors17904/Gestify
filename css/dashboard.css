@@ -433,6 +433,7 @@
   font-size: 13px;
   border-bottom: 1px solid #F5F5F5;
   color: var(--gray-800);
+  word-break: break-word;
 }
 
 .data-table tr:last-child td { border-bottom: none; }
