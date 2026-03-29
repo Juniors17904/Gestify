@@ -77,6 +77,9 @@
       <a href="#" class="nav-item" onclick="showSection('ajustes')">
         <span class="nav-icon"><i data-lucide="settings"></i></span> Ajustes
       </a>
+      <a href="ejemplo.html" class="nav-item">
+        <span class="nav-icon"><i data-lucide="layout-template"></i></span> Ejemplo
+      </a>
       <a href="#" class="nav-item logout" onclick="handleLogout()">
         <span class="nav-icon"><i data-lucide="log-out"></i></span> Cerrar Sesión
       </a>
@@ -260,21 +263,8 @@
         <input type="text" class="search-input" placeholder="Buscar cliente..." oninput="buscarCliente(this.value)">
         <button class="btn-primary" onclick="showModal('modalCliente')">+ Agregar</button>
       </div>
-      <div class="card">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Teléfono</th>
-              <th>Email</th>
-              <th>Notas</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="tablaClientes">
-            <tr><td colspan="5" class="empty-row">Sin clientes aún</td></tr>
-          </tbody>
-        </table>
+      <div id="listaClientes" class="acord-clientes">
+        <p class="empty-text">Sin clientes aún</p>
       </div>
     </section>
 
@@ -730,7 +720,10 @@
 
       <!-- PASO 2: Detalles -->
       <div id="citaPaso2" style="display:none">
-        <p style="font-size:13px;color:var(--gray-400);margin-bottom:16px" id="citaClienteSeleccionado"></p>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+          <p style="font-size:13px;color:var(--gray-400);margin:0" id="citaClienteSeleccionado"></p>
+          <button type="button" onclick="citaIrPaso1()" style="font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);color:var(--gray-500);cursor:pointer;white-space:nowrap">Cambiar</button>
+        </div>
         <form onsubmit="guardarCita(event)">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
             <div class="form-group">

@@ -18,25 +18,52 @@ async function loadClientes() {
 }
 
 function renderTablaClientes(lista) {
-  const tbody = document.getElementById('tablaClientes');
+  const cont = document.getElementById('listaClientes');
   if (!lista.length) {
-    tbody.innerHTML = '<tr><td colspan="5" class="empty-row">Sin clientes aún</td></tr>';
+    cont.innerHTML = '<p class="empty-text">Sin clientes aún</p>';
     return;
   }
 
-  tbody.innerHTML = lista.map(c => `
-    <tr>
-      <td><strong>${c.nombre}</strong></td>
-      <td>${c.telefono || '-'}</td>
-      <td>${c.email || '-'}</td>
-      <td style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.notas || '-'}</td>
-      <td>
-        <button class="action-btn edit" onclick="editarCliente('${c.id}')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-        <button class="action-btn delete" onclick="eliminarCliente('${c.id}')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
-      </td>
-    </tr>
-  `).join('');
-  if (typeof lucide !== 'undefined') lucide.createIcons();
+  cont.innerHTML = lista.map(c => {
+    const inicial = c.nombre.charAt(0).toUpperCase();
+    const colores = ['#EEF0FF,#6C63FF','#D1FAE5,#065F46','#FEF3C7,#92400E','#DBEAFE,#1D4ED8','#FCE7F3,#9D174D'];
+    const idx = c.nombre.charCodeAt(0) % colores.length;
+    const [bg, color] = colores[idx].split(',');
+    const tel = c.telefono || '—';
+    const email = c.email || '—';
+    const notas = c.notas || '—';
+    const waLink = c.telefono ? `https://wa.me/51${c.telefono.replace(/\D/g,'')}` : null;
+    return `
+    <div class="acord-cliente">
+      <div class="acord-cliente-head" onclick="toggleAcordCliente(this)">
+        <div class="acord-cliente-av" style="background:${bg};color:${color}">${inicial}</div>
+        <div class="acord-cliente-info">
+          <div class="acord-cliente-nombre">${c.nombre}</div>
+          <div class="acord-cliente-tel">${tel}</div>
+        </div>
+        <span class="acord-cliente-arrow">▼</span>
+      </div>
+      <div class="acord-cliente-body">
+        <div class="acord-cliente-row"><span class="acord-cliente-lbl">Teléfono</span><span class="acord-cliente-val">${tel}</span></div>
+        <div class="acord-cliente-row"><span class="acord-cliente-lbl">Email</span><span class="acord-cliente-val">${email}</span></div>
+        <div class="acord-cliente-row"><span class="acord-cliente-lbl">Notas</span><span class="acord-cliente-val">${notas}</span></div>
+        <div class="acord-cliente-acts">
+          ${waLink ? `<button class="acord-cliente-btn wa" onclick="window.open('${waLink}','_blank')">📱 WhatsApp</button>` : ''}
+          <button class="acord-cliente-btn edit" onclick="editarCliente('${c.id}')">✏️ Editar</button>
+          <button class="acord-cliente-btn del" onclick="eliminarCliente('${c.id}')">🗑️ Borrar</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleAcordCliente(head) {
+  const body = head.nextElementSibling;
+  const arrow = head.querySelector('.acord-cliente-arrow');
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('.acord-cliente-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.acord-cliente-arrow').forEach(a => a.classList.remove('open'));
+  if (!isOpen) { body.classList.add('open'); arrow.classList.add('open'); }
 }
 
 function buscarCliente(query) {
@@ -46,6 +73,7 @@ function buscarCliente(query) {
     (c.email || '').toLowerCase().includes(query.toLowerCase())
   );
   renderTablaClientes(filtro);
+
 }
 
 async function guardarCliente(e) {

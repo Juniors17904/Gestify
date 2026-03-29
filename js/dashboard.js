@@ -170,14 +170,21 @@ function renderUltimosClientes(lista) {
     el.innerHTML = '<p class="empty-text">No hay clientes aún</p>';
     return;
   }
-  el.innerHTML = lista.map(c => `
-    <div class="movimiento-item">
-      <div class="movimiento-info">
-        <span class="movimiento-desc">${c.nombre}</span>
-        <span class="movimiento-hora">${c.telefono || ''}</span>
+  el.classList.remove('list-empty');
+  const colores = ['#EEF0FF,#6C63FF','#D1FAE5,#065F46','#FEF3C7,#92400E','#DBEAFE,#1D4ED8','#FCE7F3,#9D174D'];
+  el.innerHTML = lista.map(c => {
+    const inicial = c.nombre.charAt(0).toUpperCase();
+    const idx = c.nombre.charCodeAt(0) % colores.length;
+    const [bg, color] = colores[idx].split(',');
+    return `
+    <div style="display:flex;align-items:center;gap:12px;padding:6px 12px;border-bottom:1px solid var(--gray-100);margin-bottom:0">
+      <div style="width:38px;height:38px;border-radius:50%;background:${bg};color:${color};font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${inicial}</div>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start">
+        <div style="font-weight:600;font-size:14px;color:var(--gray-800)">${c.nombre}</div>
+        <div style="font-size:12px;color:var(--gray-400);margin-top:4px">${c.telefono?.trim() || '—'}</div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function renderCitasHoy(lista) {

@@ -3,412 +3,935 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Propuestas — Tabs Ajustes</title>
+  <title>Ejemplos — Clientes</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F0F2F5; padding: 16px; }
+    body { background: var(--gray-100); padding: 16px; }
 
-    h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94A3B8; margin: 24px 0 10px; }
-    h2:first-child { margin-top: 0; }
+    /* Nav selector de vista */
+    .vista-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--gray-100); padding-bottom: 12px; margin-bottom: 4px;
+    }
+    .vista-scroll {
+      display: flex; gap: 6px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 4px 2px;
+    }
+    .vista-scroll::-webkit-scrollbar { display: none; }
+    .vista-btn {
+      flex-shrink: 0; padding: 8px 16px; border: none; border-radius: 20px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      background: var(--white); color: var(--gray-600);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .vista-btn.active { background: var(--primary); color: white; }
 
-    .label-actual { display: inline-block; font-size: 11px; background: #FEF3C7; color: #D97706; border-radius: 6px; padding: 2px 8px; font-weight: 600; margin-left: 8px; vertical-align: middle; }
-    .label-prop { display: inline-block; font-size: 11px; background: #EEF2FF; color: #6366F1; border-radius: 6px; padding: 2px 8px; font-weight: 600; margin-left: 8px; vertical-align: middle; }
+    .vista { display: none; }
+    .vista.visible { display: block; }
 
-    .demo-box { background: white; border-radius: 14px; padding: 16px; margin-bottom: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .vista-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--gray-400); margin: 0 0 10px;
+    }
+    .badge-actual { display:inline-block; font-size:10px; padding:2px 8px; border-radius:6px; font-weight:700; margin-left:6px; background:#FEF3C7; color:#D97706; vertical-align:middle; text-transform:none; letter-spacing:0; }
+    .badge-prop   { display:inline-block; font-size:10px; padding:2px 8px; border-radius:6px; font-weight:700; margin-left:6px; background:var(--primary-light); color:var(--primary); vertical-align:middle; text-transform:none; letter-spacing:0; }
+    .vista-note { font-size:11px; color:var(--gray-400); margin-top:10px; line-height:1.5; }
 
-    /* ===== OPCIÓN 0: ACTUAL (scroll horizontal) ===== */
-    .tabs-scroll {
-      display: flex;
-      gap: 6px;
-      background: #F1F5F9;
-      padding: 5px;
-      border-radius: 12px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+    /* Avatar letra */
+    .av {
+      width:40px; height:40px; border-radius:50%;
+      background:var(--primary-light); color:var(--primary);
+      font-weight:800; font-size:15px; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
     }
-    .tabs-scroll::-webkit-scrollbar { display: none; }
-    .tab-scroll-btn {
-      flex-shrink: 0;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      background: none;
-      color: #94A3B8;
-      white-space: nowrap;
-    }
-    .tab-scroll-btn.active { background: #F59E0B; color: white; }
 
-    /* ===== OPCIÓN 1: DROPDOWN SELECT ===== */
-    .tab-select {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1.5px solid #E2E8F0;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 600;
-      color: #1E293B;
-      background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 14px center;
-      -webkit-appearance: none;
-      appearance: none;
-      cursor: pointer;
+    /* ── B: TARJETAS ── */
+    .cards-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .c-card {
+      background:var(--gray-50); border-radius:12px; padding:14px;
+      display:flex; flex-direction:column; gap:8px; border:1.5px solid var(--gray-200);
     }
-    .tab-select:focus { outline: none; border-color: #F59E0B; }
+    .c-card-top { display:flex; align-items:center; gap:10px; }
+    .c-card-name { font-weight:700; font-size:14px; color:var(--gray-800); }
+    .c-card-tel  { font-size:12px; color:var(--gray-400); }
+    .tag {
+      display:inline-block; font-size:10px; font-weight:700;
+      padding:2px 8px; border-radius:20px; align-self:flex-start;
+    }
+    .tag-vip  { background:#FEF3C7; color:#92400E; }
+    .tag-ok   { background:#D1FAE5; color:#065F46; }
+    .tag-new  { background:var(--primary-light); color:var(--primary); }
+    .c-card-actions { display:flex; gap:6px; }
+    .c-btn { flex:1; padding:7px; border:none; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; }
+    .c-btn.edit { background:var(--primary-light); color:var(--primary); }
+    .c-btn.del  { background:#FEE2E2; color:var(--danger); }
 
-    /* ===== OPCIÓN 2: 2 FILAS ===== */
-    .tabs-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 6px;
+    /* ── C: LISTA ── */
+    .lista { display:flex; flex-direction:column; }
+    .lista-row {
+      display:flex; align-items:center; gap:12px;
+      padding:12px 4px; border-bottom:1px solid var(--gray-100);
     }
-    .tab-grid-btn {
-      padding: 10px 6px;
-      border: none;
-      border-radius: 10px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      background: #F1F5F9;
-      color: #64748B;
-      text-align: center;
-    }
-    .tab-grid-btn.active { background: #F59E0B; color: white; }
-    .tab-grid-btn.span2 { grid-column: span 1; }
+    .lista-row:last-child { border-bottom:none; }
+    .lista-info { flex:1; min-width:0; }
+    .lista-nombre { font-weight:700; font-size:14px; color:var(--gray-800); }
+    .lista-sub { font-size:12px; color:var(--gray-400); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .lista-chevron { color:var(--gray-200); font-size:18px; }
 
-    /* ===== OPCIÓN 3: COMPACTO (caben en 1 fila) ===== */
-    .tabs-compact {
-      display: flex;
-      gap: 4px;
-      background: #F1F5F9;
-      padding: 4px;
-      border-radius: 12px;
+    /* ── D: ACORDEÓN ── */
+    .acords { display:flex; flex-direction:column; gap:6px; }
+    .acord { border-radius:12px; overflow:hidden; border:1.5px solid var(--gray-200); }
+    .acord-head {
+      display:flex; align-items:center; gap:12px;
+      padding:13px 14px; background:var(--white); cursor:pointer;
     }
-    .tab-compact-btn {
-      flex: 1;
-      padding: 8px 2px;
-      border: none;
-      border-radius: 8px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      background: none;
-      color: #94A3B8;
-      white-space: nowrap;
-      text-align: center;
+    .acord-info { flex:1; }
+    .acord-nombre { font-weight:700; font-size:14px; color:var(--gray-800); }
+    .acord-tel { font-size:12px; color:var(--gray-400); }
+    .acord-arrow { font-size:12px; color:var(--gray-200); transition:transform 0.2s; }
+    .acord-arrow.open { transform:rotate(180deg); }
+    .acord-body { display:none; padding:0 14px 14px; background:var(--white); }
+    .acord-body.open { display:block; }
+    .acord-row {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:7px 0; border-bottom:1px solid var(--gray-100); font-size:13px;
     }
-    .tab-compact-btn.active { background: #F59E0B; color: white; }
+    .acord-row:last-child { border-bottom:none; }
+    .acord-lbl { color:var(--gray-400); font-weight:600; }
+    .acord-val { color:var(--gray-800); font-weight:600; }
+    .acord-acts { display:flex; gap:8px; margin-top:10px; }
+    .acord-btn { flex:1; padding:9px; border:none; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; }
+    .acord-btn.wa   { background:#D1FAE5; color:#065F46; }
+    .acord-btn.edit { background:var(--primary-light); color:var(--primary); }
+    .acord-btn.del  { background:#FEE2E2; color:var(--danger); }
 
-    /* ===== OPCIÓN 4: CHIPS CON ÍCONO ===== */
-    .tabs-chips {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
+    /* ── E: KANBAN ── */
+    .kanban { display:flex; gap:10px; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; }
+    .kanban::-webkit-scrollbar { display:none; }
+    .k-col { flex-shrink:0; width:155px; }
+    .k-head {
+      font-size:11px; font-weight:700; text-transform:uppercase;
+      letter-spacing:0.5px; padding:6px 10px; border-radius:8px 8px 0 0; margin-bottom:6px;
     }
-    .tab-chip {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 8px 14px;
-      border: 1.5px solid #E2E8F0;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      background: white;
-      color: #64748B;
-    }
-    .tab-chip.active { border-color: #F59E0B; background: #FEF3C7; color: #D97706; }
-    .tab-chip svg { width: 14px; height: 14px; stroke: currentColor; }
+    .k-vip   .k-head { background:#FEF3C7; color:#92400E; }
+    .k-reg   .k-head { background:#D1FAE5; color:#065F46; }
+    .k-new   .k-head { background:var(--primary-light); color:var(--primary); }
+    .k-none  .k-head { background:var(--gray-100); color:var(--gray-400); }
+    .k-card { background:var(--white); border-radius:10px; padding:10px; margin-bottom:6px; box-shadow:var(--shadow); }
+    .k-dot { width:8px; height:8px; border-radius:50%; margin-bottom:6px; }
+    .k-vip  .k-dot { background:var(--warning); }
+    .k-reg  .k-dot { background:var(--success); }
+    .k-new  .k-dot { background:var(--primary); }
+    .k-none .k-dot { background:var(--gray-200); }
+    .k-name { font-weight:700; font-size:13px; color:var(--gray-800); margin-bottom:3px; }
+    .k-tel  { font-size:11px; color:var(--gray-400); }
 
-    /* ===== OPCIÓN 5: LISTA VERTICAL ===== */
-    .tabs-list { display: flex; flex-direction: column; gap: 2px; }
-    .tab-list-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 13px 16px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      color: #475569;
-      background: none;
-      border: none;
-      text-align: left;
-      width: 100%;
+    /* ── F: MOSAICO ── */
+    .mosaic-stats { display:flex; gap:8px; margin-bottom:12px; }
+    .m-stat { flex:1; background:var(--gray-50); border-radius:10px; padding:10px; text-align:center; }
+    .m-stat-val { font-size:20px; font-weight:800; color:var(--gray-800); }
+    .m-stat-lbl { font-size:10px; color:var(--gray-400); font-weight:600; margin-top:2px; }
+    .mosaic-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+    .m-item {
+      background:var(--gray-50); border-radius:10px; padding:12px 8px;
+      text-align:center; display:flex; flex-direction:column; align-items:center; gap:5px;
     }
-    .tab-list-item.active { background: #FEF3C7; color: #D97706; }
-    .tab-list-item svg { width: 16px; height: 16px; stroke: #CBD5E1; }
-    .tab-list-item.active svg { stroke: #F59E0B; }
+    .m-av { width:38px; height:38px; border-radius:50%; background:var(--primary-light); color:var(--primary); font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center; }
+    .m-name { font-size:11px; font-weight:700; color:var(--gray-800); }
 
-    /* ===== OPCIÓN 6: TABS CON ÍCONOS ARRIBA ===== */
-    .tabs-icon {
-      display: flex;
-      gap: 4px;
-    }
-    .tab-icon-btn {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding: 10px 4px 8px;
-      border: none;
-      border-radius: 12px;
-      font-size: 10px;
-      font-weight: 700;
-      cursor: pointer;
-      background: #F8FAFC;
-      color: #94A3B8;
-      border-bottom: 2px solid transparent;
-    }
-    .tab-icon-btn svg { width: 18px; height: 18px; stroke: currentColor; }
-    .tab-icon-btn.active { background: #FEF3C7; color: #D97706; border-bottom-color: #F59E0B; }
+    /* ── G: HISTORIAL ── */
+    .hist-lista { display:flex; flex-direction:column; gap:6px; }
+    .hist-item { display:flex; align-items:center; gap:12px; background:var(--white); border-radius:12px; padding:12px; box-shadow:var(--shadow); }
+    .hist-info { flex:1; min-width:0; }
+    .hist-nombre { font-weight:700; font-size:14px; color:var(--gray-800); }
+    .hist-sub { font-size:11px; color:var(--gray-400); margin-top:2px; }
+    .hist-monto { text-align:right; }
+    .hist-monto-val { font-weight:800; font-size:15px; color:var(--gray-800); }
+    .hist-monto-lbl { font-size:10px; color:var(--gray-400); }
   </style>
 </head>
 <body>
 
-  <h2>Opción actual <span class="label-actual">ACTUAL</span></h2>
-  <div class="demo-box">
-    <div class="tabs-scroll">
-      <button class="tab-scroll-btn active">Negocio</button>
-      <button class="tab-scroll-btn">Mis Negocios</button>
-      <button class="tab-scroll-btn">Mi Cuenta</button>
-      <button class="tab-scroll-btn">Apariencia</button>
-      <button class="tab-scroll-btn">Plan</button>
-    </div>
-    <p style="font-size:11px;color:#94A3B8;margin-top:8px">Scroll horizontal → desliza para ver más</p>
-  </div>
-
-  <h2>Opción 1 <span class="label-prop">PROPUESTA</span></h2>
-  <div class="demo-box">
-    <select class="tab-select">
-      <option>⚙️  Negocio</option>
-      <option>🏪  Mis Negocios</option>
-      <option>👤  Mi Cuenta</option>
-      <option>🎨  Apariencia</option>
-      <option>⭐  Plan</option>
-    </select>
-    <p style="font-size:11px;color:#94A3B8;margin-top:8px">Dropdown compacto — toca para elegir sección</p>
-  </div>
-
-  <h2>Opción 2 <span class="label-prop">PROPUESTA</span></h2>
-  <div class="demo-box">
-    <div class="tabs-grid">
-      <button class="tab-grid-btn active">Negocio</button>
-      <button class="tab-grid-btn">Mis Negocios</button>
-      <button class="tab-grid-btn">Mi Cuenta</button>
-      <button class="tab-grid-btn">Apariencia</button>
-      <button class="tab-grid-btn">Plan</button>
-    </div>
-    <p style="font-size:11px;color:#94A3B8;margin-top:8px">2 filas de botones — todo visible sin scroll</p>
-  </div>
-
-  <h2>Opción 3 <span class="label-prop">PROPUESTA</span></h2>
-  <div class="demo-box">
-    <div class="tabs-compact">
-      <button class="tab-compact-btn active">Negocio</button>
-      <button class="tab-compact-btn">Negocios</button>
-      <button class="tab-compact-btn">Cuenta</button>
-      <button class="tab-compact-btn">Tema</button>
-      <button class="tab-compact-btn">Plan</button>
-    </div>
-    <p style="font-size:11px;color:#94A3B8;margin-top:8px">Texto abreviado — caben todos en 1 fila</p>
-  </div>
-
-  <h2>Opción 4 <span class="label-prop">PROPUESTA</span></h2>
-  <div class="demo-box">
-    <div class="tabs-chips">
-      <button class="tab-chip active">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        Negocio
+  <!-- Selector de vista -->
+  <div class="vista-nav">
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+      <a href="dashboard.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);border-radius:20px;font-size:13px;font-weight:600;color:var(--gray-600);text-decoration:none;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
+        ← Volver
+      </a>
+      <button onclick="mostrarPagina('clientes')" id="btnCliente" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--primary);color:white;border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
+        Cliente
       </button>
-      <button class="tab-chip">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        Mis Negocios
+      <button onclick="mostrarPagina('selecciones')" id="btnSelecciones" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:var(--gray-600);border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
+        Selecciones
       </button>
-      <button class="tab-chip">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Mi Cuenta
+      <button onclick="mostrarPagina('dashboard')" id="btnDashboard" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:var(--gray-600);border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
+        dDashboard
       </button>
-      <button class="tab-chip">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-        Apariencia
-      </button>
-      <button class="tab-chip">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        Plan
+      <button onclick="mostrarPagina('nuevacita')" id="btnNuevaCita" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:var(--gray-600);border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
+        Nueva Cita
       </button>
     </div>
-    <p style="font-size:11px;color:#94A3B8;margin-top:8px">Chips con ícono — se acomodan en 2 filas</p>
-  </div>
+  <hr style="border:none;border-top:1px solid var(--gray-200);margin:0 0 12px">
+  </div><!-- /vista-nav -->
 
-  <h2>Opción 5 <span class="label-prop">PROPUESTA</span></h2>
-  <div class="demo-box">
-    <div class="tabs-list">
-      <button class="tab-list-item active">
-        Negocio
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
-      <button class="tab-list-item">
-        Mis Negocios
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
-      <button class="tab-list-item">
-        Mi Cuenta
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
-      <button class="tab-list-item">
-        Apariencia
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
-      <button class="tab-list-item">
-        Plan
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
-    </div>
-    <p style="font-size:11px;color:#94A3B8;margin-top:8px">Lista vertical — como menú de configuración</p>
-  </div>
-
-  <h2>Opción 6 <span class="label-prop">PROPUESTA</span></h2>
-  <div class="demo-box">
-    <div class="tabs-icon">
-      <button class="tab-icon-btn active">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        Negocio
-      </button>
-      <button class="tab-icon-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        Negocios
-      </button>
-      <button class="tab-icon-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Cuenta
-      </button>
-      <button class="tab-icon-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-        Tema
-      </button>
-      <button class="tab-icon-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        Plan
-      </button>
-    </div>
-    <p style="font-size:11px;color:#94A3B8;margin-top:8px">Íconos + texto corto — estilo bottom nav</p>
-  </div>
-
-  <h2>Opción 7 — Estilo pestañas navegador <span class="label-prop">PROPUESTA</span></h2>
-
-  <style>
-    /* ===== OPCIÓN 7: BROWSER TABS DOBLE FILA ===== */
-    .tabs-browser-wrap {
-      background: #E2E8F0;
-      border-radius: 14px 14px 0 0;
-      padding: 8px 8px 0;
-      overflow: hidden;
-    }
-    .tabs-browser-row {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 4px;
-    }
-    .tab-browser {
-      flex: 1;
-      position: relative;
-      padding: 9px 10px;
-      border: none;
-      border-radius: 10px 10px 0 0;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      background: #CBD5E1;
-      color: #64748B;
-      text-align: center;
-      transition: all 0.15s;
-      white-space: nowrap;
-    }
-    .tab-browser.active {
-      background: white;
-      color: #1E293B;
-      box-shadow: 0 -2px 0 0 var(--primary, #F59E0B) inset;
-    }
-    .tabs-browser-content {
-      background: white;
-      border-radius: 0 0 14px 14px;
-      padding: 16px;
-      font-size: 13px;
-      color: #64748B;
-    }
-
-    /* ===== OPCIÓN 8: DOBLE FILA ESTILO PILL ===== */
-    .tabs-pill-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .tabs-pill-row {
-      display: flex;
-      gap: 6px;
-    }
-    .tab-pill {
-      flex: 1;
-      padding: 10px 8px;
-      border: none;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      background: white;
-      color: #94A3B8;
-      text-align: center;
-      border: 1.5px solid #E2E8F0;
-      transition: all 0.15s;
-    }
-    .tab-pill.active {
-      background: var(--primary, #F59E0B);
-      border-color: var(--primary, #F59E0B);
-      color: white;
-    }
-
-    :root { --primary: #F59E0B; }
-  </style>
-
-  <div class="demo-box" style="padding:0;overflow:hidden;border-radius:14px">
-    <div class="tabs-browser-wrap">
-      <div class="tabs-browser-row">
-        <button class="tab-browser active">Negocio</button>
-        <button class="tab-browser">Mis Negocios</button>
-        <button class="tab-browser">Mi Cuenta</button>
+  <!-- PÁGINA: CLIENTES -->
+  <div id="pagina-clientes" style="display:block">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;gap:6px">
+        <button class="vista-btn active" onclick="mostrar('A')">A · Tabla</button>
+        <button class="vista-btn" onclick="mostrar('B')">B · Tarjetas</button>
+        <button class="vista-btn" onclick="mostrar('C')">C · Lista</button>
+        <button class="vista-btn" onclick="mostrar('D')">D · Acordeón</button>
       </div>
-      <div class="tabs-browser-row">
-        <button class="tab-browser">Apariencia</button>
-        <button class="tab-browser">Plan</button>
-        <div style="flex:1"></div>
+      <div style="display:flex;gap:6px">
+        <button class="vista-btn" onclick="mostrar('E')">E · Kanban</button>
+        <button class="vista-btn" onclick="mostrar('F')">F · Mosaico</button>
+        <button class="vista-btn" onclick="mostrar('G')">G · Historial</button>
       </div>
     </div>
-    <div class="tabs-browser-content">
-      Contenido de la sección seleccionada aquí
-    </div>
-  </div>
-  <p style="font-size:11px;color:#94A3B8;margin-top:6px;margin-bottom:20px">Estilo pestañas navegador en 2 filas — activa tiene línea naranja arriba</p>
 
-  <h2>Opción 8 — Doble fila pills <span class="label-prop">PROPUESTA</span></h2>
-  <div class="demo-box">
-    <div class="tabs-pill-wrap">
-      <div class="tabs-pill-row">
-        <button class="tab-pill active">Negocio</button>
-        <button class="tab-pill">Mis Negocios</button>
-        <button class="tab-pill">Mi Cuenta</button>
-      </div>
-      <div class="tabs-pill-row">
-        <button class="tab-pill">Apariencia</button>
-        <button class="tab-pill">Plan</button>
-      </div>
+  <!-- A: TABLA (actual) -->
+  <div class="vista visible" id="v-A">
+    <p class="vista-label">A — Tabla <span class="badge-actual">ACTUAL</span></p>
+    <div class="section-toolbar">
+      <input type="text" class="search-input" placeholder="Buscar cliente...">
+      <button class="btn-primary">+ Agregar</button>
     </div>
-    <p style="font-size:11px;color:#94A3B8;margin-top:8px">Doble fila de pills — fila 1: tres tabs, fila 2: dos tabs</p>
+    <div class="card">
+      <table class="data-table">
+        <thead>
+          <tr><th>Nombre</th><th>Teléfono</th><th>Email</th><th>Notas</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>María García</strong></td><td>999 111 222</td><td>maria@email.com</td>
+            <td style="max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Cliente frecuente, le gusta el producto X</td>
+            <td><button class="action-btn edit" title="Editar"><i data-lucide="pencil"></i></button><button class="action-btn delete" title="Eliminar"><i data-lucide="trash-2"></i></button></td>
+          </tr>
+          <tr>
+            <td><strong>Carlos López</strong></td><td>988 333 444</td><td>carlos@gmail.com</td><td>-</td>
+            <td><button class="action-btn edit"><i data-lucide="pencil"></i></button><button class="action-btn delete"><i data-lucide="trash-2"></i></button></td>
+          </tr>
+          <tr>
+            <td><strong>Ana Torres</strong></td><td>977 555 666</td><td>-</td>
+            <td style="max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Viene los viernes, pide descuento</td>
+            <td><button class="action-btn edit"><i data-lucide="pencil"></i></button><button class="action-btn delete"><i data-lucide="trash-2"></i></button></td>
+          </tr>
+          <tr>
+            <td><strong>Luis Vargas</strong></td><td>966 777 888</td><td>luis@hotmail.com</td><td>-</td>
+            <td><button class="action-btn edit"><i data-lucide="pencil"></i></button><button class="action-btn delete"><i data-lucide="trash-2"></i></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="vista-note">Vista tabla — igual a la actual. En móvil puede quedar apretada.</p>
   </div>
 
+  <!-- B: TARJETAS -->
+  <div class="vista" id="v-B">
+    <p class="vista-label">B — Tarjetas <span class="badge-prop">PROPUESTA</span></p>
+    <div class="section-toolbar">
+      <input type="text" class="search-input" placeholder="Buscar cliente...">
+      <button class="btn-primary">+ Agregar</button>
+    </div>
+    <div class="cards-grid">
+      <div class="c-card">
+        <div class="c-card-top"><div class="av">M</div><div><div class="c-card-name">María García</div><div class="c-card-tel">999 111 222</div></div></div>
+        <span class="tag tag-vip">⭐ VIP</span>
+        <div class="c-card-actions"><button class="c-btn edit">✏️ Editar</button><button class="c-btn del">🗑️</button></div>
+      </div>
+      <div class="c-card">
+        <div class="c-card-top"><div class="av" style="background:#D1FAE5;color:#065F46">C</div><div><div class="c-card-name">Carlos López</div><div class="c-card-tel">988 333 444</div></div></div>
+        <span class="tag tag-ok">✅ Regular</span>
+        <div class="c-card-actions"><button class="c-btn edit">✏️ Editar</button><button class="c-btn del">🗑️</button></div>
+      </div>
+      <div class="c-card">
+        <div class="c-card-top"><div class="av" style="background:#FEF3C7;color:#92400E">A</div><div><div class="c-card-name">Ana Torres</div><div class="c-card-tel">977 555 666</div></div></div>
+        <span class="tag tag-ok">✅ Regular</span>
+        <div class="c-card-actions"><button class="c-btn edit">✏️ Editar</button><button class="c-btn del">🗑️</button></div>
+      </div>
+      <div class="c-card">
+        <div class="c-card-top"><div class="av" style="background:#DBEAFE;color:#1D4ED8">L</div><div><div class="c-card-name">Luis Vargas</div><div class="c-card-tel">966 777 888</div></div></div>
+        <span class="tag tag-new">🆕 Nuevo</span>
+        <div class="c-card-actions"><button class="c-btn edit">✏️ Editar</button><button class="c-btn del">🗑️</button></div>
+      </div>
+    </div>
+    <p class="vista-note">Grid 2 columnas — avatar, nombre, teléfono y etiqueta. Más visual en móvil.</p>
+  </div>
+
+  <!-- C: LISTA -->
+  <div class="vista" id="v-C">
+    <p class="vista-label">C — Lista compacta <span class="badge-prop">PROPUESTA</span></p>
+    <div class="section-toolbar">
+      <input type="text" class="search-input" placeholder="Buscar cliente...">
+      <button class="btn-primary">+ Agregar</button>
+    </div>
+    <div class="card" style="padding:8px 16px">
+      <div class="lista">
+        <div class="lista-row"><div class="av">M</div><div class="lista-info"><div class="lista-nombre">María García</div><div class="lista-sub">999 111 222 · maria@email.com</div></div><span class="tag tag-vip">⭐ VIP</span><div class="lista-chevron">›</div></div>
+        <div class="lista-row"><div class="av" style="background:#D1FAE5;color:#065F46">C</div><div class="lista-info"><div class="lista-nombre">Carlos López</div><div class="lista-sub">988 333 444 · carlos@gmail.com</div></div><span class="tag tag-ok">✅ Regular</span><div class="lista-chevron">›</div></div>
+        <div class="lista-row"><div class="av" style="background:#FEF3C7;color:#92400E">A</div><div class="lista-info"><div class="lista-nombre">Ana Torres</div><div class="lista-sub">977 555 666 · sin email</div></div><span class="tag tag-ok">✅ Regular</span><div class="lista-chevron">›</div></div>
+        <div class="lista-row"><div class="av" style="background:#DBEAFE;color:#1D4ED8">L</div><div class="lista-info"><div class="lista-nombre">Luis Vargas</div><div class="lista-sub">966 777 888 · luis@hotmail.com</div></div><span class="tag tag-new">🆕 Nuevo</span><div class="lista-chevron">›</div></div>
+      </div>
+    </div>
+    <p class="vista-note">Lista tipo contactos — ideal para listas largas, toca para ver detalle.</p>
+  </div>
+
+  <!-- D: ACORDEÓN -->
+  <div class="vista" id="v-D">
+    <p class="vista-label">D — Acordeón <span class="badge-prop">PROPUESTA</span></p>
+    <div class="section-toolbar">
+      <input type="text" class="search-input" placeholder="Buscar cliente...">
+      <button class="btn-primary">+ Agregar</button>
+    </div>
+    <div class="acords">
+      <div class="acord">
+        <div class="acord-head" onclick="toggleAcord(this)">
+          <div class="av">M</div>
+          <div class="acord-info"><div class="acord-nombre">María García</div><div class="acord-tel">999 111 222</div></div>
+          <span class="acord-arrow open">▼</span>
+        </div>
+        <div class="acord-body open">
+          <div class="acord-row"><span class="acord-lbl">Email</span><span class="acord-val">maria@email.com</span></div>
+          <div class="acord-row"><span class="acord-lbl">Etiqueta</span><span class="acord-val">⭐ VIP</span></div>
+          <div class="acord-row"><span class="acord-lbl">Notas</span><span class="acord-val" style="max-width:160px;text-align:right;font-size:12px">Cliente frecuente, le gusta el producto X</span></div>
+          <div class="acord-acts"><button class="acord-btn wa">📱 WhatsApp</button><button class="acord-btn edit">✏️ Editar</button><button class="acord-btn del">🗑️</button></div>
+        </div>
+      </div>
+      <div class="acord">
+        <div class="acord-head" onclick="toggleAcord(this)">
+          <div class="av" style="background:#D1FAE5;color:#065F46">C</div>
+          <div class="acord-info"><div class="acord-nombre">Carlos López</div><div class="acord-tel">988 333 444</div></div>
+          <span class="acord-arrow">▼</span>
+        </div>
+        <div class="acord-body">
+          <div class="acord-row"><span class="acord-lbl">Email</span><span class="acord-val">carlos@gmail.com</span></div>
+          <div class="acord-row"><span class="acord-lbl">Etiqueta</span><span class="acord-val">✅ Regular</span></div>
+          <div class="acord-row"><span class="acord-lbl">Notas</span><span class="acord-val">—</span></div>
+          <div class="acord-acts"><button class="acord-btn wa">📱 WhatsApp</button><button class="acord-btn edit">✏️ Editar</button><button class="acord-btn del">🗑️</button></div>
+        </div>
+      </div>
+      <div class="acord">
+        <div class="acord-head" onclick="toggleAcord(this)">
+          <div class="av" style="background:#FEF3C7;color:#92400E">A</div>
+          <div class="acord-info"><div class="acord-nombre">Ana Torres</div><div class="acord-tel">977 555 666</div></div>
+          <span class="acord-arrow">▼</span>
+        </div>
+        <div class="acord-body">
+          <div class="acord-row"><span class="acord-lbl">Email</span><span class="acord-val">—</span></div>
+          <div class="acord-row"><span class="acord-lbl">Etiqueta</span><span class="acord-val">✅ Regular</span></div>
+          <div class="acord-row"><span class="acord-lbl">Notas</span><span class="acord-val" style="max-width:160px;text-align:right;font-size:12px">Viene los viernes, pide descuento</span></div>
+          <div class="acord-acts"><button class="acord-btn wa">📱 WhatsApp</button><button class="acord-btn edit">✏️ Editar</button><button class="acord-btn del">🗑️</button></div>
+        </div>
+      </div>
+      <div class="acord">
+        <div class="acord-head" onclick="toggleAcord(this)">
+          <div class="av" style="background:#DBEAFE;color:#1D4ED8">L</div>
+          <div class="acord-info"><div class="acord-nombre">Luis Vargas</div><div class="acord-tel">966 777 888</div></div>
+          <span class="acord-arrow">▼</span>
+        </div>
+        <div class="acord-body">
+          <div class="acord-row"><span class="acord-lbl">Email</span><span class="acord-val">luis@hotmail.com</span></div>
+          <div class="acord-row"><span class="acord-lbl">Etiqueta</span><span class="acord-val">🆕 Nuevo</span></div>
+          <div class="acord-row"><span class="acord-lbl">Notas</span><span class="acord-val">—</span></div>
+          <div class="acord-acts"><button class="acord-btn wa">📱 WhatsApp</button><button class="acord-btn edit">✏️ Editar</button><button class="acord-btn del">🗑️</button></div>
+        </div>
+      </div>
+    </div>
+    <p class="vista-note">Acordeón — toca para expandir perfil completo con WhatsApp, editar y borrar.</p>
+  </div>
+
+  <!-- E: KANBAN -->
+  <div class="vista" id="v-E">
+    <p class="vista-label">E — Kanban por etiqueta <span class="badge-prop">PROPUESTA</span></p>
+    <div class="section-toolbar">
+      <input type="text" class="search-input" placeholder="Buscar cliente...">
+      <button class="btn-primary">+ Agregar</button>
+    </div>
+    <div class="kanban">
+      <div class="k-col k-vip">
+        <div class="k-head">⭐ VIP (1)</div>
+        <div class="k-card"><div class="k-dot"></div><div class="k-name">María García</div><div class="k-tel">999 111 222</div></div>
+      </div>
+      <div class="k-col k-reg">
+        <div class="k-head">✅ Regular (2)</div>
+        <div class="k-card"><div class="k-dot"></div><div class="k-name">Carlos López</div><div class="k-tel">988 333 444</div></div>
+        <div class="k-card"><div class="k-dot"></div><div class="k-name">Ana Torres</div><div class="k-tel">977 555 666</div></div>
+      </div>
+      <div class="k-col k-new">
+        <div class="k-head">🆕 Nuevo (1)</div>
+        <div class="k-card"><div class="k-dot"></div><div class="k-name">Luis Vargas</div><div class="k-tel">966 777 888</div></div>
+      </div>
+      <div class="k-col k-none">
+        <div class="k-head">💤 Sin etiqueta (0)</div>
+      </div>
+    </div>
+    <p class="vista-note">Kanban — columnas por etiqueta. Desliza horizontal. De un vistazo quiénes son VIP vs nuevos.</p>
+  </div>
+
+  <!-- F: MOSAICO -->
+  <div class="vista" id="v-F">
+    <p class="vista-label">F — Mosaico <span class="badge-prop">PROPUESTA</span></p>
+    <div class="section-toolbar">
+      <input type="text" class="search-input" placeholder="Buscar cliente...">
+      <button class="btn-primary">+ Agregar</button>
+    </div>
+    <div class="card">
+      <div class="mosaic-stats">
+        <div class="m-stat"><div class="m-stat-val">4</div><div class="m-stat-lbl">Total</div></div>
+        <div class="m-stat"><div class="m-stat-val" style="color:var(--warning)">1</div><div class="m-stat-lbl">VIP</div></div>
+        <div class="m-stat"><div class="m-stat-val" style="color:var(--success)">2</div><div class="m-stat-lbl">Regular</div></div>
+        <div class="m-stat"><div class="m-stat-val" style="color:var(--primary)">1</div><div class="m-stat-lbl">Nuevo</div></div>
+      </div>
+      <div class="mosaic-grid">
+        <div class="m-item"><div class="m-av">M</div><div class="m-name">María García</div><span class="tag tag-vip" style="font-size:9px">⭐ VIP</span></div>
+        <div class="m-item"><div class="m-av" style="background:#D1FAE5;color:#065F46">C</div><div class="m-name">Carlos López</div><span class="tag tag-ok" style="font-size:9px">✅ Regular</span></div>
+        <div class="m-item"><div class="m-av" style="background:#FEF3C7;color:#92400E">A</div><div class="m-name">Ana Torres</div><span class="tag tag-ok" style="font-size:9px">✅ Regular</span></div>
+        <div class="m-item"><div class="m-av" style="background:#DBEAFE;color:#1D4ED8">L</div><div class="m-name">Luis Vargas</div><span class="tag tag-new" style="font-size:9px">🆕 Nuevo</span></div>
+        <div class="m-item" style="border:2px dashed var(--gray-200);background:none;cursor:pointer"><div style="font-size:22px;color:var(--gray-200)">＋</div><div class="m-name" style="color:var(--gray-400)">Agregar</div></div>
+      </div>
+    </div>
+    <p class="vista-note">Mosaico — stats arriba + grid de avatares. Muy visual para pocos clientes.</p>
+  </div>
+
+  <!-- G: HISTORIAL -->
+  <div class="vista" id="v-G">
+    <p class="vista-label">G — Historial de compras <span class="badge-prop">PROPUESTA</span></p>
+    <div class="section-toolbar">
+      <input type="text" class="search-input" placeholder="Buscar cliente...">
+      <button class="btn-primary">+ Agregar</button>
+    </div>
+    <div class="hist-lista">
+      <div class="hist-item"><div class="av">M</div><div class="hist-info"><div class="hist-nombre">María García</div><div class="hist-sub">⭐ VIP · Última compra: hace 2 días</div></div><div class="hist-monto"><div class="hist-monto-val">S/ 245</div><div class="hist-monto-lbl">acumulado</div></div></div>
+      <div class="hist-item"><div class="av" style="background:#D1FAE5;color:#065F46">C</div><div class="hist-info"><div class="hist-nombre">Carlos López</div><div class="hist-sub">✅ Regular · Última compra: hace 1 semana</div></div><div class="hist-monto"><div class="hist-monto-val">S/ 180</div><div class="hist-monto-lbl">acumulado</div></div></div>
+      <div class="hist-item"><div class="av" style="background:#FEF3C7;color:#92400E">A</div><div class="hist-info"><div class="hist-nombre">Ana Torres</div><div class="hist-sub">✅ Regular · Última compra: hace 3 días</div></div><div class="hist-monto"><div class="hist-monto-val">S/ 95</div><div class="hist-monto-lbl">acumulado</div></div></div>
+      <div class="hist-item"><div class="av" style="background:#DBEAFE;color:#1D4ED8">L</div><div class="hist-info"><div class="hist-nombre">Luis Vargas</div><div class="hist-sub">🆕 Nuevo · Primera visita hoy</div></div><div class="hist-monto"><div class="hist-monto-val">S/ 35</div><div class="hist-monto-lbl">acumulado</div></div></div>
+    </div>
+    <p class="vista-note">Historial — última compra y monto acumulado. Útil para fidelización.</p>
+  </div>
+
+  </div><!-- /pagina-clientes -->
+
+  <!-- PÁGINA: SELECCIONES (tabs ajustes) -->
+  <div id="pagina-selecciones" style="display:none">
+    <style>
+      .s-h2 { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:#94A3B8; margin:24px 0 10px; }
+      .s-h2:first-of-type { margin-top:0; }
+      .s-box { background:white; border-radius:14px; padding:16px; margin-bottom:6px; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+      .s-note { font-size:11px; color:#94A3B8; margin-top:8px; }
+      .label-s-actual { display:inline-block; font-size:11px; background:#FEF3C7; color:#D97706; border-radius:6px; padding:2px 8px; font-weight:600; margin-left:8px; vertical-align:middle; }
+      .label-s-prop { display:inline-block; font-size:11px; background:#EEF2FF; color:#6366F1; border-radius:6px; padding:2px 8px; font-weight:600; margin-left:8px; vertical-align:middle; }
+      .s-tabs-scroll { display:flex; gap:6px; background:#F1F5F9; padding:5px; border-radius:12px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+      .s-tabs-scroll::-webkit-scrollbar { display:none; }
+      .s-tab-scroll-btn { flex-shrink:0; padding:8px 14px; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; background:none; color:#94A3B8; white-space:nowrap; }
+      .s-tab-scroll-btn.active { background:#F59E0B; color:white; }
+      .s-tab-select { width:100%; padding:12px 16px; border:1.5px solid #E2E8F0; border-radius:12px; font-size:15px; font-weight:600; color:#1E293B; background:white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 14px center; -webkit-appearance:none; appearance:none; cursor:pointer; }
+      .s-tabs-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; }
+      .s-tab-grid-btn { padding:10px 6px; border:none; border-radius:10px; font-size:12px; font-weight:600; cursor:pointer; background:#F1F5F9; color:#64748B; text-align:center; }
+      .s-tab-grid-btn.active { background:#F59E0B; color:white; }
+      .s-tabs-compact { display:flex; gap:4px; background:#F1F5F9; padding:4px; border-radius:12px; }
+      .s-tab-compact-btn { flex:1; padding:8px 2px; border:none; border-radius:8px; font-size:11px; font-weight:600; cursor:pointer; background:none; color:#94A3B8; white-space:nowrap; text-align:center; }
+      .s-tab-compact-btn.active { background:#F59E0B; color:white; }
+      .s-tabs-chips { display:flex; gap:6px; flex-wrap:wrap; }
+      .s-tab-chip { display:flex; align-items:center; gap:5px; padding:8px 14px; border:1.5px solid #E2E8F0; border-radius:20px; font-size:13px; font-weight:600; cursor:pointer; background:white; color:#64748B; }
+      .s-tab-chip.active { border-color:#F59E0B; background:#FEF3C7; color:#D97706; }
+      .s-tab-chip svg { width:14px; height:14px; stroke:currentColor; }
+      .s-tabs-list { display:flex; flex-direction:column; gap:2px; }
+      .s-tab-list-item { display:flex; align-items:center; justify-content:space-between; padding:13px 16px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; color:#475569; background:none; border:none; text-align:left; width:100%; }
+      .s-tab-list-item.active { background:#FEF3C7; color:#D97706; }
+      .s-tab-list-item svg { width:16px; height:16px; stroke:#CBD5E1; }
+      .s-tabs-icon { display:flex; gap:4px; }
+      .s-tab-icon-btn { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 4px 8px; border:none; border-radius:12px; font-size:10px; font-weight:700; cursor:pointer; background:#F8FAFC; color:#94A3B8; border-bottom:2px solid transparent; }
+      .s-tab-icon-btn svg { width:18px; height:18px; stroke:currentColor; }
+      .s-tab-icon-btn.active { background:#FEF3C7; color:#D97706; border-bottom-color:#F59E0B; }
+      .s-tabs-pill-wrap { display:flex; flex-direction:column; gap:6px; }
+      .s-tabs-pill-row { display:flex; gap:6px; }
+      .s-tab-pill { flex:1; padding:10px 8px; border:1.5px solid #E2E8F0; border-radius:20px; font-size:13px; font-weight:600; cursor:pointer; background:white; color:#94A3B8; text-align:center; }
+      .s-tab-pill.active { background:#F59E0B; border-color:#F59E0B; color:white; }
+    </style>
+
+    <p class="s-h2">Opción actual <span class="label-s-actual">ACTUAL</span></p>
+    <div class="s-box">
+      <div class="s-tabs-scroll">
+        <button class="s-tab-scroll-btn active">Negocio</button>
+        <button class="s-tab-scroll-btn">Mis Negocios</button>
+        <button class="s-tab-scroll-btn">Mi Cuenta</button>
+        <button class="s-tab-scroll-btn">Apariencia</button>
+        <button class="s-tab-scroll-btn">Plan</button>
+      </div>
+      <p class="s-note">Scroll horizontal → desliza para ver más</p>
+    </div>
+
+    <p class="s-h2">Opción 1 <span class="label-s-prop">PROPUESTA</span></p>
+    <div class="s-box">
+      <select class="s-tab-select">
+        <option>⚙️  Negocio</option><option>🏪  Mis Negocios</option><option>👤  Mi Cuenta</option><option>🎨  Apariencia</option><option>⭐  Plan</option>
+      </select>
+      <p class="s-note">Dropdown compacto — toca para elegir sección</p>
+    </div>
+
+    <p class="s-h2">Opción 2 <span class="label-s-prop">PROPUESTA</span></p>
+    <div class="s-box">
+      <div class="s-tabs-grid">
+        <button class="s-tab-grid-btn active">Negocio</button>
+        <button class="s-tab-grid-btn">Mis Negocios</button>
+        <button class="s-tab-grid-btn">Mi Cuenta</button>
+        <button class="s-tab-grid-btn">Apariencia</button>
+        <button class="s-tab-grid-btn">Plan</button>
+      </div>
+      <p class="s-note">2 filas de botones — todo visible sin scroll</p>
+    </div>
+
+    <p class="s-h2">Opción 3 <span class="label-s-prop">PROPUESTA</span></p>
+    <div class="s-box">
+      <div class="s-tabs-compact">
+        <button class="s-tab-compact-btn active">Negocio</button>
+        <button class="s-tab-compact-btn">Negocios</button>
+        <button class="s-tab-compact-btn">Cuenta</button>
+        <button class="s-tab-compact-btn">Tema</button>
+        <button class="s-tab-compact-btn">Plan</button>
+      </div>
+      <p class="s-note">Texto abreviado — caben todos en 1 fila</p>
+    </div>
+
+    <p class="s-h2">Opción 4 <span class="label-s-prop">PROPUESTA</span></p>
+    <div class="s-box">
+      <div class="s-tabs-chips">
+        <button class="s-tab-chip active"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Negocio</button>
+        <button class="s-tab-chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Mis Negocios</button>
+        <button class="s-tab-chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Mi Cuenta</button>
+        <button class="s-tab-chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>Apariencia</button>
+        <button class="s-tab-chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Plan</button>
+      </div>
+      <p class="s-note">Chips con ícono — se acomodan en 2 filas</p>
+    </div>
+
+    <p class="s-h2">Opción 5 <span class="label-s-prop">PROPUESTA</span></p>
+    <div class="s-box">
+      <div class="s-tabs-list">
+        <button class="s-tab-list-item active">Negocio<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        <button class="s-tab-list-item">Mis Negocios<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        <button class="s-tab-list-item">Mi Cuenta<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        <button class="s-tab-list-item">Apariencia<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        <button class="s-tab-list-item">Plan<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+      </div>
+      <p class="s-note">Lista vertical — como menú de configuración</p>
+    </div>
+
+    <p class="s-h2">Opción 6 <span class="label-s-prop">PROPUESTA</span></p>
+    <div class="s-box">
+      <div class="s-tabs-icon">
+        <button class="s-tab-icon-btn active"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Negocio</button>
+        <button class="s-tab-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Negocios</button>
+        <button class="s-tab-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Cuenta</button>
+        <button class="s-tab-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>Tema</button>
+        <button class="s-tab-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Plan</button>
+      </div>
+      <p class="s-note">Íconos + texto corto — estilo bottom nav</p>
+    </div>
+
+    <p class="s-h2">Opción 7 <span class="label-s-prop">PROPUESTA</span></p>
+    <div class="s-box" style="padding:0;overflow:hidden">
+      <div style="background:#E2E8F0;border-radius:14px 14px 0 0;padding:8px 8px 0">
+        <div style="display:flex;gap:4px;margin-bottom:4px">
+          <button style="flex:1;padding:9px 10px;border:none;border-radius:10px 10px 0 0;font-size:12px;font-weight:600;cursor:pointer;background:white;color:#1E293B;box-shadow:0 -2px 0 0 #F59E0B inset">Negocio</button>
+          <button style="flex:1;padding:9px 10px;border:none;border-radius:10px 10px 0 0;font-size:12px;font-weight:600;cursor:pointer;background:#CBD5E1;color:#64748B">Mis Negocios</button>
+          <button style="flex:1;padding:9px 10px;border:none;border-radius:10px 10px 0 0;font-size:12px;font-weight:600;cursor:pointer;background:#CBD5E1;color:#64748B">Mi Cuenta</button>
+        </div>
+        <div style="display:flex;gap:4px;margin-bottom:4px">
+          <button style="flex:1;padding:9px 10px;border:none;border-radius:10px 10px 0 0;font-size:12px;font-weight:600;cursor:pointer;background:#CBD5E1;color:#64748B">Apariencia</button>
+          <button style="flex:1;padding:9px 10px;border:none;border-radius:10px 10px 0 0;font-size:12px;font-weight:600;cursor:pointer;background:#CBD5E1;color:#64748B">Plan</button>
+          <div style="flex:1"></div>
+        </div>
+      </div>
+      <div style="background:white;padding:16px;font-size:13px;color:#64748B">Contenido de la sección seleccionada aquí</div>
+    </div>
+    <p class="s-note" style="margin-bottom:20px">Estilo pestañas navegador en 2 filas</p>
+
+    <p class="s-h2">Opción 8 <span class="label-s-prop">PROPUESTA</span></p>
+    <div class="s-box">
+      <div class="s-tabs-pill-wrap">
+        <div class="s-tabs-pill-row">
+          <button class="s-tab-pill active">Negocio</button>
+          <button class="s-tab-pill">Mis Negocios</button>
+          <button class="s-tab-pill">Mi Cuenta</button>
+        </div>
+        <div class="s-tabs-pill-row">
+          <button class="s-tab-pill">Apariencia</button>
+          <button class="s-tab-pill">Plan</button>
+        </div>
+      </div>
+      <p class="s-note">Doble fila de pills — todo visible</p>
+    </div>
+  </div><!-- /pagina-selecciones -->
+
+  <!-- PÁGINA: dDASHBOARD -->
+  <div id="pagina-dashboard" style="display:none">
+
+    <!-- Stats -->
+    <div class="stats-grid" style="margin-bottom:16px">
+      <div class="stat-card purple">
+        <div class="stat-icon"><i data-lucide="trending-up"></i></div>
+        <div class="stat-info"><span class="stat-label">Ventas Hoy</span><span class="stat-value">S/ 320</span></div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-icon"><i data-lucide="package"></i></div>
+        <div class="stat-info"><span class="stat-label">Productos</span><span class="stat-value">48</span></div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon"><i data-lucide="wallet"></i></div>
+        <div class="stat-info"><span class="stat-label">En Caja</span><span class="stat-value">S/ 1,240</span></div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-icon"><i data-lucide="alert-triangle"></i></div>
+        <div class="stat-info"><span class="stat-label">Stock Bajo</span><span class="stat-value">3</span></div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-icon"><i data-lucide="users"></i></div>
+        <div class="stat-info"><span class="stat-label">Clientes</span><span class="stat-value">27</span></div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-icon"><i data-lucide="calendar"></i></div>
+        <div class="stat-info"><span class="stat-label">Citas Hoy</span><span class="stat-value">4</span></div>
+      </div>
+    </div>
+
+    <!-- Cards grid -->
+    <div class="dashboard-grid">
+
+      <!-- Últimas Ventas -->
+      <div class="card">
+        <div class="card-header"><h3>Últimas Ventas</h3><span class="ver-mas">Ver todas</span></div>
+        <div style="display:flex;flex-direction:column">
+          <div class="movimiento-item"><div class="movimiento-info"><span class="movimiento-desc">Corte de cabello</span><span class="movimiento-hora">10:30</span></div><span class="movimiento-monto ingreso">S/ 35</span></div>
+          <div class="movimiento-item"><div class="movimiento-info"><span class="movimiento-desc">Shampoo premium</span><span class="movimiento-hora">11:15</span></div><span class="movimiento-monto ingreso">S/ 45</span></div>
+          <div class="movimiento-item"><div class="movimiento-info"><span class="movimiento-desc">Tinte y brushing</span><span class="movimiento-hora">12:00</span></div><span class="movimiento-monto ingreso">S/ 120</span></div>
+          <div class="movimiento-item"><div class="movimiento-info"><span class="movimiento-desc">Manicure</span><span class="movimiento-hora">13:45</span></div><span class="movimiento-monto ingreso">S/ 30</span></div>
+        </div>
+      </div>
+
+      <!-- Stock Bajo -->
+      <div class="card">
+        <div class="card-header"><h3>Stock Bajo</h3><span class="ver-mas">Ver todos</span></div>
+        <div style="display:flex;flex-direction:column;gap:8px;padding-top:4px">
+          <div class="movimiento-item"><span class="movimiento-desc">Shampoo Sedal 400ml</span><span class="badge-stock low">2 unidades</span></div>
+          <div class="movimiento-item"><span class="movimiento-desc">Tinte Negro N°1</span><span class="badge-stock out">Sin stock</span></div>
+          <div class="movimiento-item"><span class="movimiento-desc">Acondicionador Pantene</span><span class="badge-stock low">4 unidades</span></div>
+        </div>
+      </div>
+
+      <!-- Últimos Clientes -->
+      <div class="card">
+        <div class="card-header"><h3>Últimos Clientes</h3><span class="ver-mas">Ver todos</span></div>
+        <div style="display:flex;flex-direction:column">
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-100)">
+            <div style="width:38px;height:38px;border-radius:50%;background:#EEF0FF;color:#6C63FF;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0">M</div>
+            <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:14px;color:var(--gray-800)">María García</div><div style="font-size:12px;color:var(--gray-400);margin-top:2px">999 111 222</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-100)">
+            <div style="width:38px;height:38px;border-radius:50%;background:#FEF3C7;color:#92400E;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0">C</div>
+            <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:14px;color:var(--gray-800)">Carlos López</div><div style="font-size:12px;color:var(--gray-400);margin-top:2px">988 333 444</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0">
+            <div style="width:38px;height:38px;border-radius:50%;background:#D1FAE5;color:#065F46;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0">A</div>
+            <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:14px;color:var(--gray-800)">Ana Torres</div><div style="font-size:12px;color:var(--gray-400);margin-top:2px">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Citas de Hoy -->
+      <div class="card">
+        <div class="card-header"><h3>Citas de Hoy</h3><span class="ver-mas">Ver todas</span></div>
+        <div style="display:flex;flex-direction:column">
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-100)">
+            <div style="width:36px;height:36px;border-radius:10px;background:#DBEAFE;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="calendar" style="width:16px;height:16px;stroke:#1E40AF"></i></div>
+            <div style="flex:1"><div style="font-weight:600;font-size:13px;color:var(--gray-800)">María García</div><div style="margin-top:3px"><span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#DBEAFE;color:#1E40AF;font-weight:700">Confirmada</span></div></div>
+            <span style="font-size:14px;font-weight:700;color:var(--gray-600)">09:00</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-100)">
+            <div style="width:36px;height:36px;border-radius:10px;background:#FEF3C7;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="calendar" style="width:16px;height:16px;stroke:#92400E"></i></div>
+            <div style="flex:1"><div style="font-weight:600;font-size:13px;color:var(--gray-800)">Carlos López</div><div style="margin-top:3px"><span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#FEF3C7;color:#92400E;font-weight:700">Pendiente</span></div></div>
+            <span style="font-size:14px;font-weight:700;color:var(--gray-600)">11:30</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0">
+            <div style="width:36px;height:36px;border-radius:10px;background:#D1FAE5;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="calendar" style="width:16px;height:16px;stroke:#065F46"></i></div>
+            <div style="flex:1"><div style="font-weight:600;font-size:13px;color:var(--gray-800)">Ana Torres</div><div style="margin-top:3px"><span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">Completada</span></div></div>
+            <span style="font-size:14px;font-weight:700;color:var(--gray-600)">14:00</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /pagina-dashboard -->
+
+  <!-- PÁGINA: NUEVA CITA -->
+  <div id="pagina-nuevacita" style="display:none;padding:16px;max-width:440px;margin:0 auto">
+    <h2 style="font-size:16px;font-weight:700;color:var(--gray-800);margin-bottom:20px">Opciones · Formulario Nueva Cita</h2>
+
+    <!-- ══ OPCIÓN A: Wizard 2 pasos (estilo actual + mejoras) ══ -->
+    <p style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Opción A · Wizard 2 pasos</p>
+    <div style="background:var(--white);border-radius:14px;padding:20px;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+      <!-- Header -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <span style="font-size:15px;font-weight:700;color:var(--gray-800)">Nueva Cita</span>
+        <span style="font-size:18px;color:var(--gray-400);cursor:pointer">✕</span>
+      </div>
+      <!-- Stepper -->
+      <div style="display:flex;align-items:center;margin-bottom:20px">
+        <div style="width:28px;height:28px;border-radius:50%;background:var(--primary);color:white;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center">1</div>
+        <div style="flex:1;height:3px;background:var(--primary)"></div>
+        <div style="width:28px;height:28px;border-radius:50%;background:var(--gray-200);color:var(--gray-400);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center">2</div>
+      </div>
+      <!-- Paso 1 -->
+      <div id="ncA-paso1">
+        <p style="font-size:13px;color:var(--gray-500);margin-bottom:12px">¿Quién es el cliente?</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <button onclick="ncAselOpcion('nuevo',this)" style="padding:14px 8px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-700);text-align:center">👤<br>Nuevo cliente</button>
+          <button onclick="ncAselOpcion('existente',this)" style="padding:14px 8px;border-radius:10px;border:1px solid var(--primary);background:#FFF8EC;cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-700);text-align:center">🔍<br>Cliente existente</button>
+        </div>
+        <input type="text" placeholder="Buscar cliente..." value="Ernesto" style="width:100%;padding:10px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;color:var(--gray-800);box-sizing:border-box;margin-bottom:14px">
+        <div style="display:flex;gap:10px">
+          <button style="flex:1;padding:11px;border-radius:10px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:14px;font-weight:600;color:var(--gray-600);cursor:pointer">Cancelar</button>
+          <button onclick="ncAirPaso2()" style="flex:1;padding:11px;border-radius:10px;border:none;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Siguiente →</button>
+        </div>
+      </div>
+      <!-- Paso 2 -->
+      <div id="ncA-paso2" style="display:none">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+          <span style="font-size:13px;color:var(--gray-500)">👤 Ernesto</span>
+          <button onclick="ncAirPaso1()" style="font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);color:var(--gray-500);cursor:pointer">Cambiar</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+          <div>
+            <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Fecha</label>
+            <input type="date" value="2026-03-28" style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Hora</label>
+            <div style="display:flex;align-items:center;gap:6px">
+              <button onclick="cambiarHora('ncAhora',-15)" style="width:32px;height:32px;border-radius:7px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:16px;font-weight:700;cursor:pointer;color:var(--gray-700);flex-shrink:0">−</button>
+              <input type="time" id="ncAhora" value="09:00" style="flex:1;padding:6px 4px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-weight:700;text-align:center;min-width:0">
+              <button onclick="cambiarHora('ncAhora',15)" style="width:32px;height:32px;border-radius:7px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:16px;font-weight:700;cursor:pointer;color:var(--gray-700);flex-shrink:0">+</button>
+            </div>
+          </div>
+        </div>
+        <div style="margin-bottom:10px">
+          <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Duración</label>
+          <select style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px">
+            <option>30 min</option><option selected>1 hora</option><option>1h 30min</option><option>2 horas</option>
+          </select>
+        </div>
+        <div style="margin-bottom:10px">
+          <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Servicio / Motivo</label>
+          <input type="text" placeholder="Ej: Consulta, Terapia..." style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;box-sizing:border-box">
+        </div>
+        <div style="margin-bottom:14px">
+          <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Estado</label>
+          <select style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px">
+            <option>Pendiente</option><option>Confirmada</option><option>Completada</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button onclick="ncAirPaso1()" style="flex:1;padding:11px;border-radius:10px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:14px;font-weight:600;color:var(--gray-600);cursor:pointer">← Volver</button>
+          <button style="flex:1;padding:11px;border-radius:10px;border:none;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Guardar Cita</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ OPCIÓN B: Formulario todo en uno, 2 secciones ══ -->
+    <p style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Opción B · Todo en una pantalla</p>
+    <div style="background:var(--white);border-radius:14px;overflow:hidden;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+
+      <!-- Header -->
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--gray-100)">
+        <span style="font-size:15px;font-weight:700;color:var(--gray-800)">Nueva Cita</span>
+        <span style="font-size:18px;color:var(--gray-400);cursor:pointer">✕</span>
+      </div>
+
+      <!-- SECCIÓN 1: Cliente -->
+      <div style="padding:16px 20px;border-bottom:2px solid var(--gray-100)">
+        <p style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Cliente</p>
+        <!-- Tabs nuevo / existente -->
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <button onclick="ncBtab('existente',this)" id="ncBtabExistente" style="padding:6px 14px;border-radius:20px;border:1px solid var(--primary);background:#FFF8EC;font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-800)">Existente</button>
+          <button onclick="ncBtab('nuevo',this)" id="ncBtabNuevo" style="padding:6px 14px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-600)">+ Nuevo</button>
+        </div>
+        <!-- Buscar existente -->
+        <div id="ncB-existente">
+          <input type="text" placeholder="Buscar cliente..." style="width:100%;padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;box-sizing:border-box">
+        </div>
+        <!-- Nuevo cliente -->
+        <div id="ncB-nuevo" style="display:none">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <input type="text" placeholder="Nombre *" style="width:100%;padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;box-sizing:border-box">
+            <input type="text" placeholder="Teléfono" style="width:100%;padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 2: Detalles de la cita -->
+      <div style="padding:16px 20px">
+        <p style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Detalles</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+          <div>
+            <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Fecha</label>
+            <input type="date" value="2026-03-28" style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Hora</label>
+            <div style="display:flex;align-items:center;gap:6px">
+              <button onclick="cambiarHora('ncBhora',-15)" style="width:32px;height:32px;border-radius:7px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:16px;font-weight:700;cursor:pointer;color:var(--gray-700);flex-shrink:0">−</button>
+              <input type="time" id="ncBhora" value="09:00" style="flex:1;padding:6px 4px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-weight:700;text-align:center;min-width:0">
+              <button onclick="cambiarHora('ncBhora',15)" style="width:32px;height:32px;border-radius:7px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:16px;font-weight:700;cursor:pointer;color:var(--gray-700);flex-shrink:0">+</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+          <div>
+            <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Duración</label>
+            <select style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px">
+              <option>30 min</option><option selected>1 hora</option><option>1h 30min</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Estado</label>
+            <select style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px">
+              <option>Pendiente</option><option>Confirmada</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:16px">
+          <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Servicio / Motivo</label>
+          <input type="text" placeholder="Ej: Consulta, Terapia..." style="width:100%;padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;box-sizing:border-box">
+        </div>
+        <div style="display:flex;gap:10px">
+          <button style="flex:1;padding:11px;border-radius:10px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:14px;font-weight:600;color:var(--gray-600);cursor:pointer">Cancelar</button>
+          <button style="flex:1;padding:11px;border-radius:10px;border:none;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Guardar Cita</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══ OPCIÓN C: Chips de hora ══ -->
+    <p style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Opción C · Hora con chips rápidos</p>
+    <div style="background:var(--white);border-radius:14px;padding:20px;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+        <span style="font-size:15px;font-weight:700;color:var(--gray-800)">Nueva Cita</span>
+        <span style="font-size:18px;color:var(--gray-400);cursor:pointer">✕</span>
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Cliente</label>
+        <input type="text" placeholder="Buscar cliente..." style="width:100%;padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;box-sizing:border-box">
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Fecha</label>
+        <input type="date" value="2026-03-28" style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;box-sizing:border-box">
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:6px">Hora</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+          <button onclick="setHora('ncChora','08:00',this)" style="padding:5px 12px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-700)">8:00</button>
+          <button onclick="setHora('ncChora','09:00',this)" style="padding:5px 12px;border-radius:20px;border:1px solid var(--primary);background:#FFF8EC;font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-700)">9:00</button>
+          <button onclick="setHora('ncChora','10:00',this)" style="padding:5px 12px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-700)">10:00</button>
+          <button onclick="setHora('ncChora','11:00',this)" style="padding:5px 12px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-700)">11:00</button>
+          <button onclick="setHora('ncChora','14:00',this)" style="padding:5px 12px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-700)">14:00</button>
+          <button onclick="setHora('ncChora','15:00',this)" style="padding:5px 12px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-700)">15:00</button>
+          <button onclick="setHora('ncChora','16:00',this)" style="padding:5px 12px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-700)">16:00</button>
+        </div>
+        <input type="time" id="ncChora" value="09:00" style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;font-weight:700;box-sizing:border-box">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div>
+          <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Duración</label>
+          <select style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px">
+            <option>30 min</option><option selected>1 hora</option><option>1h 30min</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Estado</label>
+          <select style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px">
+            <option>Pendiente</option><option>Confirmada</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button style="flex:1;padding:11px;border-radius:10px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:14px;font-weight:600;color:var(--gray-600);cursor:pointer">Cancelar</button>
+        <button style="flex:1;padding:11px;border-radius:10px;border:none;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Guardar Cita</button>
+      </div>
+    </div>
+
+  </div><!-- /pagina-nuevacita -->
+
+  <script>
+    lucide.createIcons();
+    function mostrarPagina(p) {
+      document.getElementById('pagina-clientes').style.display = p === 'clientes' ? 'block' : 'none';
+      document.getElementById('pagina-selecciones').style.display = p === 'selecciones' ? 'block' : 'none';
+      document.getElementById('pagina-dashboard').style.display = p === 'dashboard' ? 'block' : 'none';
+      document.getElementById('pagina-nuevacita').style.display = p === 'nuevacita' ? 'block' : 'none';
+      document.getElementById('btnCliente').style.background = p === 'clientes' ? 'var(--primary)' : 'var(--white)';
+      document.getElementById('btnCliente').style.color = p === 'clientes' ? 'white' : 'var(--gray-600)';
+      document.getElementById('btnSelecciones').style.background = p === 'selecciones' ? 'var(--primary)' : 'var(--white)';
+      document.getElementById('btnSelecciones').style.color = p === 'selecciones' ? 'white' : 'var(--gray-600)';
+      document.getElementById('btnDashboard').style.background = p === 'dashboard' ? 'var(--primary)' : 'var(--white)';
+      document.getElementById('btnDashboard').style.color = p === 'dashboard' ? 'white' : 'var(--gray-600)';
+      document.getElementById('btnNuevaCita').style.background = p === 'nuevacita' ? 'var(--primary)' : 'var(--white)';
+      document.getElementById('btnNuevaCita').style.color = p === 'nuevacita' ? 'white' : 'var(--gray-600)';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function mostrar(id) {
+      document.querySelectorAll('.vista').forEach(el => el.classList.remove('visible'));
+      document.querySelectorAll('.vista-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('v-' + id).classList.add('visible');
+      const map = { A:0, B:1, C:2, D:3, E:4, F:5, G:6 };
+      document.querySelectorAll('.vista-btn')[map[id]].classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function ncBtab(tab, btn) {
+      const esNuevo = tab === 'nuevo';
+      document.getElementById('ncB-existente').style.display = esNuevo ? 'none' : 'block';
+      document.getElementById('ncB-nuevo').style.display = esNuevo ? 'block' : 'none';
+      document.getElementById('ncBtabNuevo').style.borderColor = esNuevo ? 'var(--primary)' : 'var(--gray-200)';
+      document.getElementById('ncBtabNuevo').style.background = esNuevo ? '#FFF8EC' : 'var(--gray-50)';
+      document.getElementById('ncBtabNuevo').style.color = esNuevo ? 'var(--gray-800)' : 'var(--gray-600)';
+      document.getElementById('ncBtabExistente').style.borderColor = !esNuevo ? 'var(--primary)' : 'var(--gray-200)';
+      document.getElementById('ncBtabExistente').style.background = !esNuevo ? '#FFF8EC' : 'var(--gray-50)';
+      document.getElementById('ncBtabExistente').style.color = !esNuevo ? 'var(--gray-800)' : 'var(--gray-600)';
+    }
+    function ncAselOpcion(op, btn) {
+      btn.parentElement.querySelectorAll('button').forEach(b => { b.style.borderColor='var(--gray-200)'; b.style.background='var(--white)'; });
+      btn.style.borderColor = 'var(--primary)'; btn.style.background = '#FFF8EC';
+    }
+    function ncAirPaso2() {
+      document.getElementById('ncA-paso1').style.display = 'none';
+      document.getElementById('ncA-paso2').style.display = 'block';
+    }
+    function ncAirPaso1() {
+      document.getElementById('ncA-paso2').style.display = 'none';
+      document.getElementById('ncA-paso1').style.display = 'block';
+    }
+    function cambiarHora(id, mins) {
+      const el = document.getElementById(id);
+      const [h, m] = el.value.split(':').map(Number);
+      const total = h * 60 + m + mins;
+      const newH = ((total % (24*60)) + 24*60) % (24*60);
+      el.value = String(Math.floor(newH/60)).padStart(2,'0') + ':' + String(newH%60).padStart(2,'0');
+    }
+    function setHora(id, val, btn) {
+      document.getElementById(id).value = val;
+      btn.closest('div').querySelectorAll('button').forEach(b => { b.style.background='var(--gray-50)'; b.style.color='var(--gray-700)'; b.style.borderColor='var(--gray-200)'; });
+      btn.style.background = 'var(--primary)'; btn.style.color = 'white'; btn.style.borderColor = 'var(--primary)';
+    }
+    function toggleAcord(head) {
+      const body = head.nextElementSibling;
+      const arrow = head.querySelector('.acord-arrow');
+      const isOpen = body.classList.contains('open');
+      document.querySelectorAll('.acord-body').forEach(b => b.classList.remove('open'));
+      document.querySelectorAll('.acord-arrow').forEach(a => a.classList.remove('open'));
+      if (!isOpen) { body.classList.add('open'); arrow.classList.add('open'); }
+    }
+  </script>
 </body>
 </html>
