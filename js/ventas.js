@@ -71,11 +71,12 @@ async function guardarVenta(e) {
   e.preventDefault();
 
   const tieneInventario = currentBusiness?.modulos?.includes('inventario');
-  const cantidad = parseInt(document.getElementById('ventaCantidad').value);
-  const precio   = parseFloat(document.getElementById('ventaPrecio').value);
+  const cantidad  = parseFloat(document.getElementById('ventaCantidad').value);
+  const precio    = parseFloat(document.getElementById('ventaPrecio').value);
   const negocioId = currentBusiness?.id;
 
-  if (!cantidad || !precio) { showToast('Completa cantidad y precio', 'error'); return; }
+  if (isNaN(cantidad) || cantidad <= 0) { showToast('Ingresa una cantidad válida', 'error'); return; }
+  if (isNaN(precio)   || precio   <= 0) { showToast('Ingresa un precio válido', 'error'); return; }
 
   let productoId = null;
   let descripcion = '';

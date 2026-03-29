@@ -150,6 +150,29 @@
     .hist-monto { text-align:right; }
     .hist-monto-val { font-weight:800; font-size:15px; color:var(--gray-800); }
     .hist-monto-lbl { font-size:10px; color:var(--gray-400); }
+
+    /* Botones nueva cita */
+    .cita-section { margin-top: 16px; }
+    .cita-section h2 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94A3B8; margin-bottom: 10px; }
+    .cita-opts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .cita-opt-btn {
+      padding: 16px 10px;
+      border: 2px solid #E2E8F0;
+      border-radius: 14px;
+      background: white;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      font-size: 12px;
+      font-weight: 700;
+      color: #475569;
+    }
+    .cita-opt-btn:hover { border-color: #F59E0B; background: #FFFBEB; color: #D97706; }
+    .cita-opt-btn svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .cita-label-tag { font-size: 10px; font-weight: 600; background: #EEF2FF; color: #6366F1; border-radius: 6px; padding: 2px 8px; margin-bottom: 6px; display: inline-block; }
   </style>
 </head>
 <body>
@@ -160,6 +183,9 @@
       <a href="dashboard.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);border-radius:20px;font-size:13px;font-weight:600;color:var(--gray-600);text-decoration:none;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
         ← Volver
       </a>
+      <button onclick="mostrarPagina('nuevacita')" id="btnNuevaCita" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:var(--gray-600);border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
+        Nueva Cita
+      </button>
       <button onclick="mostrarPagina('clientes')" id="btnCliente" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--primary);color:white;border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
         Cliente
       </button>
@@ -168,9 +194,6 @@
       </button>
       <button onclick="mostrarPagina('dashboard')" id="btnDashboard" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:var(--gray-600);border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
         dDashboard
-      </button>
-      <button onclick="mostrarPagina('nuevacita')" id="btnNuevaCita" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:var(--gray-600);border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
-        Nueva Cita
       </button>
     </div>
   <hr style="border:none;border-top:1px solid var(--gray-200);margin:0 0 12px">
@@ -668,80 +691,6 @@
 
   <!-- PÁGINA: NUEVA CITA -->
   <div id="pagina-nuevacita" style="display:none;padding:16px;max-width:440px;margin:0 auto">
-    <h2 style="font-size:16px;font-weight:700;color:var(--gray-800);margin-bottom:20px">Opciones · Formulario Nueva Cita</h2>
-
-    <!-- ══ OPCIÓN A: Wizard 2 pasos (estilo actual + mejoras) ══ -->
-    <p style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Opción A · Wizard 2 pasos</p>
-    <div style="background:var(--white);border-radius:14px;padding:20px;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
-      <!-- Header -->
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <span style="font-size:15px;font-weight:700;color:var(--gray-800)">Nueva Cita</span>
-        <span style="font-size:18px;color:var(--gray-400);cursor:pointer">✕</span>
-      </div>
-      <!-- Stepper -->
-      <div style="display:flex;align-items:center;margin-bottom:20px">
-        <div style="width:28px;height:28px;border-radius:50%;background:var(--primary);color:white;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center">1</div>
-        <div style="flex:1;height:3px;background:var(--primary)"></div>
-        <div style="width:28px;height:28px;border-radius:50%;background:var(--gray-200);color:var(--gray-400);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center">2</div>
-      </div>
-      <!-- Paso 1 -->
-      <div id="ncA-paso1">
-        <p style="font-size:13px;color:var(--gray-500);margin-bottom:12px">¿Quién es el cliente?</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-          <button onclick="ncAselOpcion('nuevo',this)" style="padding:14px 8px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-700);text-align:center">👤<br>Nuevo cliente</button>
-          <button onclick="ncAselOpcion('existente',this)" style="padding:14px 8px;border-radius:10px;border:1px solid var(--primary);background:#FFF8EC;cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-700);text-align:center">🔍<br>Cliente existente</button>
-        </div>
-        <input type="text" placeholder="Buscar cliente..." value="Ernesto" style="width:100%;padding:10px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;color:var(--gray-800);box-sizing:border-box;margin-bottom:14px">
-        <div style="display:flex;gap:10px">
-          <button style="flex:1;padding:11px;border-radius:10px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:14px;font-weight:600;color:var(--gray-600);cursor:pointer">Cancelar</button>
-          <button onclick="ncAirPaso2()" style="flex:1;padding:11px;border-radius:10px;border:none;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Siguiente →</button>
-        </div>
-      </div>
-      <!-- Paso 2 -->
-      <div id="ncA-paso2" style="display:none">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
-          <span style="font-size:13px;color:var(--gray-500)">👤 Ernesto</span>
-          <button onclick="ncAirPaso1()" style="font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);color:var(--gray-500);cursor:pointer">Cambiar</button>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-          <div>
-            <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Fecha</label>
-            <input type="date" value="2026-03-28" style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;box-sizing:border-box">
-          </div>
-          <div>
-            <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Hora</label>
-            <div style="display:flex;align-items:center;gap:6px">
-              <button onclick="cambiarHora('ncAhora',-15)" style="width:32px;height:32px;border-radius:7px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:16px;font-weight:700;cursor:pointer;color:var(--gray-700);flex-shrink:0">−</button>
-              <input type="time" id="ncAhora" value="09:00" style="flex:1;padding:6px 4px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-weight:700;text-align:center;min-width:0">
-              <button onclick="cambiarHora('ncAhora',15)" style="width:32px;height:32px;border-radius:7px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:16px;font-weight:700;cursor:pointer;color:var(--gray-700);flex-shrink:0">+</button>
-            </div>
-          </div>
-        </div>
-        <div style="margin-bottom:10px">
-          <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Duración</label>
-          <select style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px">
-            <option>30 min</option><option selected>1 hora</option><option>1h 30min</option><option>2 horas</option>
-          </select>
-        </div>
-        <div style="margin-bottom:10px">
-          <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Servicio / Motivo</label>
-          <input type="text" placeholder="Ej: Consulta, Terapia..." style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;box-sizing:border-box">
-        </div>
-        <div style="margin-bottom:14px">
-          <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Estado</label>
-          <select style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px">
-            <option>Pendiente</option><option>Confirmada</option><option>Completada</option>
-          </select>
-        </div>
-        <div style="display:flex;gap:10px">
-          <button onclick="ncAirPaso1()" style="flex:1;padding:11px;border-radius:10px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:14px;font-weight:600;color:var(--gray-600);cursor:pointer">← Volver</button>
-          <button style="flex:1;padding:11px;border-radius:10px;border:none;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Guardar Cita</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ OPCIÓN B: Formulario todo en uno, 2 secciones ══ -->
-    <p style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Opción B · Todo en una pantalla</p>
     <div style="background:var(--white);border-radius:14px;overflow:hidden;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
 
       <!-- Header -->
@@ -812,54 +761,6 @@
         </div>
       </div>
 
-    </div>
-
-    <!-- ══ OPCIÓN C: Chips de hora ══ -->
-    <p style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Opción C · Hora con chips rápidos</p>
-    <div style="background:var(--white);border-radius:14px;padding:20px;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
-        <span style="font-size:15px;font-weight:700;color:var(--gray-800)">Nueva Cita</span>
-        <span style="font-size:18px;color:var(--gray-400);cursor:pointer">✕</span>
-      </div>
-      <div style="margin-bottom:12px">
-        <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Cliente</label>
-        <input type="text" placeholder="Buscar cliente..." style="width:100%;padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;box-sizing:border-box">
-      </div>
-      <div style="margin-bottom:12px">
-        <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Fecha</label>
-        <input type="date" value="2026-03-28" style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;box-sizing:border-box">
-      </div>
-      <div style="margin-bottom:12px">
-        <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:6px">Hora</label>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
-          <button onclick="setHora('ncChora','08:00',this)" style="padding:5px 12px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-700)">8:00</button>
-          <button onclick="setHora('ncChora','09:00',this)" style="padding:5px 12px;border-radius:20px;border:1px solid var(--primary);background:#FFF8EC;font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-700)">9:00</button>
-          <button onclick="setHora('ncChora','10:00',this)" style="padding:5px 12px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-700)">10:00</button>
-          <button onclick="setHora('ncChora','11:00',this)" style="padding:5px 12px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-700)">11:00</button>
-          <button onclick="setHora('ncChora','14:00',this)" style="padding:5px 12px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-700)">14:00</button>
-          <button onclick="setHora('ncChora','15:00',this)" style="padding:5px 12px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-700)">15:00</button>
-          <button onclick="setHora('ncChora','16:00',this)" style="padding:5px 12px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-700)">16:00</button>
-        </div>
-        <input type="time" id="ncChora" value="09:00" style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;font-weight:700;box-sizing:border-box">
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
-        <div>
-          <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Duración</label>
-          <select style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px">
-            <option>30 min</option><option selected>1 hora</option><option>1h 30min</option>
-          </select>
-        </div>
-        <div>
-          <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Estado</label>
-          <select style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px">
-            <option>Pendiente</option><option>Confirmada</option>
-          </select>
-        </div>
-      </div>
-      <div style="display:flex;gap:10px">
-        <button style="flex:1;padding:11px;border-radius:10px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:14px;font-weight:600;color:var(--gray-600);cursor:pointer">Cancelar</button>
-        <button style="flex:1;padding:11px;border-radius:10px;border:none;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Guardar Cita</button>
-      </div>
     </div>
 
   </div><!-- /pagina-nuevacita -->
@@ -933,5 +834,7 @@
       if (!isOpen) { body.classList.add('open'); arrow.classList.add('open'); }
     }
   </script>
+
+
 </body>
 </html>
