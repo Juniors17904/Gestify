@@ -183,10 +183,16 @@
       <a href="dashboard.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);border-radius:20px;font-size:13px;font-weight:600;color:var(--gray-600);text-decoration:none;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
         ← Volver
       </a>
+      <button onclick="mostrarPagina('vistaagenda')" id="btnVistaAgenda" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--primary);color:white;border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
+        Vista Agenda
+      </button>
+      <button onclick="mostrarPagina('vistascitas')" id="btnVistasCitas" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:var(--gray-600);border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
+        Vistas Citas
+      </button>
       <button onclick="mostrarPagina('nuevacita')" id="btnNuevaCita" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:var(--gray-600);border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
         Nueva Cita
       </button>
-      <button onclick="mostrarPagina('clientes')" id="btnCliente" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--primary);color:white;border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
+      <button onclick="mostrarPagina('clientes')" id="btnCliente" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:var(--gray-600);border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
         Cliente
       </button>
       <button onclick="mostrarPagina('selecciones')" id="btnSelecciones" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:var(--gray-600);border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
@@ -200,7 +206,7 @@
   </div><!-- /vista-nav -->
 
   <!-- PÁGINA: CLIENTES -->
-  <div id="pagina-clientes" style="display:block">
+  <div id="pagina-clientes" style="display:none">
     <div style="display:flex;flex-direction:column;gap:6px">
       <div style="display:flex;gap:6px">
         <button class="vista-btn active" onclick="mostrar('A')">A · Tabla</button>
@@ -702,10 +708,16 @@
       <!-- SECCIÓN 1: Cliente -->
       <div style="padding:16px 20px;border-bottom:2px solid var(--gray-100)">
         <p style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Cliente</p>
-        <!-- Tabs nuevo / existente -->
-        <div style="display:flex;gap:8px;margin-bottom:12px">
-          <button onclick="ncBtab('existente',this)" id="ncBtabExistente" style="padding:6px 14px;border-radius:20px;border:1px solid var(--primary);background:#FFF8EC;font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-800)">Existente</button>
-          <button onclick="ncBtab('nuevo',this)" id="ncBtabNuevo" style="padding:6px 14px;border-radius:20px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:12px;font-weight:600;cursor:pointer;color:var(--gray-600)">+ Nuevo</button>
+        <!-- Tabs nuevo / existente — Opción D -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <button onclick="ncBtab('existente',this)" id="ncBtabExistente" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;border:2px solid var(--primary);border-radius:14px;background:var(--primary-light);cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-700)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><circle cx="18.5" cy="18.5" r="3.5"/><path d="m21 21-1.5-1.5"/></svg>
+            <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:var(--primary);color:white;font-weight:700">Seleccionar</span>
+          </button>
+          <button onclick="ncBtab('nuevo',this)" id="ncBtabNuevo" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;border:2px solid var(--gray-200);border-radius:14px;background:white;cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-700)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:var(--gray-100);color:var(--gray-500);font-weight:700">+ Agregar</span>
+          </button>
         </div>
         <!-- Buscar existente -->
         <div id="ncB-existente">
@@ -763,24 +775,613 @@
 
     </div>
 
+    <!-- Opciones de etiqueta para botones cliente -->
+    <p style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin:24px 0 12px">Opciones de etiqueta</p>
+
+    <!-- 1 — Solo texto debajo del ícono -->
+    <p style="font-size:12px;font-weight:700;color:var(--gray-600);margin:0 0 8px">1 — Texto simple</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+      <button style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;border:2px solid var(--primary);border-radius:14px;background:var(--primary-light);cursor:pointer">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><circle cx="18.5" cy="18.5" r="3.5"/><path d="m21 21-1.5-1.5"/></svg>
+        <span style="font-size:13px;font-weight:700;color:var(--primary)">Existente</span>
+      </button>
+      <button style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;border:2px solid var(--gray-200);border-radius:14px;background:white;cursor:pointer">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        <span style="font-size:13px;font-weight:700;color:var(--gray-500)">Nuevo</span>
+      </button>
+    </div>
+
+    <!-- 2 — Título + subtítulo -->
+    <p style="font-size:12px;font-weight:700;color:var(--gray-600);margin:0 0 8px">2 — Título + subtítulo</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+      <button style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px;border:2px solid var(--primary);border-radius:14px;background:var(--primary-light);cursor:pointer">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><circle cx="18.5" cy="18.5" r="3.5"/><path d="m21 21-1.5-1.5"/></svg>
+        <span style="font-size:13px;font-weight:700;color:var(--primary)">Existente</span>
+        <span style="font-size:10px;color:var(--primary);opacity:.7">Buscar cliente</span>
+      </button>
+      <button style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px;border:2px solid var(--gray-200);border-radius:14px;background:white;cursor:pointer">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        <span style="font-size:13px;font-weight:700;color:var(--gray-600)">Nuevo</span>
+        <span style="font-size:10px;color:var(--gray-400)">Crear cliente</span>
+      </button>
+    </div>
+
+    <!-- 3 — Ícono en círculo + texto -->
+    <p style="font-size:12px;font-weight:700;color:var(--gray-600);margin:0 0 8px">3 — Ícono circular + texto</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+      <button style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;border:2px solid var(--primary);border-radius:14px;background:var(--primary-light);cursor:pointer">
+        <div style="width:44px;height:44px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><circle cx="18.5" cy="18.5" r="3.5"/><path d="m21 21-1.5-1.5"/></svg>
+        </div>
+        <span style="font-size:13px;font-weight:700;color:var(--primary)">Existente</span>
+      </button>
+      <button style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;border:2px solid var(--gray-200);border-radius:14px;background:white;cursor:pointer">
+        <div style="width:44px;height:44px;border-radius:50%;background:var(--gray-100);display:flex;align-items:center;justify-content:center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gray-500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        </div>
+        <span style="font-size:13px;font-weight:700;color:var(--gray-500)">Nuevo</span>
+      </button>
+    </div>
+
+    <!-- 4 — Pill horizontal (estilo tabs) -->
+    <p style="font-size:12px;font-weight:700;color:var(--gray-600);margin:0 0 8px">4 — Tabs pill horizontal</p>
+    <div style="display:flex;background:var(--gray-100);border-radius:12px;padding:4px;margin-bottom:20px">
+      <button style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border:none;border-radius:9px;background:white;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.1)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><circle cx="18.5" cy="18.5" r="3.5"/><path d="m21 21-1.5-1.5"/></svg>
+        <span style="font-size:13px;font-weight:700;color:var(--primary)">Existente</span>
+      </button>
+      <button style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border:none;border-radius:9px;background:transparent;cursor:pointer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        <span style="font-size:13px;font-weight:600;color:var(--gray-500)">Nuevo</span>
+      </button>
+    </div>
+
+    <!-- 5 — Solo ícono grande (sin texto) -->
+    <p style="font-size:12px;font-weight:700;color:var(--gray-600);margin:0 0 8px">5 — Solo ícono</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+      <button style="display:flex;flex-direction:column;align-items:center;padding:18px 14px;border:2px solid var(--primary);border-radius:14px;background:var(--primary-light);cursor:pointer">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><circle cx="18.5" cy="18.5" r="3.5"/><path d="m21 21-1.5-1.5"/></svg>
+      </button>
+      <button style="display:flex;flex-direction:column;align-items:center;padding:18px 14px;border:2px solid var(--gray-200);border-radius:14px;background:white;cursor:pointer">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+      </button>
+    </div>
+
   </div><!-- /pagina-nuevacita -->
+
+  <!-- PÁGINA: VISTA AGENDA -->
+  <div id="pagina-vistaagenda" style="display:block">
+
+    <!-- ══ Toggle Día / Semana / Mes ══ -->
+    <div class="section-toolbar">
+      <h2 style="font-size:1.1rem;font-weight:700;color:var(--gray-800);margin:0">Citas</h2>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div style="display:flex;background:var(--gray-100);border-radius:8px;padding:3px">
+          <button id="ej-btn-dia"    onclick="ejVista('dia')"    style="padding:4px 12px;border-radius:6px;border:none;background:var(--white);font-size:12px;font-weight:700;color:var(--primary);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Día</button>
+          <button id="ej-btn-semana" onclick="ejVista('semana')" style="padding:4px 12px;border-radius:6px;border:none;background:transparent;font-size:12px;font-weight:600;color:var(--gray-500);cursor:pointer">Semana</button>
+          <button id="ej-btn-mes"    onclick="ejVista('mes')"    style="padding:4px 12px;border-radius:6px;border:none;background:transparent;font-size:12px;font-weight:600;color:var(--gray-500);cursor:pointer">Mes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vista DÍA -->
+    <div id="ej-vista-dia">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <button onclick="ejDiaCambiar(-1)" style="width:40px;height:40px;border-radius:12px;border:1.5px solid var(--gray-200);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.08);transition:box-shadow 0.15s" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.14)'" onmouseout="this.style.boxShadow='0 2px 6px rgba(0,0,0,0.08)'"><i data-lucide="chevron-left" style="width:18px;height:18px;stroke:var(--gray-600);stroke-width:2.5"></i></button>
+        <div style="text-align:center">
+          <div id="ej-dia-relativo" style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:1px">Hoy</div>
+          <div id="ej-dia-nombre" style="font-size:14px;font-weight:700;color:var(--gray-800)">Domingo</div>
+          <div id="ej-dia-fecha" style="font-size:12px;color:var(--gray-400);margin-top:2px">29 de marzo</div>
+        </div>
+        <button onclick="ejDiaCambiar(1)" style="width:40px;height:40px;border-radius:12px;border:1.5px solid var(--gray-200);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.08);transition:box-shadow 0.15s" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.14)'" onmouseout="this.style.boxShadow='0 2px 6px rgba(0,0,0,0.08)'"><i data-lucide="chevron-right" style="width:18px;height:18px;stroke:var(--gray-600);stroke-width:2.5"></i></button>
+      </div>
+      <div class="card agenda-card">
+        <div style="background:var(--white);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.07)">
+          <div><div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;border-bottom:1px solid var(--gray-100)"><span style="font-size:13px;font-weight:800;color:#F59E0B;width:40px;flex-shrink:0">16:27</span><span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">Mila</span><span style="width:8px;height:8px;border-radius:50%;background:#F59E0B;flex-shrink:0"></span><svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg></div><div style="display:none;padding:10px 16px 12px;background:var(--gray-50);border-bottom:1px solid var(--gray-100)"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap"><span style="font-size:12px;color:var(--gray-400)">1h · Consulta</span><span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#FEF3C7;color:#92400E;font-weight:700">Pendiente</span></div><div style="display:flex;gap:8px"><button style="flex:1;padding:7px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:12px;font-weight:600;color:var(--gray-600);cursor:pointer">Editar</button><button style="flex:1;padding:7px;border-radius:10px;border:none;background:#FEE2E2;font-size:12px;font-weight:600;color:#DC2626;cursor:pointer">Eliminar</button></div></div></div>
+          <div><div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;border-bottom:1px solid var(--gray-100)"><span style="font-size:13px;font-weight:800;color:#F59E0B;width:40px;flex-shrink:0">16:29</span><span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">Daniel F</span><span style="width:8px;height:8px;border-radius:50%;background:#F59E0B;flex-shrink:0"></span><svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg></div><div style="display:none;padding:10px 16px 12px;background:var(--gray-50);border-bottom:1px solid var(--gray-100)"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap"><span style="font-size:12px;color:var(--gray-400)">1h · 902333333</span><span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#FEF3C7;color:#92400E;font-weight:700">Pendiente</span></div><div style="display:flex;gap:8px"><button style="flex:1;padding:7px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:12px;font-weight:600;color:var(--gray-600);cursor:pointer">Editar</button><button style="flex:1;padding:7px;border-radius:10px;border:none;background:#FEE2E2;font-size:12px;font-weight:600;color:#DC2626;cursor:pointer">Eliminar</button></div></div></div>
+          <div><div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer"><span style="font-size:13px;font-weight:800;color:#10B981;width:40px;flex-shrink:0">18:03</span><span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">Dante</span><span style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></span><svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg></div><div style="display:none;padding:10px 16px 12px;background:var(--gray-50)"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap"><span style="font-size:12px;color:var(--gray-400)">1h</span><span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">Confirmada</span></div><div style="display:flex;gap:8px"><button style="flex:1;padding:7px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:12px;font-weight:600;color:var(--gray-600);cursor:pointer">Editar</button><button style="flex:1;padding:7px;border-radius:10px;border:none;background:#FEE2E2;font-size:12px;font-weight:600;color:#DC2626;cursor:pointer">Eliminar</button></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vista SEMANA -->
+    <div id="ej-vista-semana" style="display:none">
+      <div class="agenda-nav" style="margin-bottom:12px">
+        <button class="btn-icon" onclick="ejSemanaCambiar(-1)"><i data-lucide="chevron-left"></i></button>
+        <span id="ej-semana-label" class="agenda-fecha-label">24 — 30 mar.</span>
+        <button class="btn-icon" onclick="ejSemanaCambiar(1)"><i data-lucide="chevron-right"></i></button>
+        <button id="ej-semana-hoy" class="btn-secondary btn-sm" onclick="ejSemanaIrHoy()" style="display:none">Hoy</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+
+        <!-- Lun sin citas -->
+        <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px">
+            <span style="font-size:13px;font-weight:700;color:var(--gray-600)">Lun 24</span>
+            <span style="font-size:12px;color:var(--gray-300)">Sin citas</span>
+          </div>
+        </div>
+
+        <!-- Mar con 1 cita -->
+        <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+          <div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--gray-100)">
+            <span style="font-size:13px;font-weight:700;color:var(--gray-700)">Mar 25</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:var(--primary-light);color:var(--primary);font-weight:700">1 cita</span>
+              <svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div style="display:none;padding:8px 12px">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 4px">
+              <span style="font-size:12px;font-weight:800;color:#3B82F6;width:36px">10:00</span>
+              <span style="font-size:13px;font-weight:600;color:var(--gray-800);flex:1">Ernesto</span>
+              <span style="width:7px;height:7px;border-radius:50%;background:#3B82F6"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mié sin citas -->
+        <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px">
+            <span style="font-size:13px;font-weight:700;color:var(--gray-600)">Mié 26</span>
+            <span style="font-size:12px;color:var(--gray-300)">Sin citas</span>
+          </div>
+        </div>
+
+        <!-- Jue con 2 citas -->
+        <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+          <div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--gray-100)">
+            <span style="font-size:13px;font-weight:700;color:var(--gray-700)">Jue 27</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:var(--primary-light);color:var(--primary);font-weight:700">2 citas</span>
+              <svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div style="display:none;padding:8px 12px">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--gray-100)">
+              <span style="font-size:12px;font-weight:800;color:#F59E0B;width:36px">09:00</span>
+              <span style="font-size:13px;font-weight:600;color:var(--gray-800);flex:1">Juniors</span>
+              <span style="width:7px;height:7px;border-radius:50%;background:#F59E0B"></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 4px">
+              <span style="font-size:12px;font-weight:800;color:#10B981;width:36px">11:30</span>
+              <span style="font-size:13px;font-weight:600;color:var(--gray-800);flex:1">María</span>
+              <span style="width:7px;height:7px;border-radius:50%;background:#10B981"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vie sin citas -->
+        <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px">
+            <span style="font-size:13px;font-weight:700;color:var(--gray-600)">Vie 28</span>
+            <span style="font-size:12px;color:var(--gray-300)">Sin citas</span>
+          </div>
+        </div>
+
+        <!-- Sáb/Dom — HOY con 3 citas -->
+        <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06);border:2px solid var(--primary)">
+          <div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--gray-100)">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:13px;font-weight:700;color:var(--primary)">Dom 29</span>
+              <span style="font-size:10px;padding:1px 7px;border-radius:20px;background:var(--primary);color:white;font-weight:700">Hoy</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:var(--primary-light);color:var(--primary);font-weight:700">3 citas</span>
+              <svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div style="display:none;padding:8px 12px">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--gray-100)"><span style="font-size:12px;font-weight:800;color:#F59E0B;width:36px">16:27</span><span style="font-size:13px;font-weight:600;color:var(--gray-800);flex:1">Mila</span><span style="width:7px;height:7px;border-radius:50%;background:#F59E0B"></span></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--gray-100)"><span style="font-size:12px;font-weight:800;color:#F59E0B;width:36px">16:29</span><span style="font-size:13px;font-weight:600;color:var(--gray-800);flex:1">Daniel F</span><span style="width:7px;height:7px;border-radius:50%;background:#F59E0B"></span></div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 4px"><span style="font-size:12px;font-weight:800;color:#10B981;width:36px">18:03</span><span style="font-size:13px;font-weight:600;color:var(--gray-800);flex:1">Dante</span><span style="width:7px;height:7px;border-radius:50%;background:#10B981"></span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Vista MES -->
+    <div id="ej-vista-mes" style="display:none">
+      <div class="agenda-nav" style="margin-bottom:12px">
+        <button class="btn-icon" onclick="ejMesCambiar(-1)"><i data-lucide="chevron-left"></i></button>
+        <span id="ej-mes-label" class="agenda-fecha-label">Marzo 2026</span>
+        <button class="btn-icon" onclick="ejMesCambiar(1)"><i data-lucide="chevron-right"></i></button>
+        <button id="ej-mes-hoy" class="btn-secondary btn-sm" onclick="ejMesIrHoy()" style="display:none">Hoy</button>
+      </div>
+      <div class="card" style="padding:12px">
+        <!-- Cabecera días semana -->
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:6px">
+          <span style="text-align:center;font-size:11px;font-weight:700;color:var(--gray-400)">L</span>
+          <span style="text-align:center;font-size:11px;font-weight:700;color:var(--gray-400)">M</span>
+          <span style="text-align:center;font-size:11px;font-weight:700;color:var(--gray-400)">X</span>
+          <span style="text-align:center;font-size:11px;font-weight:700;color:var(--gray-400)">J</span>
+          <span style="text-align:center;font-size:11px;font-weight:700;color:var(--gray-400)">V</span>
+          <span style="text-align:center;font-size:11px;font-weight:700;color:var(--primary)">S</span>
+          <span style="text-align:center;font-size:11px;font-weight:700;color:var(--primary)">D</span>
+        </div>
+        <!-- Grilla días -->
+        <div id="ej-mes-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px"></div>
+      </div>
+      <!-- Detalle día seleccionado -->
+      <div id="ej-mes-detalle" style="margin-top:10px"></div>
+    </div>
+
+    <div style="height:80px"></div>
+
+  </div><!-- /pagina-vistaagenda -->
+
+  <!-- PÁGINA: VISTAS CITAS -->
+  <div id="pagina-vistascitas" style="display:none;padding:16px;max-width:440px;margin:0 auto">
+
+    <!-- OPCIÓN A — Actual (border izquierdo) -->
+    <p style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px">A — Actual <span style="background:#FEF3C7;color:#D97706;font-size:10px;padding:2px 8px;border-radius:6px;text-transform:none;letter-spacing:0">actual</span></p>
+    <div style="background:var(--white);border-radius:14px;overflow:hidden;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,0.07)">
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--gray-100);border-left:4px solid #F59E0B">
+        <span style="font-size:15px;font-weight:800;color:#F59E0B;min-width:44px">16:27</span>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px;color:var(--gray-800)">Mila</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">🕐 1h</div>
+        </div>
+        <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">Pendiente</span>
+        <div style="display:flex;gap:6px">
+          <button style="border:none;background:none;cursor:pointer;color:var(--primary)">✏️</button>
+          <button style="border:none;background:none;cursor:pointer;color:var(--danger)">🗑️</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--gray-100);border-left:4px solid #F59E0B">
+        <span style="font-size:15px;font-weight:800;color:#F59E0B;min-width:44px">16:29</span>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px;color:var(--gray-800)">Daniel F</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">🕐 1h</div>
+        </div>
+        <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">Pendiente</span>
+        <div style="display:flex;gap:6px">
+          <button style="border:none;background:none;cursor:pointer;color:var(--primary)">✏️</button>
+          <button style="border:none;background:none;cursor:pointer;color:var(--danger)">🗑️</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-left:4px solid #10B981">
+        <span style="font-size:15px;font-weight:800;color:#10B981;min-width:44px">18:03</span>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px;color:var(--gray-800)">Dante</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">🕐 1h</div>
+        </div>
+        <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">Confirmada</span>
+        <div style="display:flex;gap:6px">
+          <button style="border:none;background:none;cursor:pointer;color:var(--primary)">✏️</button>
+          <button style="border:none;background:none;cursor:pointer;color:var(--danger)">🗑️</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPCIÓN B — Timeline con línea vertical -->
+    <p style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px">B — Timeline</p>
+    <div style="margin-bottom:24px;padding:4px 0">
+      <div style="display:flex;gap:12px;margin-bottom:4px">
+        <div style="display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0">
+          <div style="width:12px;height:12px;border-radius:50%;background:#F59E0B;margin-top:4px"></div>
+          <div style="width:2px;flex:1;background:var(--gray-200);margin:4px 0"></div>
+        </div>
+        <div style="flex:1;background:var(--white);border-radius:12px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.07);margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:12px;font-weight:700;color:#F59E0B">16:27</span>
+            <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">Pendiente</span>
+          </div>
+          <div style="font-weight:700;font-size:14px;color:var(--gray-800);margin-top:4px">Mila</div>
+          <div style="font-size:12px;color:var(--gray-400)">1 hora</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:4px">
+        <div style="display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0">
+          <div style="width:12px;height:12px;border-radius:50%;background:#F59E0B;margin-top:4px"></div>
+          <div style="width:2px;flex:1;background:var(--gray-200);margin:4px 0"></div>
+        </div>
+        <div style="flex:1;background:var(--white);border-radius:12px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.07);margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:12px;font-weight:700;color:#F59E0B">16:29</span>
+            <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">Pendiente</span>
+          </div>
+          <div style="font-weight:700;font-size:14px;color:var(--gray-800);margin-top:4px">Daniel F</div>
+          <div style="font-size:12px;color:var(--gray-400)">1 hora</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px">
+        <div style="display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0">
+          <div style="width:12px;height:12px;border-radius:50%;background:#10B981;margin-top:4px"></div>
+        </div>
+        <div style="flex:1;background:var(--white);border-radius:12px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:12px;font-weight:700;color:#10B981">18:03</span>
+            <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">Confirmada</span>
+          </div>
+          <div style="font-weight:700;font-size:14px;color:var(--gray-800);margin-top:4px">Dante</div>
+          <div style="font-size:12px;color:var(--gray-400)">1 hora</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPCIÓN C — Agenda estilo hora columna -->
+    <p style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px">C — Columna hora fija</p>
+    <div style="background:var(--white);border-radius:14px;overflow:hidden;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,0.07)">
+      <div style="display:grid;grid-template-columns:52px 1fr;border-bottom:1px solid var(--gray-100)">
+        <div style="background:#FFF8EC;display:flex;align-items:center;justify-content:center;padding:14px 4px;border-right:1px solid var(--gray-100)">
+          <span style="font-size:13px;font-weight:800;color:#F59E0B;text-align:center;line-height:1.2">16<br>27</span>
+        </div>
+        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:700;font-size:14px;color:var(--gray-800)">Mila</div>
+            <div style="font-size:12px;color:var(--gray-400);margin-top:2px">1 hora · Pendiente</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button style="width:30px;height:30px;border-radius:8px;border:1px solid var(--gray-200);background:var(--gray-50);cursor:pointer;font-size:14px">✏️</button>
+            <button style="width:30px;height:30px;border-radius:8px;border:1px solid #FEE2E2;background:#FFF5F5;cursor:pointer;font-size:14px">🗑️</button>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:52px 1fr;border-bottom:1px solid var(--gray-100)">
+        <div style="background:#FFF8EC;display:flex;align-items:center;justify-content:center;padding:14px 4px;border-right:1px solid var(--gray-100)">
+          <span style="font-size:13px;font-weight:800;color:#F59E0B;text-align:center;line-height:1.2">16<br>29</span>
+        </div>
+        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:700;font-size:14px;color:var(--gray-800)">Daniel F</div>
+            <div style="font-size:12px;color:var(--gray-400);margin-top:2px">1 hora · Pendiente</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button style="width:30px;height:30px;border-radius:8px;border:1px solid var(--gray-200);background:var(--gray-50);cursor:pointer;font-size:14px">✏️</button>
+            <button style="width:30px;height:30px;border-radius:8px;border:1px solid #FEE2E2;background:#FFF5F5;cursor:pointer;font-size:14px">🗑️</button>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:52px 1fr">
+        <div style="background:#ECFDF5;display:flex;align-items:center;justify-content:center;padding:14px 4px;border-right:1px solid var(--gray-100)">
+          <span style="font-size:13px;font-weight:800;color:#10B981;text-align:center;line-height:1.2">18<br>03</span>
+        </div>
+        <div style="padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:700;font-size:14px;color:var(--gray-800)">Dante</div>
+            <div style="font-size:12px;color:var(--gray-400);margin-top:2px">1 hora · Confirmada</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button style="width:30px;height:30px;border-radius:8px;border:1px solid var(--gray-200);background:var(--gray-50);cursor:pointer;font-size:14px">✏️</button>
+            <button style="width:30px;height:30px;border-radius:8px;border:1px solid #FEE2E2;background:#FFF5F5;cursor:pointer;font-size:14px">🗑️</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPCIÓN D — Card con avatar inicial -->
+    <p style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px">D — Card con avatar</p>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px">
+      <div style="background:var(--white);border-radius:14px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,0.07);display:flex;align-items:center;gap:12px">
+        <div style="width:42px;height:42px;border-radius:50%;background:#FFF8EC;color:#F59E0B;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0">M</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:14px;color:var(--gray-800)">Mila</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">1h · <span style="color:#D97706">16:27</span></div>
+        </div>
+        <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700;flex-shrink:0">Pendiente</span>
+      </div>
+      <div style="background:var(--white);border-radius:14px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,0.07);display:flex;align-items:center;gap:12px">
+        <div style="width:42px;height:42px;border-radius:50%;background:#FFF8EC;color:#F59E0B;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0">D</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:14px;color:var(--gray-800)">Daniel F</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">1h · <span style="color:#D97706">16:29</span></div>
+        </div>
+        <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700;flex-shrink:0">Pendiente</span>
+      </div>
+      <div style="background:var(--white);border-radius:14px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,0.07);display:flex;align-items:center;gap:12px">
+        <div style="width:42px;height:42px;border-radius:50%;background:#ECFDF5;color:#10B981;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0">D</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:14px;color:var(--gray-800)">Dante</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">1h · <span style="color:#10B981">18:03</span></div>
+        </div>
+        <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700;flex-shrink:0">Confirmada</span>
+      </div>
+    </div>
+
+    <!-- OPCIÓN E — Lista compacta sin tarjeta -->
+    <p style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px">E — Lista compacta</p>
+    <div style="background:var(--white);border-radius:14px;overflow:hidden;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,0.07)">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--gray-100)">
+        <span style="font-size:13px;font-weight:800;color:#F59E0B;width:38px;flex-shrink:0">16:27</span>
+        <span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">Mila</span>
+        <span style="width:8px;height:8px;border-radius:50%;background:#F59E0B;flex-shrink:0"></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--gray-100)">
+        <span style="font-size:13px;font-weight:800;color:#F59E0B;width:38px;flex-shrink:0">16:29</span>
+        <span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">Daniel F</span>
+        <span style="width:8px;height:8px;border-radius:50%;background:#F59E0B;flex-shrink:0"></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 16px">
+        <span style="font-size:13px;font-weight:800;color:#10B981;width:38px;flex-shrink:0">18:03</span>
+        <span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">Dante</span>
+        <span style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></span>
+      </div>
+    </div>
+
+    <!-- OPCIÓN F — Bloque de color por estado -->
+    <p style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px">F — Bloque de color</p>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">
+      <div style="background:#FFF8EC;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+        <span style="font-size:15px;font-weight:800;color:#D97706;min-width:44px">16:27</span>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px;color:var(--gray-800)">Mila</div>
+          <div style="font-size:12px;color:#92400E;margin-top:2px">1 hora</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button style="width:30px;height:30px;border-radius:8px;border:1px solid #FDE68A;background:white;cursor:pointer;font-size:13px">✏️</button>
+          <button style="width:30px;height:30px;border-radius:8px;border:1px solid #FDE68A;background:white;cursor:pointer;font-size:13px">🗑️</button>
+        </div>
+      </div>
+      <div style="background:#FFF8EC;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+        <span style="font-size:15px;font-weight:800;color:#D97706;min-width:44px">16:29</span>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px;color:var(--gray-800)">Daniel F</div>
+          <div style="font-size:12px;color:#92400E;margin-top:2px">1 hora</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button style="width:30px;height:30px;border-radius:8px;border:1px solid #FDE68A;background:white;cursor:pointer;font-size:13px">✏️</button>
+          <button style="width:30px;height:30px;border-radius:8px;border:1px solid #FDE68A;background:white;cursor:pointer;font-size:13px">🗑️</button>
+        </div>
+      </div>
+      <div style="background:#ECFDF5;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+        <span style="font-size:15px;font-weight:800;color:#10B981;min-width:44px">18:03</span>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px;color:var(--gray-800)">Dante</div>
+          <div style="font-size:12px;color:#065F46;margin-top:2px">1 hora</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button style="width:30px;height:30px;border-radius:8px;border:1px solid #A7F3D0;background:white;cursor:pointer;font-size:13px">✏️</button>
+          <button style="width:30px;height:30px;border-radius:8px;border:1px solid #A7F3D0;background:white;cursor:pointer;font-size:13px">🗑️</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPCIÓN G — Acordeón -->
+    <p style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px">G — Acordeón</p>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">
+
+      <!-- Item 1 — cerrado -->
+      <div style="background:var(--white);border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
+        <div onclick="toggleCitaAcordeon(this)" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;border-left:4px solid #F59E0B">
+          <span style="font-size:15px;font-weight:800;color:#F59E0B;min-width:44px">16:27</span>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:14px;color:var(--gray-800)">Mila</div>
+            <div style="font-size:12px;color:var(--gray-400);margin-top:2px">🕐 1h</div>
+          </div>
+          <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">Pendiente</span>
+          <svg class="acord-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="acord-body" style="display:none;padding:0 16px 14px 16px;border-top:1px solid var(--gray-100)">
+          <div style="font-size:12px;color:var(--gray-500);margin-top:10px;margin-bottom:10px">📋 Consulta general &nbsp;·&nbsp; 📝 Sin notas</div>
+          <div style="display:flex;gap:8px">
+            <button style="flex:1;padding:8px;border-radius:10px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:13px;font-weight:600;color:var(--gray-600);cursor:pointer">✏️ Editar</button>
+            <button style="flex:1;padding:8px;border-radius:10px;border:none;background:#FEE2E2;font-size:13px;font-weight:600;color:#DC2626;cursor:pointer">🗑️ Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 2 — abierto -->
+      <div style="background:var(--white);border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
+        <div onclick="toggleCitaAcordeon(this)" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;border-left:4px solid #F59E0B">
+          <span style="font-size:15px;font-weight:800;color:#F59E0B;min-width:44px">16:29</span>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:14px;color:var(--gray-800)">Daniel F</div>
+            <div style="font-size:12px;color:var(--gray-400);margin-top:2px">🕐 1h</div>
+          </div>
+          <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">Pendiente</span>
+          <svg class="acord-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s;transform:rotate(180deg)"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="acord-body" style="display:block;padding:0 16px 14px 16px;border-top:1px solid var(--gray-100)">
+          <div style="font-size:12px;color:var(--gray-500);margin-top:10px;margin-bottom:10px">📋 Terapia &nbsp;·&nbsp; 📝 Traer resultados</div>
+          <div style="display:flex;gap:8px">
+            <button style="flex:1;padding:8px;border-radius:10px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:13px;font-weight:600;color:var(--gray-600);cursor:pointer">✏️ Editar</button>
+            <button style="flex:1;padding:8px;border-radius:10px;border:none;background:#FEE2E2;font-size:13px;font-weight:600;color:#DC2626;cursor:pointer">🗑️ Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 3 — cerrado -->
+      <div style="background:var(--white);border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
+        <div onclick="toggleCitaAcordeon(this)" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;border-left:4px solid #10B981">
+          <span style="font-size:15px;font-weight:800;color:#10B981;min-width:44px">18:03</span>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:14px;color:var(--gray-800)">Dante</div>
+            <div style="font-size:12px;color:var(--gray-400);margin-top:2px">🕐 1h</div>
+          </div>
+          <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">Confirmada</span>
+          <svg class="acord-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="acord-body" style="display:none;padding:0 16px 14px 16px;border-top:1px solid var(--gray-100)">
+          <div style="font-size:12px;color:var(--gray-500);margin-top:10px;margin-bottom:10px">📋 Control mensual &nbsp;·&nbsp; 📝 Sin notas</div>
+          <div style="display:flex;gap:8px">
+            <button style="flex:1;padding:8px;border-radius:10px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:13px;font-weight:600;color:var(--gray-600);cursor:pointer">✏️ Editar</button>
+            <button style="flex:1;padding:8px;border-radius:10px;border:none;background:#FEE2E2;font-size:13px;font-weight:600;color:#DC2626;cursor:pointer">🗑️ Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- OPCIÓN G — Lista compacta + acordeón -->
+    <p style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px">G — Compacta + acordeón</p>
+    <div style="background:var(--white);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.07);margin-bottom:24px">
+
+      <!-- fila 1 -->
+      <div>
+        <div onclick="toggleCitaAcordeon(this)" style="display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--gray-100)">
+          <span style="font-size:13px;font-weight:800;color:#F59E0B;width:38px;flex-shrink:0">16:27</span>
+          <span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">Mila</span>
+          <span style="width:8px;height:8px;border-radius:50%;background:#F59E0B;flex-shrink:0"></span>
+          <svg class="acord-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="acord-body" style="display:none;padding:10px 16px 12px;background:var(--gray-50);border-bottom:1px solid var(--gray-100)">
+          <div style="font-size:12px;color:var(--gray-500);margin-bottom:10px">🕐 1h &nbsp;·&nbsp; <span style="padding:2px 8px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700;font-size:10px">Pendiente</span></div>
+          <div style="display:flex;gap:8px">
+            <button style="flex:1;padding:7px;border-radius:10px;border:1px solid var(--gray-200);background:white;font-size:12px;font-weight:600;color:var(--gray-600);cursor:pointer">✏️ Editar</button>
+            <button style="flex:1;padding:7px;border-radius:10px;border:none;background:#FEE2E2;font-size:12px;font-weight:600;color:#DC2626;cursor:pointer">🗑️ Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- fila 2 — abierta -->
+      <div>
+        <div onclick="toggleCitaAcordeon(this)" style="display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--gray-100)">
+          <span style="font-size:13px;font-weight:800;color:#F59E0B;width:38px;flex-shrink:0">16:29</span>
+          <span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">Daniel F</span>
+          <span style="width:8px;height:8px;border-radius:50%;background:#F59E0B;flex-shrink:0"></span>
+          <svg class="acord-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s;transform:rotate(180deg)"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="acord-body" style="display:block;padding:10px 16px 12px;background:var(--gray-50);border-bottom:1px solid var(--gray-100)">
+          <div style="font-size:12px;color:var(--gray-500);margin-bottom:10px">🕐 1h &nbsp;·&nbsp; <span style="padding:2px 8px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700;font-size:10px">Pendiente</span></div>
+          <div style="display:flex;gap:8px">
+            <button style="flex:1;padding:7px;border-radius:10px;border:1px solid var(--gray-200);background:white;font-size:12px;font-weight:600;color:var(--gray-600);cursor:pointer">✏️ Editar</button>
+            <button style="flex:1;padding:7px;border-radius:10px;border:none;background:#FEE2E2;font-size:12px;font-weight:600;color:#DC2626;cursor:pointer">🗑️ Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- fila 3 -->
+      <div>
+        <div onclick="toggleCitaAcordeon(this)" style="display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer">
+          <span style="font-size:13px;font-weight:800;color:#10B981;width:38px;flex-shrink:0">18:03</span>
+          <span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">Dante</span>
+          <span style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></span>
+          <svg class="acord-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="acord-body" style="display:none;padding:10px 16px 12px;background:var(--gray-50)">
+          <div style="font-size:12px;color:var(--gray-500);margin-bottom:10px">🕐 1h &nbsp;·&nbsp; <span style="padding:2px 8px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700;font-size:10px">Confirmada</span></div>
+          <div style="display:flex;gap:8px">
+            <button style="flex:1;padding:7px;border-radius:10px;border:1px solid var(--gray-200);background:white;font-size:12px;font-weight:600;color:var(--gray-600);cursor:pointer">✏️ Editar</button>
+            <button style="flex:1;padding:7px;border-radius:10px;border:none;background:#FEE2E2;font-size:12px;font-weight:600;color:#DC2626;cursor:pointer">🗑️ Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- /pagina-vistascitas -->
 
   <script>
     lucide.createIcons();
     function mostrarPagina(p) {
-      document.getElementById('pagina-clientes').style.display = p === 'clientes' ? 'block' : 'none';
-      document.getElementById('pagina-selecciones').style.display = p === 'selecciones' ? 'block' : 'none';
-      document.getElementById('pagina-dashboard').style.display = p === 'dashboard' ? 'block' : 'none';
-      document.getElementById('pagina-nuevacita').style.display = p === 'nuevacita' ? 'block' : 'none';
-      document.getElementById('btnCliente').style.background = p === 'clientes' ? 'var(--primary)' : 'var(--white)';
-      document.getElementById('btnCliente').style.color = p === 'clientes' ? 'white' : 'var(--gray-600)';
-      document.getElementById('btnSelecciones').style.background = p === 'selecciones' ? 'var(--primary)' : 'var(--white)';
-      document.getElementById('btnSelecciones').style.color = p === 'selecciones' ? 'white' : 'var(--gray-600)';
-      document.getElementById('btnDashboard').style.background = p === 'dashboard' ? 'var(--primary)' : 'var(--white)';
-      document.getElementById('btnDashboard').style.color = p === 'dashboard' ? 'white' : 'var(--gray-600)';
-      document.getElementById('btnNuevaCita').style.background = p === 'nuevacita' ? 'var(--primary)' : 'var(--white)';
-      document.getElementById('btnNuevaCita').style.color = p === 'nuevacita' ? 'white' : 'var(--gray-600)';
+      ['clientes','selecciones','dashboard','nuevacita','vistascitas','vistaagenda'].forEach(id => {
+        document.getElementById('pagina-' + id).style.display = p === id ? 'block' : 'none';
+      });
+      [['btnCliente','clientes'],['btnSelecciones','selecciones'],['btnDashboard','dashboard'],
+       ['btnNuevaCita','nuevacita'],['btnVistasCitas','vistascitas'],['btnVistaAgenda','vistaagenda']].forEach(([btn, id]) => {
+        document.getElementById(btn).style.background = p === id ? 'var(--primary)' : 'var(--white)';
+        document.getElementById(btn).style.color = p === id ? 'white' : 'var(--gray-600)';
+      });
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function toggleAgendaEj(header) {
+      const detail  = header.nextElementSibling;
+      const chevron = header.querySelector('.acord-chevron');
+      const abierto = detail.style.display !== 'none';
+      detail.style.display    = abierto ? 'none' : 'block';
+      chevron.style.transform = abierto ? '' : 'rotate(180deg)';
     }
     function mostrar(id) {
       document.querySelectorAll('.vista').forEach(el => el.classList.remove('visible'));
@@ -794,12 +1395,24 @@
       const esNuevo = tab === 'nuevo';
       document.getElementById('ncB-existente').style.display = esNuevo ? 'none' : 'block';
       document.getElementById('ncB-nuevo').style.display = esNuevo ? 'block' : 'none';
-      document.getElementById('ncBtabNuevo').style.borderColor = esNuevo ? 'var(--primary)' : 'var(--gray-200)';
-      document.getElementById('ncBtabNuevo').style.background = esNuevo ? '#FFF8EC' : 'var(--gray-50)';
-      document.getElementById('ncBtabNuevo').style.color = esNuevo ? 'var(--gray-800)' : 'var(--gray-600)';
-      document.getElementById('ncBtabExistente').style.borderColor = !esNuevo ? 'var(--primary)' : 'var(--gray-200)';
-      document.getElementById('ncBtabExistente').style.background = !esNuevo ? '#FFF8EC' : 'var(--gray-50)';
-      document.getElementById('ncBtabExistente').style.color = !esNuevo ? 'var(--gray-800)' : 'var(--gray-600)';
+
+      const btnNuevo = document.getElementById('ncBtabNuevo');
+      const btnExistente = document.getElementById('ncBtabExistente');
+      const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+
+      btnNuevo.style.borderColor = esNuevo ? 'var(--primary)' : 'var(--gray-200)';
+      btnNuevo.style.background = esNuevo ? 'var(--primary-light)' : 'white';
+      btnNuevo.querySelector('svg').style.stroke = esNuevo ? 'var(--primary)' : 'var(--gray-400)';
+      btnNuevo.querySelector('span').style.background = esNuevo ? 'var(--primary)' : 'var(--gray-100)';
+      btnNuevo.querySelector('span').style.color = esNuevo ? 'white' : 'var(--gray-500)';
+      btnNuevo.querySelector('span').textContent = '+ Agregar';
+
+      btnExistente.style.borderColor = !esNuevo ? 'var(--primary)' : 'var(--gray-200)';
+      btnExistente.style.background = !esNuevo ? 'var(--primary-light)' : 'white';
+      btnExistente.querySelector('svg').style.stroke = !esNuevo ? 'var(--primary)' : 'var(--gray-400)';
+      btnExistente.querySelector('span').style.background = !esNuevo ? 'var(--primary)' : 'var(--gray-100)';
+      btnExistente.querySelector('span').style.color = !esNuevo ? 'white' : 'var(--gray-500)';
+      btnExistente.querySelector('span').textContent = 'Seleccionar';
     }
     function ncAselOpcion(op, btn) {
       btn.parentElement.querySelectorAll('button').forEach(b => { b.style.borderColor='var(--gray-200)'; b.style.background='var(--white)'; });
@@ -812,6 +1425,13 @@
     function ncAirPaso1() {
       document.getElementById('ncA-paso2').style.display = 'none';
       document.getElementById('ncA-paso1').style.display = 'block';
+    }
+    function toggleCitaAcordeon(header) {
+      const body = header.nextElementSibling;
+      const icon = header.querySelector('.acord-icon');
+      const abierto = body.style.display !== 'none';
+      body.style.display = abierto ? 'none' : 'block';
+      icon.style.transform = abierto ? '' : 'rotate(180deg)';
     }
     function cambiarHora(id, mins) {
       const el = document.getElementById(id);
@@ -833,6 +1453,204 @@
       document.querySelectorAll('.acord-arrow').forEach(a => a.classList.remove('open'));
       if (!isOpen) { body.classList.add('open'); arrow.classList.add('open'); }
     }
+
+    // ── Navegación Vista DÍA ──
+    let ejDiaActual = new Date(2026, 2, 29);
+    const diasSemana = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+    const mesesCorto = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
+    function ejDiaActualizarLabel() {
+      const hoy = new Date();
+      const ayer   = new Date(hoy); ayer.setDate(hoy.getDate() - 1);
+      const manana = new Date(hoy); manana.setDate(hoy.getDate() + 1);
+      let relativo = '';
+      if      (ejDiaActual.toDateString() === hoy.toDateString())    relativo = 'Hoy';
+      else if (ejDiaActual.toDateString() === ayer.toDateString())   relativo = 'Ayer';
+      else if (ejDiaActual.toDateString() === manana.toDateString()) relativo = 'Mañana';
+      const rel = document.getElementById('ej-dia-relativo');
+      rel.textContent  = relativo;
+      rel.style.visibility = relativo ? 'visible' : 'hidden';
+      document.getElementById('ej-dia-nombre').textContent = diasNombre[ejDiaActual.getDay()];
+      document.getElementById('ej-dia-fecha').textContent  = ejDiaActual.getDate() + ' de ' + mesesNombre[ejDiaActual.getMonth()];
+    }
+    function ejDiaCambiar(delta) {
+      ejDiaActual = new Date(ejDiaActual);
+      ejDiaActual.setDate(ejDiaActual.getDate() + delta);
+      ejDiaActualizarLabel();
+    }
+    function ejDiaIrHoy() {
+      ejDiaActual = new Date();
+      ejDiaActualizarLabel();
+    }
+
+    // ── Navegación Vista SEMANA ──
+    let ejSemanaRef = new Date(2026, 2, 24); // lunes de la semana actual
+
+    function ejSemanaActualizarLabel() {
+      const fin = new Date(ejSemanaRef); fin.setDate(ejSemanaRef.getDate() + 6);
+      const mismoMes = ejSemanaRef.getMonth() === fin.getMonth();
+      let label;
+      if (mismoMes) label = ejSemanaRef.getDate() + ' — ' + fin.getDate() + ' ' + mesesCorto[fin.getMonth()] + '.';
+      else label = ejSemanaRef.getDate() + ' ' + mesesCorto[ejSemanaRef.getMonth()] + '. — ' + fin.getDate() + ' ' + mesesCorto[fin.getMonth()] + '.';
+      document.getElementById('ej-semana-label').textContent = label;
+
+      // Mostrar "Hoy" solo si no estamos en la semana actual
+      const hoy = new Date();
+      const diffDia = hoy.getDay() === 0 ? -6 : 1 - hoy.getDay();
+      const lunesHoy = new Date(hoy); lunesHoy.setDate(hoy.getDate() + diffDia); lunesHoy.setHours(0,0,0,0);
+      const lunesRef = new Date(ejSemanaRef); lunesRef.setHours(0,0,0,0);
+      const btnHoy = document.getElementById('ej-semana-hoy');
+      if (btnHoy) btnHoy.style.display = lunesRef.getTime() === lunesHoy.getTime() ? 'none' : '';
+    }
+    function ejSemanaCambiar(delta) {
+      ejSemanaRef = new Date(ejSemanaRef);
+      ejSemanaRef.setDate(ejSemanaRef.getDate() + delta * 7);
+      ejSemanaActualizarLabel();
+    }
+    function ejSemanaIrHoy() {
+      const hoy = new Date();
+      const dia = hoy.getDay(); // 0=dom
+      const diff = dia === 0 ? -6 : 1 - dia; // retroceder al lunes
+      ejSemanaRef = new Date(hoy);
+      ejSemanaRef.setDate(hoy.getDate() + diff);
+      ejSemanaActualizarLabel();
+    }
+
+    // ── OPCIÓN 1: Toggle Día / Semana / Mes ──
+    function ejVista(v) {
+      ['dia','semana','mes'].forEach(id => {
+        document.getElementById('ej-vista-' + id).style.display = v === id ? 'block' : 'none';
+        const btn = document.getElementById('ej-btn-' + id);
+        btn.style.background = v === id ? 'var(--white)' : 'transparent';
+        btn.style.color      = v === id ? 'var(--primary)' : 'var(--gray-500)';
+        btn.style.fontWeight = v === id ? '700' : '600';
+        btn.style.boxShadow  = v === id ? '0 1px 3px rgba(0,0,0,0.1)' : 'none';
+      });
+      if (v === 'mes') ejRenderMes();
+    }
+
+    // ── Vista MES ──
+    const ejCitasMes = {
+      '2026-03-25': [{ color:'#3B82F6' }],
+      '2026-03-27': [{ color:'#F59E0B' }, { color:'#10B981' }],
+      '2026-03-29': [{ color:'#F59E0B' }, { color:'#F59E0B' }, { color:'#10B981' }],
+    };
+    let ejMesActual = new Date(2026, 2, 1); // Marzo 2026
+    let ejDiaSeleccionado = null;
+
+    const ejDetalleCitas = {
+      '2026-03-25': [{ hora:'10:00', nombre:'Ernesto',  color:'#3B82F6', servicio:'Control',  estado:'Confirmada', bg:'#DBEAFE', tc:'#1E40AF' }],
+      '2026-03-27': [
+        { hora:'09:00', nombre:'Juniors', color:'#F59E0B', servicio:'Consulta', estado:'Pendiente',  bg:'#FEF3C7', tc:'#92400E' },
+        { hora:'11:30', nombre:'María',   color:'#10B981', servicio:'Terapia',  estado:'Completada', bg:'#D1FAE5', tc:'#065F46' }
+      ],
+      '2026-03-29': [
+        { hora:'16:27', nombre:'Mila',     color:'#F59E0B', servicio:'Consulta', estado:'Pendiente',  bg:'#FEF3C7', tc:'#92400E' },
+        { hora:'16:29', nombre:'Daniel F', color:'#F59E0B', servicio:'',         estado:'Pendiente',  bg:'#FEF3C7', tc:'#92400E' },
+        { hora:'18:03', nombre:'Dante',    color:'#10B981', servicio:'',         estado:'Confirmada', bg:'#DBEAFE', tc:'#1E40AF' }
+      ],
+    };
+
+    function ejRenderMes() {
+      const año  = ejMesActual.getFullYear();
+      const mes  = ejMesActual.getMonth();
+      const hoy  = new Date();
+      const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+      document.getElementById('ej-mes-label').textContent = meses[mes] + ' ' + año;
+      const btnHoyMes = document.getElementById('ej-mes-hoy');
+      if (btnHoyMes) btnHoyMes.style.display = (año === hoy.getFullYear() && mes === hoy.getMonth()) ? 'none' : '';
+
+      const primerDia = new Date(año, mes, 1);
+      // lunes=0 ... domingo=6
+      let offset = primerDia.getDay() - 1;
+      if (offset < 0) offset = 6;
+      const diasEnMes = new Date(año, mes + 1, 0).getDate();
+
+      let html = '';
+      // Celdas vacías inicio
+      for (let i = 0; i < offset; i++) {
+        html += `<div></div>`;
+      }
+      for (let d = 1; d <= diasEnMes; d++) {
+        const fecha = año + '-' + String(mes+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+        const esHoy = hoy.getFullYear()===año && hoy.getMonth()===mes && hoy.getDate()===d;
+        const selec = ejDiaSeleccionado === fecha;
+        const citas = ejCitasMes[fecha] || [];
+        const dotsDia = citas.slice(0,3).map(c => `<span style="width:5px;height:5px;border-radius:50%;background:${selec?'white':c.color};display:inline-block"></span>`).join('');
+
+        html += `<div onclick="ejSelDia('${fecha}')" style="
+          display:flex;flex-direction:column;align-items:center;justify-content:center;
+          padding:6px 2px;border-radius:10px;cursor:pointer;min-height:44px;
+          background:${selec ? 'var(--primary)' : esHoy ? 'var(--primary-light)' : 'transparent'};
+          transition:background 0.15s">
+          <span style="font-size:13px;font-weight:${esHoy||selec?'800':'600'};color:${selec?'white':esHoy?'var(--primary)':'var(--gray-700)'}">${d}</span>
+          <div style="display:flex;gap:2px;margin-top:2px;min-height:7px">${dotsDia}</div>
+        </div>`;
+      }
+      document.getElementById('ej-mes-grid').innerHTML = html;
+      ejRenderDetalleMes();
+    }
+
+    function ejSelDia(fecha) {
+      ejDiaSeleccionado = ejDiaSeleccionado === fecha ? null : fecha;
+      ejRenderMes();
+    }
+
+    function ejRenderDetalleMes() {
+      const cont = document.getElementById('ej-mes-detalle');
+      if (!ejDiaSeleccionado) { cont.innerHTML = ''; return; }
+      const lista = ejDetalleCitas[ejDiaSeleccionado] || [];
+      const [a, m, d] = ejDiaSeleccionado.split('-');
+      const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+      const label = `${parseInt(d)} de ${meses[parseInt(m)-1]}`;
+
+      if (!lista.length) {
+        cont.innerHTML = `<p style="font-size:13px;font-weight:700;color:var(--gray-500);padding:0 4px;margin:0 0 8px">${label}</p>
+          <div class="card" style="padding:16px;text-align:center;color:var(--gray-400);font-size:14px">Sin citas este día</div>`;
+        return;
+      }
+      cont.innerHTML = `<p style="font-size:13px;font-weight:700;color:var(--gray-700);padding:0 4px;margin:0 0 8px">${label}</p>
+        <div style="background:var(--white);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.07)">` +
+        lista.map((c, i) => {
+          const isLast = i === lista.length - 1;
+          return `<div>
+            <div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;${isLast?'':'border-bottom:1px solid var(--gray-100)'}">
+              <span style="font-size:13px;font-weight:800;color:${c.color};width:40px;flex-shrink:0">${c.hora}</span>
+              <span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">${c.nombre}</span>
+              <span style="width:8px;height:8px;border-radius:50%;background:${c.color};flex-shrink:0"></span>
+              <svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div style="display:none;padding:10px 16px 12px;background:var(--gray-50);${isLast?'':'border-bottom:1px solid var(--gray-100)'}">
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+                <span style="font-size:12px;color:var(--gray-400)">1h${c.servicio ? ' · '+c.servicio : ''}</span>
+                <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:${c.bg};color:${c.tc};font-weight:700">${c.estado}</span>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button style="flex:1;padding:7px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:12px;font-weight:600;color:var(--gray-600);cursor:pointer">Editar</button>
+                <button style="flex:1;padding:7px;border-radius:10px;border:none;background:#FEE2E2;font-size:12px;font-weight:600;color:#DC2626;cursor:pointer">Eliminar</button>
+              </div>
+            </div>
+          </div>`;
+        }).join('') + `</div>`;
+    }
+
+    // ── Vista MES ──
+    const diasNombre = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+    const mesesNombre = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+    function ejMesCambiar(delta) {
+      ejMesActual = new Date(ejMesActual.getFullYear(), ejMesActual.getMonth() + delta, 1);
+      ejDiaSeleccionado = null;
+      ejRenderMes();
+    }
+
+    function ejMesIrHoy() {
+      const hoy = new Date();
+      ejMesActual = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+      ejDiaSeleccionado = null;
+      ejRenderMes();
+    }
+
   </script>
 
 
