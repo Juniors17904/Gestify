@@ -744,10 +744,11 @@ body {
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   z-index: 1000;
   padding: 20px;
+  overflow-y: auto;
 }
 
 .modal-content {
@@ -756,8 +757,7 @@ body {
   padding: 24px;
   width: 100%;
   max-width: 460px;
-  max-height: 90vh;
-  overflow-y: auto;
+  margin: auto;
   box-shadow: var(--shadow-lg);
 }
 
