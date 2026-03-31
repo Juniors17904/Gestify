@@ -177,33 +177,26 @@
 </head>
 <body>
 
-  <!-- Selector de vista -->
+  <!-- Selector de módulo -->
   <div class="vista-nav">
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px">
-      <a href="dashboard.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);border-radius:20px;font-size:13px;font-weight:600;color:var(--gray-600);text-decoration:none;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
-        ← Volver
-      </a>
-      <button onclick="mostrarPagina('vistaagenda')" id="btnVistaAgenda" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--primary);color:white;border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
-        Vista Agenda
-      </button>
-      <button onclick="mostrarPagina('vistascitas')" id="btnVistasCitas" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:var(--gray-600);border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
-        Vistas Citas
-      </button>
-      <button onclick="mostrarPagina('nuevacita')" id="btnNuevaCita" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:var(--gray-600);border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
-        Nueva Cita
-      </button>
-      <button onclick="mostrarPagina('clientes')" id="btnCliente" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:var(--gray-600);border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
-        Cliente
-      </button>
-      <button onclick="mostrarPagina('selecciones')" id="btnSelecciones" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:var(--gray-600);border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
-        Selecciones
-      </button>
-      <button onclick="mostrarPagina('dashboard')" id="btnDashboard" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--white);color:var(--gray-600);border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
-        dDashboard
-      </button>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+      <a href="dashboard.html" style="display:inline-flex;align-items:center;padding:7px 12px;background:var(--white);border-radius:20px;font-size:12px;font-weight:600;color:var(--gray-500);text-decoration:none;box-shadow:0 1px 3px rgba(0,0,0,0.08)">← Volver</a>
+      <button onclick="mostrarPagina('dashboard')"   id="btnDashboard"   class="nav-mod">📊 Dashboard</button>
+      <button onclick="mostrarPagina('ventas')"      id="btnVentas"      class="nav-mod">💰 Ventas</button>
+      <button onclick="mostrarPagina('inventario')"  id="btnInventario"  class="nav-mod">📦 Inventario</button>
+      <button onclick="mostrarPagina('caja')"        id="btnCaja"        class="nav-mod">💵 Caja</button>
+      <button onclick="mostrarPagina('clientes')"    id="btnClientes"    class="nav-mod">👥 Clientes</button>
+      <button onclick="mostrarPagina('agenda')"      id="btnAgenda"      class="nav-mod">📅 Agenda</button>
+      <button onclick="mostrarPagina('empleados')"   id="btnEmpleados"   class="nav-mod">👷 Empleados</button>
     </div>
-  <hr style="border:none;border-top:1px solid var(--gray-200);margin:0 0 12px">
-  </div><!-- /vista-nav -->
+    <hr style="border:none;border-top:1px solid var(--gray-200);margin:0 0 12px">
+  </div>
+  <style>
+    .nav-mod { display:inline-flex;align-items:center;padding:7px 12px;border:none;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;background:var(--white);color:var(--gray-600);box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+    .nav-mod.active { background:var(--primary);color:white; }
+    .ej-section-label { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gray-400);margin:0 0 10px;padding:0 2px; }
+    .ej-divider { height:1px;background:var(--gray-200);margin:24px 0; }
+  </style>
 
   <!-- PÁGINA: CLIENTES -->
   <div id="pagina-clientes" style="display:none">
@@ -850,7 +843,7 @@
   </div><!-- /pagina-nuevacita -->
 
   <!-- PÁGINA: VISTA AGENDA -->
-  <div id="pagina-vistaagenda" style="display:block">
+  <div id="pagina-agenda" style="display:none">
 
     <!-- ══ Toggle Día / Semana / Mes ══ -->
     <div class="section-toolbar">
@@ -1009,7 +1002,7 @@
 
     <div style="height:80px"></div>
 
-  </div><!-- /pagina-vistaagenda -->
+  </div><!-- /pagina-agenda -->
 
   <!-- PÁGINA: VISTAS CITAS -->
   <div id="pagina-vistascitas" style="display:none;padding:16px;max-width:440px;margin:0 auto">
@@ -1363,16 +1356,239 @@
 
   </div><!-- /pagina-vistascitas -->
 
+  <!-- ══════════════════════════════════ -->
+  <!-- PÁGINA: VENTAS                     -->
+  <!-- ══════════════════════════════════ -->
+  <div id="pagina-ventas" style="display:none;padding:16px;max-width:440px;margin:0 auto">
+
+    <p class="ej-section-label">Widget — Dashboard</p>
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px">
+        <h3 style="font-size:14px;font-weight:700;color:var(--gray-800);margin:0">Últimas Ventas</h3>
+        <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver todas</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--gray-100)">
+        <div style="width:36px;height:36px;border-radius:10px;background:#EDE9FE;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="shopping-cart" style="width:16px;height:16px;stroke:#7C3AED"></i></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike</div><div style="font-size:11px;color:var(--gray-400);margin-top:2px">hace 5 min</div></div>
+        <span style="font-size:14px;font-weight:700;color:#10B981">S/ 250</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--gray-100)">
+        <div style="width:36px;height:36px;border-radius:10px;background:#EDE9FE;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="shopping-cart" style="width:16px;height:16px;stroke:#7C3AED"></i></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas</div><div style="font-size:11px;color:var(--gray-400);margin-top:2px">hace 23 min</div></div>
+        <span style="font-size:14px;font-weight:700;color:#10B981">S/ 89</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--gray-100)">
+        <div style="width:36px;height:36px;border-radius:10px;background:#EDE9FE;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="shopping-cart" style="width:16px;height:16px;stroke:#7C3AED"></i></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma</div><div style="font-size:11px;color:var(--gray-400);margin-top:2px">hace 1h</div></div>
+        <span style="font-size:14px;font-weight:700;color:#10B981">S/ 180</span>
+      </div>
+    </div>
+
+    <div class="ej-divider"></div>
+    <p class="ej-section-label">Sección — Ventas</p>
+
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <div class="card" style="flex:1;padding:14px;text-align:center">
+        <div style="font-size:11px;color:var(--gray-400);font-weight:600;margin-bottom:4px">Hoy</div>
+        <div style="font-size:20px;font-weight:800;color:var(--primary)">S/ 519</div>
+      </div>
+      <div class="card" style="flex:1;padding:14px;text-align:center">
+        <div style="font-size:11px;color:var(--gray-400);font-weight:600;margin-bottom:4px">Este mes</div>
+        <div style="font-size:20px;font-weight:800;color:var(--gray-800)">S/ 8,240</div>
+      </div>
+      <div class="card" style="flex:1;padding:14px;text-align:center">
+        <div style="font-size:11px;color:var(--gray-400);font-weight:600;margin-bottom:4px">Ventas</div>
+        <div style="font-size:20px;font-weight:800;color:var(--gray-800)">47</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:13px;font-weight:700;color:var(--gray-800)">Historial</span>
+        <button style="display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:8px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:600;cursor:pointer"><i data-lucide="plus" style="width:13px;height:13px"></i> Nueva venta</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 15:42</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">S/ 250</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 15:19</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">S/ 89</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 14:58</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">S/ 180</span>
+      </div>
+    </div>
+    <div style="height:80px"></div>
+  </div><!-- /pagina-ventas -->
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PÁGINA: INVENTARIO                 -->
+  <!-- ══════════════════════════════════ -->
+  <div id="pagina-inventario" style="display:none;padding:16px;max-width:440px;margin:0 auto">
+
+    <p class="ej-section-label">Widget — Dashboard</p>
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px">
+        <h3 style="font-size:14px;font-weight:700;color:var(--gray-800);margin:0">Stock Bajo</h3>
+        <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver todos</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--gray-100)">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike T42</div></div>
+        <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#FEE2E2;color:#DC2626;font-weight:700">Sin stock</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--gray-100)">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas M</div></div>
+        <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">2 unidades</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--gray-100)">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma L</div></div>
+        <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">1 unidad</span>
+      </div>
+    </div>
+
+    <div class="ej-divider"></div>
+    <p class="ej-section-label">Sección — Inventario</p>
+
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:12px">
+      <div style="padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100)">
+        <input type="text" placeholder="Buscar producto..." style="flex:1;border:1.5px solid var(--gray-200);border-radius:8px;padding:8px 12px;font-size:13px;outline:none">
+        <button style="padding:8px 14px;border-radius:8px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">+ Agregar</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike T42</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Calzado · S/ 250</div></div>
+        <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#FEE2E2;color:#DC2626;font-weight:700">0</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas M</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Ropa · S/ 89</div></div>
+        <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">2</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma L</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Ropa · S/ 180</div></div>
+        <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">14</span>
+      </div>
+    </div>
+    <div style="height:80px"></div>
+  </div><!-- /pagina-inventario -->
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PÁGINA: CAJA                       -->
+  <!-- ══════════════════════════════════ -->
+  <div id="pagina-caja" style="display:none;padding:16px;max-width:440px;margin:0 auto">
+
+    <p class="ej-section-label">Widget — Dashboard</p>
+    <div class="card" style="padding:16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:14px;font-weight:700;color:var(--gray-800)">Saldo en Caja</span>
+        <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver movimientos</span>
+      </div>
+      <div style="font-size:32px;font-weight:800;color:#10B981;margin-bottom:12px">S/ 1,240.00</div>
+      <div style="display:flex;gap:8px">
+        <div style="flex:1;text-align:center;padding:10px;background:#D1FAE5;border-radius:10px">
+          <div style="font-size:10px;font-weight:700;color:#065F46;margin-bottom:2px">INGRESOS</div>
+          <div style="font-size:15px;font-weight:800;color:#065F46">S/ 2,100</div>
+        </div>
+        <div style="flex:1;text-align:center;padding:10px;background:#FEE2E2;border-radius:10px">
+          <div style="font-size:10px;font-weight:700;color:#DC2626;margin-bottom:2px">EGRESOS</div>
+          <div style="font-size:15px;font-weight:800;color:#DC2626">S/ 860</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ej-divider"></div>
+    <p class="ej-section-label">Sección — Caja</p>
+
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <button style="flex:1;padding:12px;border-radius:12px;border:none;background:#D1FAE5;color:#065F46;font-size:13px;font-weight:700;cursor:pointer">+ Ingreso</button>
+      <button style="flex:1;padding:12px;border-radius:12px;border:none;background:#FEE2E2;color:#DC2626;font-size:13px;font-weight:700;cursor:pointer">− Egreso</button>
+    </div>
+
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--gray-100)">
+        <span style="font-size:13px;font-weight:700;color:var(--gray-800)">Movimientos de hoy</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta — Zapatillas</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">15:42</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">+S/ 250</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="width:8px;height:8px;border-radius:50%;background:#EF4444;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Pago proveedor</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">14:10</div></div>
+        <span style="font-size:13px;font-weight:700;color:#EF4444">−S/ 400</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+        <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta — Polo</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">13:05</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">+S/ 89</span>
+      </div>
+    </div>
+    <div style="height:80px"></div>
+  </div><!-- /pagina-caja -->
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PÁGINA: EMPLEADOS                  -->
+  <!-- ══════════════════════════════════ -->
+  <div id="pagina-empleados" style="display:none;padding:16px;max-width:440px;margin:0 auto">
+
+    <p class="ej-section-label">Widget — Dashboard</p>
+    <div class="card" style="padding:16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:14px;font-weight:700;color:var(--gray-800)">Empleados</span>
+        <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver todos</span>
+      </div>
+      <div style="display:flex;gap:10px">
+        <div style="width:42px;height:42px;border-radius:50%;background:#EEF0FF;color:#6C63FF;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center">L</div>
+        <div style="width:42px;height:42px;border-radius:50%;background:#D1FAE5;color:#065F46;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center">M</div>
+        <div style="width:42px;height:42px;border-radius:50%;background:#FEF3C7;color:#92400E;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center">J</div>
+        <div style="width:42px;height:42px;border-radius:50%;background:var(--gray-100);color:var(--gray-500);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center">+2</div>
+      </div>
+    </div>
+
+    <div class="ej-divider"></div>
+    <p class="ej-section-label">Sección — Empleados</p>
+
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100)">
+        <span style="font-size:13px;font-weight:700;color:var(--gray-800)">5 empleados</span>
+        <button style="padding:6px 12px;border-radius:8px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:600;cursor:pointer">+ Agregar</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="width:38px;height:38px;border-radius:50%;background:#EEF0FF;color:#6C63FF;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0">L</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Luis Torres</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Administrador</div></div>
+        <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">Activo</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="width:38px;height:38px;border-radius:50%;background:#D1FAE5;color:#065F46;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0">M</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">María Quispe</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Vendedor</div></div>
+        <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">Activo</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+        <div style="width:38px;height:38px;border-radius:50%;background:#FEF3C7;color:#92400E;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0">J</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Juan Ramos</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Almacén</div></div>
+        <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#FEE2E2;color:#DC2626;font-weight:700">Inactivo</span>
+      </div>
+    </div>
+    <div style="height:80px"></div>
+  </div><!-- /pagina-empleados -->
+
   <script>
     lucide.createIcons();
+    mostrarPagina('agenda');
+    const PAGINAS = ['clientes','selecciones','dashboard','nuevacita','vistascitas','agenda','ventas','inventario','caja','empleados'];
+    const BTNS    = [['btnClientes','clientes'],['btnSelecciones','selecciones'],['btnDashboard','dashboard'],
+                     ['btnAgenda','agenda'],['btnVentas','ventas'],['btnInventario','inventario'],
+                     ['btnCaja','caja'],['btnEmpleados','empleados']];
     function mostrarPagina(p) {
-      ['clientes','selecciones','dashboard','nuevacita','vistascitas','vistaagenda'].forEach(id => {
-        document.getElementById('pagina-' + id).style.display = p === id ? 'block' : 'none';
+      PAGINAS.forEach(id => {
+        const el = document.getElementById('pagina-' + id);
+        if (el) el.style.display = p === id ? 'block' : 'none';
       });
-      [['btnCliente','clientes'],['btnSelecciones','selecciones'],['btnDashboard','dashboard'],
-       ['btnNuevaCita','nuevacita'],['btnVistasCitas','vistascitas'],['btnVistaAgenda','vistaagenda']].forEach(([btn, id]) => {
-        document.getElementById(btn).style.background = p === id ? 'var(--primary)' : 'var(--white)';
-        document.getElementById(btn).style.color = p === id ? 'white' : 'var(--gray-600)';
+      BTNS.forEach(([btn, id]) => {
+        const el = document.getElementById(btn);
+        if (!el) return;
+        el.classList.toggle('active', p === id);
       });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
