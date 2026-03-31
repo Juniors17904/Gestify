@@ -229,6 +229,7 @@ function abrirModalCita(fechaStr) {
   const hh = now.getHours().toString().padStart(2, '0');
   const mm = now.getMinutes().toString().padStart(2, '0');
   document.getElementById('citaHora').value = hh + ':' + mm;
+  if (typeof ncTimePicker !== 'undefined') ncTimePicker.init(hh + ':' + mm);
   document.getElementById('citaDuracion').value = '60';
   document.getElementById('citaServicio').value = '';
   document.getElementById('citaEstado').value = 'pendiente';
@@ -307,3 +308,115 @@ async function eliminarCita(id) {
   showToast('Cita eliminada', 'success');
   cargarCitasDelDia();
 }
+
+// ── Custom Time Picker ──────────────────────────────────────
+const ncTimePicker = (() => {
+  let ampm = 'AM';
+
+  function buildDrum(id, items, itemH) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = `<div style="height:${itemH}px"></div>`;
+    items.forEach(v => {
+      const d = document.createElement('div');
+      d.style.cssText = `scroll-snap-align:center;height:${itemH}px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:var(--gray-800)`;
+      d.dataset.v = v;
+      d.textContent = v;
+      el.appendChild(d);
+    });
+    const end = document.createElement('div');
+    end.style.height = itemH + 'px';
+    el.appendChild(end);
+  }
+
+  function getVal(id) {
+    const el = document.getElementById(id);
+    if (!el) return null;
+    const cy = el.getBoundingClientRect().top + el.offsetHeight / 2;
+    const found = [...el.querySelectorAll('[data-v]')].find(d => {
+      const r = d.getBoundingClientRect();
+      return r.top <= cy && r.bottom > cy;
+    });
+    return found ? found.dataset.v : null;
+  }
+
+  function scrollTo(id, val) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const item = el.querySelector(`[data-v="${val}"]`);
+    if (item) el.scrollTop = item.offsetTop - el.offsetHeight / 2 + item.offsetHeight / 2;
+  }
+
+  function updateAmpmBtns() {
+    const am = document.getElementById('nctAM');
+    const pm = document.getElementById('nctPM');
+    if (!am || !pm) return;
+    const activeStyle = `padding:6px 10px;border-radius:8px;border:1.5px solid var(--primary);background:var(--primary);color:white;font-size:12px;font-weight:700;cursor:pointer`;
+    const inactiveStyle = `padding:6px 10px;border-radius:8px;border:1.5px solid var(--gray-200);background:var(--white);color:var(--gray-600);font-size:12px;font-weight:700;cursor:pointer`;
+    am.style.cssText = ampm === 'AM' ? activeStyle : inactiveStyle;
+    pm.style.cssText = ampm === 'PM' ? activeStyle : inactiveStyle;
+  }
+
+  return {
+    init(timeVal) {
+      const hours = Array.from({length:12}, (_,i) => String(i+1));
+      const mins  = Array.from({length:60}, (_,i) => String(i).padStart(2,'0'));
+      buildDrum('nctH', hours, 36);
+      buildDrum('nctM', mins, 36);
+
+      let h24 = 9, m = '00';
+      if (timeVal) {
+        const [hh, mm] = timeVal.split(':');
+        h24 = parseInt(hh); m = mm;
+      }
+      ampm = h24 >= 12 ? 'PM' : 'AM';
+      const h12 = h24 === 0 ? 12 : h24 > 12 ? h24 - 12 : h24;
+      updateAmpmBtns();
+      setTimeout(() => { scrollTo('nctH', String(h12)); scrollTo('nctM', m); }, 50);
+      this.updateDisplay(timeVal);
+    },
+    open() {
+      const p = document.getElementById('ncTimePicker');
+      if (!p) return;
+      p.style.display = p.style.display === 'none' ? '' : 'none';
+    },
+    live() {
+      const h12 = parseInt(getVal('nctH') || '9');
+      const m   = getVal('nctM') || '00';
+      let h24 = h12;
+      if (ampm === 'AM' && h12 === 12) h24 = 0;
+      else if (ampm === 'PM' && h12 !== 12) h24 = h12 + 12;
+      document.getElementById('citaHora').value = String(h24).padStart(2,'0') + ':' + m;
+    },
+    step(col, dir) {
+      const id = col === 'h' ? 'nctH' : 'nctM';
+      const el = document.getElementById(id);
+      if (el) el.scrollBy({ top: dir * 36, behavior: 'smooth' });
+    },
+    setAmpm(val) {
+      ampm = val;
+      updateAmpmBtns();
+      this.live();
+    },
+    confirm() {
+      const h12 = parseInt(getVal('nctH') || '9');
+      const m   = getVal('nctM') || '00';
+      let h24 = h12;
+      if (ampm === 'AM' && h12 === 12) h24 = 0;
+      else if (ampm === 'PM' && h12 !== 12) h24 = h12 + 12;
+      const val = String(h24).padStart(2,'0') + ':' + m;
+      document.getElementById('citaHora').value = val;
+      this.updateDisplay(val);
+      document.getElementById('ncTimePicker').style.display = 'none';
+    },
+    updateDisplay(val) {
+      const el = document.getElementById('citaHoraTexto');
+      if (!el || !val) return;
+      const [hh, mm] = val.split(':');
+      const h = parseInt(hh);
+      const ap = h >= 12 ? 'PM' : 'AM';
+      const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+      el.textContent = h12 + ':' + mm + ' ' + ap;
+    }
+  };
+})();

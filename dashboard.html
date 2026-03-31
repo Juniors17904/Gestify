@@ -731,7 +731,36 @@
             </div>
             <div class="form-group">
               <label>Hora</label>
-              <input type="time" id="citaHora" required>
+              <input type="hidden" id="citaHora">
+              <div id="citaHoraDisplay" onclick="ncTimePicker.open()"
+                style="width:100%;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:10px;font-size:15px;font-weight:600;color:var(--gray-800);background:var(--white);cursor:pointer;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between">
+                <span id="citaHoraTexto">Seleccionar hora</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <!-- Picker custom -->
+              <div id="ncTimePicker" style="display:none;margin-top:6px;background:var(--white);border:1.5px solid var(--gray-200);border-radius:14px;padding:12px;box-shadow:0 8px 24px rgba(0,0,0,0.12)">
+                <div style="display:flex;align-items:center;justify-content:center;gap:4px">
+                  <!-- Horas -->
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+                    <button type="button" onclick="ncTimePicker.step('h',-1)" style="background:none;border:none;font-size:18px;color:var(--gray-400);cursor:pointer;padding:2px 8px">▲</button>
+                    <div id="nctH" style="width:48px;height:108px;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;border-radius:10px;background:var(--gray-50)" onscroll="ncTimePicker.live()"></div>
+                    <button type="button" onclick="ncTimePicker.step('h',1)" style="background:none;border:none;font-size:18px;color:var(--gray-400);cursor:pointer;padding:2px 8px">▼</button>
+                  </div>
+                  <div style="font-size:20px;font-weight:800;color:var(--gray-400);margin-bottom:2px">:</div>
+                  <!-- Minutos -->
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+                    <button type="button" onclick="ncTimePicker.step('m',-1)" style="background:none;border:none;font-size:18px;color:var(--gray-400);cursor:pointer;padding:2px 8px">▲</button>
+                    <div id="nctM" style="width:48px;height:108px;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;border-radius:10px;background:var(--gray-50)" onscroll="ncTimePicker.live()"></div>
+                    <button type="button" onclick="ncTimePicker.step('m',1)" style="background:none;border:none;font-size:18px;color:var(--gray-400);cursor:pointer;padding:2px 8px">▼</button>
+                  </div>
+                  <!-- AM/PM -->
+                  <div style="display:flex;flex-direction:column;gap:6px;margin-left:8px">
+                    <button type="button" id="nctAM" onclick="ncTimePicker.setAmpm('AM')" style="padding:6px 10px;border-radius:8px;border:1.5px solid var(--primary);background:var(--primary);color:white;font-size:12px;font-weight:700;cursor:pointer">AM</button>
+                    <button type="button" id="nctPM" onclick="ncTimePicker.setAmpm('PM')" style="padding:6px 10px;border-radius:8px;border:1.5px solid var(--gray-200);background:var(--white);color:var(--gray-600);font-size:12px;font-weight:700;cursor:pointer">PM</button>
+                  </div>
+                </div>
+                <button type="button" onclick="ncTimePicker.confirm()" style="width:100%;margin-top:10px;padding:9px;border:none;border-radius:9px;background:var(--primary);color:white;font-size:13px;font-weight:700;cursor:pointer">Listo</button>
+              </div>
             </div>
             <div class="form-group">
               <label>Duración</label>
