@@ -126,6 +126,18 @@ function toggleAgendaAcordeon(header) {
   chevron.style.transform = abierto ? '' : 'rotate(180deg)';
 }
 
+function ncAcord(seccion) {
+  ['cliente', 'detalles'].forEach(s => {
+    const body    = document.getElementById('nc-body-' + s);
+    const chevron = document.getElementById('nc-chevron-' + s);
+    const numEl   = document.getElementById('nc-num-' + s);
+    const abierto = s === seccion;
+    body.style.display      = abierto ? 'block' : 'none';
+    chevron.style.transform = abierto ? 'rotate(180deg)' : '';
+    if (numEl) numEl.style.background = abierto ? 'var(--primary)' : 'var(--gray-300)';
+  });
+}
+
 function citaMostrarOpcion(opcion) {
   const btnNuevo       = document.getElementById('btnOpcionNuevo');
   const btnExistente   = document.getElementById('btnOpcionExistente');
@@ -225,6 +237,7 @@ function abrirModalCita(fechaStr) {
   document.getElementById('inlineClienteNombre').value = '';
   document.getElementById('inlineClienteTelefono').value = '';
   citaMostrarOpcion('existente');
+  ncAcord('cliente');
   actualizarSelectClientes();
   showModal('modalCita');
 }
