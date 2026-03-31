@@ -188,6 +188,9 @@
       <button onclick="mostrarPagina('clientes')"    id="btnClientes"    class="nav-mod">👥 Clientes</button>
       <button onclick="mostrarPagina('agenda')"      id="btnAgenda"      class="nav-mod">📅 Agenda</button>
       <button onclick="mostrarPagina('empleados')"   id="btnEmpleados"   class="nav-mod">👷 Empleados</button>
+      <button onclick="mostrarPagina('selecciones')" id="btnSelecciones" class="nav-mod">🗂️ Ajustes tabs</button>
+      <button onclick="mostrarPagina('nuevacita')"   id="btnNuevaCita"   class="nav-mod">➕ Nueva cita</button>
+      <button onclick="mostrarPagina('vistascitas')" id="btnVistasCitas" class="nav-mod">📋 Vistas citas</button>
     </div>
     <hr style="border:none;border-top:1px solid var(--gray-200);margin:0 0 12px">
   </div>
@@ -690,156 +693,110 @@
 
   <!-- PÁGINA: NUEVA CITA -->
   <div id="pagina-nuevacita" style="display:none;padding:16px;max-width:440px;margin:0 auto">
-    <div style="background:var(--white);border-radius:14px;overflow:hidden;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
-
-      <!-- Header -->
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--gray-100)">
-        <span style="font-size:15px;font-weight:700;color:var(--gray-800)">Nueva Cita</span>
-        <span style="font-size:18px;color:var(--gray-400);cursor:pointer">✕</span>
+    <div class="modal-content" style="position:static;max-height:none;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
+      <div class="modal-header">
+        <h3>Nueva Cita</h3>
       </div>
 
-      <!-- SECCIÓN 1: Cliente -->
-      <div style="padding:16px 20px;border-bottom:2px solid var(--gray-100)">
-        <p style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Cliente</p>
-        <!-- Tabs nuevo / existente — Opción D -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-          <button onclick="ncBtab('existente',this)" id="ncBtabExistente" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;border:2px solid var(--primary);border-radius:14px;background:var(--primary-light);cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-700)">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><circle cx="18.5" cy="18.5" r="3.5"/><path d="m21 21-1.5-1.5"/></svg>
-            <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:var(--primary);color:white;font-weight:700">Seleccionar</span>
-          </button>
-          <button onclick="ncBtab('nuevo',this)" id="ncBtabNuevo" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;border:2px solid var(--gray-200);border-radius:14px;background:white;cursor:pointer;font-size:13px;font-weight:600;color:var(--gray-700)">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-            <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:var(--gray-100);color:var(--gray-500);font-weight:700">+ Agregar</span>
-          </button>
-        </div>
-        <!-- Buscar existente -->
-        <div id="ncB-existente">
-          <input type="text" placeholder="Buscar cliente..." style="width:100%;padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;box-sizing:border-box">
-        </div>
-        <!-- Nuevo cliente -->
-        <div id="ncB-nuevo" style="display:none">
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <input type="text" placeholder="Nombre *" style="width:100%;padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;box-sizing:border-box">
-            <input type="text" placeholder="Teléfono" style="width:100%;padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;box-sizing:border-box">
-          </div>
-        </div>
-      </div>
-
-      <!-- SECCIÓN 2: Detalles de la cita -->
-      <div style="padding:16px 20px">
-        <p style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Detalles</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-          <div>
-            <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Fecha</label>
-            <input type="date" value="2026-03-28" style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;box-sizing:border-box">
-          </div>
-          <div>
-            <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Hora</label>
-            <div style="display:flex;align-items:center;gap:6px">
-              <button onclick="cambiarHora('ncBhora',-15)" style="width:32px;height:32px;border-radius:7px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:16px;font-weight:700;cursor:pointer;color:var(--gray-700);flex-shrink:0">−</button>
-              <input type="time" id="ncBhora" value="09:00" style="flex:1;padding:6px 4px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-weight:700;text-align:center;min-width:0">
-              <button onclick="cambiarHora('ncBhora',15)" style="width:32px;height:32px;border-radius:7px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:16px;font-weight:700;cursor:pointer;color:var(--gray-700);flex-shrink:0">+</button>
+      <!-- Acordeón paso 1: Cliente -->
+      <div style="border:1.5px solid var(--gray-200);border-radius:12px;margin-bottom:10px;overflow:hidden">
+        <div onclick="ncAcord('cliente')" style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;background:var(--white)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:22px;height:22px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <span style="font-size:11px;font-weight:800;color:white">1</span>
             </div>
+            <span style="font-size:13px;font-weight:700;color:var(--gray-800)">Cliente</span>
+            <span id="nc-cliente-resumen" style="font-size:12px;color:var(--primary);font-weight:600"></span>
           </div>
+          <svg id="nc-chevron-cliente" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .2s;transform:rotate(180deg)"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-          <div>
-            <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Duración</label>
-            <select style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px">
-              <option>30 min</option><option selected>1 hora</option><option>1h 30min</option>
-            </select>
+        <div id="nc-body-cliente" style="padding:0 16px 16px;border-top:1px solid var(--gray-100)">
+          <div style="height:12px"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+            <button type="button" id="btnOpcionExistente" onclick="citaMostrarOpcion('existente')"
+              style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;border:2px solid var(--primary);border-radius:14px;background:var(--primary-light);cursor:pointer">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><circle cx="18.5" cy="18.5" r="3.5"/><path d="m21 21-1.5-1.5"/></svg>
+              <span id="badgeExistente" style="font-size:10px;padding:2px 8px;border-radius:20px;background:var(--primary);color:white;font-weight:700">Seleccionar</span>
+            </button>
+            <button type="button" id="btnOpcionNuevo" onclick="citaMostrarOpcion('nuevo')"
+              style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;border:2px solid var(--gray-200);border-radius:14px;background:var(--white);cursor:pointer">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+              <span id="badgeNuevo" style="font-size:10px;padding:2px 8px;border-radius:20px;background:var(--gray-100);color:var(--gray-500);font-weight:700">+ Agregar</span>
+            </button>
           </div>
-          <div>
-            <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Estado</label>
-            <select style="width:100%;padding:8px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px">
-              <option>Pendiente</option><option>Confirmada</option>
-            </select>
+          <div id="selectClienteExistente">
+            <input type="text" id="citaBuscarCliente" placeholder="Buscar cliente..."
+              style="width:100%;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:10px;font-size:14px;outline:none;background:var(--white);color:var(--gray-800);box-sizing:border-box;margin-bottom:8px">
+            <div id="citaClientesLista" style="max-height:160px;overflow-y:auto;border:1.5px solid var(--gray-200);border-radius:10px;background:var(--white)"></div>
           </div>
+          <div id="nuevoClienteInline" style="display:none;flex-direction:column;gap:8px;background:var(--gray-50);border-radius:10px;padding:12px">
+            <input type="text" id="inlineClienteNombre" placeholder="Nombre *" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;outline:none;background:var(--white);color:var(--gray-800)">
+            <input type="tel" id="inlineClienteTelefono" placeholder="Teléfono (opcional)" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;outline:none;background:var(--white);color:var(--gray-800)">
+            <button type="button" class="btn-primary" style="padding:8px;font-size:13px">+ Agregar y seleccionar</button>
+          </div>
+          <input type="hidden" id="citaClienteId">
         </div>
-        <div style="margin-bottom:16px">
-          <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px">Servicio / Motivo</label>
-          <input type="text" placeholder="Ej: Consulta, Terapia..." style="width:100%;padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;box-sizing:border-box">
+      </div>
+
+      <!-- Acordeón paso 2: Detalles -->
+      <div style="border:1.5px solid var(--gray-200);border-radius:12px;margin-bottom:10px;overflow:hidden">
+        <div onclick="ncAcord('detalles')" style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;background:var(--white)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:22px;height:22px;border-radius:50%;background:var(--gray-300);display:flex;align-items:center;justify-content:center;flex-shrink:0" id="nc-num-detalles">
+              <span style="font-size:11px;font-weight:800;color:white">2</span>
+            </div>
+            <span style="font-size:13px;font-weight:700;color:var(--gray-800)">Detalles de la cita</span>
+          </div>
+          <svg id="nc-chevron-detalles" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div style="display:flex;gap:10px">
-          <button style="flex:1;padding:11px;border-radius:10px;border:1px solid var(--gray-200);background:var(--gray-50);font-size:14px;font-weight:600;color:var(--gray-600);cursor:pointer">Cancelar</button>
-          <button style="flex:1;padding:11px;border-radius:10px;border:none;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Guardar Cita</button>
+        <div id="nc-body-detalles" style="display:none;padding:0 16px 16px;border-top:1px solid var(--gray-100)">
+          <form style="margin-top:12px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div class="form-group">
+                <label>Fecha</label>
+                <input type="date" id="citaFecha">
+              </div>
+              <div class="form-group">
+                <label>Hora</label>
+                <input type="time" id="citaHora">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Duración</label>
+              <select id="citaDuracion">
+                <option value="30">30 min</option>
+                <option value="45">45 min</option>
+                <option value="60" selected>1 hora</option>
+                <option value="90">1h 30min</option>
+                <option value="120">2 horas</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Servicio / Motivo</label>
+              <input type="text" id="citaServicio" placeholder="Ej: Consulta, Terapia, Control...">
+            </div>
+            <div class="form-group">
+              <label>Estado</label>
+              <select id="citaEstado">
+                <option value="pendiente">Pendiente</option>
+                <option value="confirmada">Confirmada</option>
+                <option value="completada">Completada</option>
+                <option value="cancelada">Cancelada</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Notas</label>
+              <textarea id="citaNotas" placeholder="Observaciones adicionales..." rows="2" style="resize:vertical"></textarea>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn-secondary">Cancelar</button>
+              <button type="submit" class="btn-primary">Guardar Cita</button>
+            </div>
+          </form>
         </div>
       </div>
 
     </div>
-
-    <!-- Opciones de etiqueta para botones cliente -->
-    <p style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin:24px 0 12px">Opciones de etiqueta</p>
-
-    <!-- 1 — Solo texto debajo del ícono -->
-    <p style="font-size:12px;font-weight:700;color:var(--gray-600);margin:0 0 8px">1 — Texto simple</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
-      <button style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;border:2px solid var(--primary);border-radius:14px;background:var(--primary-light);cursor:pointer">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><circle cx="18.5" cy="18.5" r="3.5"/><path d="m21 21-1.5-1.5"/></svg>
-        <span style="font-size:13px;font-weight:700;color:var(--primary)">Existente</span>
-      </button>
-      <button style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;border:2px solid var(--gray-200);border-radius:14px;background:white;cursor:pointer">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-        <span style="font-size:13px;font-weight:700;color:var(--gray-500)">Nuevo</span>
-      </button>
-    </div>
-
-    <!-- 2 — Título + subtítulo -->
-    <p style="font-size:12px;font-weight:700;color:var(--gray-600);margin:0 0 8px">2 — Título + subtítulo</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
-      <button style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px;border:2px solid var(--primary);border-radius:14px;background:var(--primary-light);cursor:pointer">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><circle cx="18.5" cy="18.5" r="3.5"/><path d="m21 21-1.5-1.5"/></svg>
-        <span style="font-size:13px;font-weight:700;color:var(--primary)">Existente</span>
-        <span style="font-size:10px;color:var(--primary);opacity:.7">Buscar cliente</span>
-      </button>
-      <button style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px;border:2px solid var(--gray-200);border-radius:14px;background:white;cursor:pointer">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-        <span style="font-size:13px;font-weight:700;color:var(--gray-600)">Nuevo</span>
-        <span style="font-size:10px;color:var(--gray-400)">Crear cliente</span>
-      </button>
-    </div>
-
-    <!-- 3 — Ícono en círculo + texto -->
-    <p style="font-size:12px;font-weight:700;color:var(--gray-600);margin:0 0 8px">3 — Ícono circular + texto</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
-      <button style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;border:2px solid var(--primary);border-radius:14px;background:var(--primary-light);cursor:pointer">
-        <div style="width:44px;height:44px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><circle cx="18.5" cy="18.5" r="3.5"/><path d="m21 21-1.5-1.5"/></svg>
-        </div>
-        <span style="font-size:13px;font-weight:700;color:var(--primary)">Existente</span>
-      </button>
-      <button style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;border:2px solid var(--gray-200);border-radius:14px;background:white;cursor:pointer">
-        <div style="width:44px;height:44px;border-radius:50%;background:var(--gray-100);display:flex;align-items:center;justify-content:center">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gray-500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-        </div>
-        <span style="font-size:13px;font-weight:700;color:var(--gray-500)">Nuevo</span>
-      </button>
-    </div>
-
-    <!-- 4 — Pill horizontal (estilo tabs) -->
-    <p style="font-size:12px;font-weight:700;color:var(--gray-600);margin:0 0 8px">4 — Tabs pill horizontal</p>
-    <div style="display:flex;background:var(--gray-100);border-radius:12px;padding:4px;margin-bottom:20px">
-      <button style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border:none;border-radius:9px;background:white;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.1)">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><circle cx="18.5" cy="18.5" r="3.5"/><path d="m21 21-1.5-1.5"/></svg>
-        <span style="font-size:13px;font-weight:700;color:var(--primary)">Existente</span>
-      </button>
-      <button style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border:none;border-radius:9px;background:transparent;cursor:pointer">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-        <span style="font-size:13px;font-weight:600;color:var(--gray-500)">Nuevo</span>
-      </button>
-    </div>
-
-    <!-- 5 — Solo ícono grande (sin texto) -->
-    <p style="font-size:12px;font-weight:700;color:var(--gray-600);margin:0 0 8px">5 — Solo ícono</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
-      <button style="display:flex;flex-direction:column;align-items:center;padding:18px 14px;border:2px solid var(--primary);border-radius:14px;background:var(--primary-light);cursor:pointer">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><circle cx="18.5" cy="18.5" r="3.5"/><path d="m21 21-1.5-1.5"/></svg>
-      </button>
-      <button style="display:flex;flex-direction:column;align-items:center;padding:18px 14px;border:2px solid var(--gray-200);border-radius:14px;background:white;cursor:pointer">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-      </button>
-    </div>
-
   </div><!-- /pagina-nuevacita -->
 
   <!-- PÁGINA: VISTA AGENDA -->
@@ -1359,66 +1316,137 @@
   <!-- ══════════════════════════════════ -->
   <!-- PÁGINA: VENTAS                     -->
   <!-- ══════════════════════════════════ -->
+  <!-- ══════════════════════════════════ -->
+  <!-- PÁGINA: VENTAS                     -->
+  <!-- ══════════════════════════════════ -->
   <div id="pagina-ventas" style="display:none;padding:16px;max-width:440px;margin:0 auto">
 
-    <p class="ej-section-label">Widget — Dashboard</p>
-    <div class="card" style="padding:0;overflow:hidden;margin-bottom:8px">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px">
-        <h3 style="font-size:14px;font-weight:700;color:var(--gray-800);margin:0">Últimas Ventas</h3>
-        <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver todas</span>
+    <!-- Tabs -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+      <button class="vista-btn active" onclick="mvista('ven','WA',this)">WA · Widget simple</button>
+      <button class="vista-btn" onclick="mvista('ven','WB',this)">WB · Widget con stats</button>
+      <button class="vista-btn" onclick="mvista('ven','SA',this)">SA · Sección lista</button>
+      <button class="vista-btn" onclick="mvista('ven','SB',this)">SB · Sección acordeón</button>
+    </div>
+
+    <!-- WA: Widget simple -->
+    <div id="ven-WA" class="mvis-ven" style="">
+      <p class="ej-section-label">Widget — Últimas Ventas (simple) <span class="badge-actual">ACTUAL</span></p>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--gray-100)">
+          <h3 style="font-size:14px;font-weight:700;color:var(--gray-800);margin:0">Últimas Ventas</h3>
+          <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver todas</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">hace 5 min</div></div>
+          <span style="font-size:13px;font-weight:700;color:#10B981">S/ 250</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">hace 23 min</div></div>
+          <span style="font-size:13px;font-weight:700;color:#10B981">S/ 89</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">hace 1h</div></div>
+          <span style="font-size:13px;font-weight:700;color:#10B981">S/ 180</span>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--gray-100)">
-        <div style="width:36px;height:36px;border-radius:10px;background:#EDE9FE;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="shopping-cart" style="width:16px;height:16px;stroke:#7C3AED"></i></div>
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike</div><div style="font-size:11px;color:var(--gray-400);margin-top:2px">hace 5 min</div></div>
-        <span style="font-size:14px;font-weight:700;color:#10B981">S/ 250</span>
+      <p class="vista-note">Lista plana sin stat de total. Igual al actual.</p>
+    </div>
+
+    <!-- WB: Widget con stats -->
+    <div id="ven-WB" class="mvis-ven" style="display:none">
+      <p class="ej-section-label">Widget — Últimas Ventas con total del día <span class="badge-prop">PROPUESTA</span></p>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--gray-100)">
+          <h3 style="font-size:14px;font-weight:700;color:var(--gray-800);margin:0">Ventas Hoy</h3>
+          <div style="text-align:right">
+            <div style="font-size:18px;font-weight:800;color:#10B981">S/ 519</div>
+            <div style="font-size:10px;color:var(--gray-400);font-weight:600">3 ventas</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="width:8px;width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike</div><div style="font-size:11px;color:var(--gray-400)">15:42</div></div>
+          <span style="font-size:13px;font-weight:700;color:#10B981">S/ 250</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas</div><div style="font-size:11px;color:var(--gray-400)">15:19</div></div>
+          <span style="font-size:13px;font-weight:700;color:#10B981">S/ 89</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+          <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma</div><div style="font-size:11px;color:var(--gray-400)">14:58</div></div>
+          <span style="font-size:13px;font-weight:700;color:#10B981">S/ 180</span>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--gray-100)">
-        <div style="width:36px;height:36px;border-radius:10px;background:#EDE9FE;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="shopping-cart" style="width:16px;height:16px;stroke:#7C3AED"></i></div>
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas</div><div style="font-size:11px;color:var(--gray-400);margin-top:2px">hace 23 min</div></div>
-        <span style="font-size:14px;font-weight:700;color:#10B981">S/ 89</span>
+      <p class="vista-note">Muestra el total del día y cantidad de ventas en el header.</p>
+    </div>
+
+    <!-- SA: Sección lista -->
+    <div id="ven-SA" class="mvis-ven" style="display:none">
+      <p class="ej-section-label">Sección — Historial lista <span class="badge-actual">ACTUAL</span></p>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">HOY</div><div style="font-size:18px;font-weight:800;color:var(--primary)">S/ 519</div></div>
+        <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">MES</div><div style="font-size:18px;font-weight:800;color:var(--gray-800)">S/ 8,240</div></div>
+        <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">VENTAS</div><div style="font-size:18px;font-weight:800;color:var(--gray-800)">47</div></div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--gray-100)">
-        <div style="width:36px;height:36px;border-radius:10px;background:#EDE9FE;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="shopping-cart" style="width:16px;height:16px;stroke:#7C3AED"></i></div>
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma</div><div style="font-size:11px;color:var(--gray-400);margin-top:2px">hace 1h</div></div>
-        <span style="font-size:14px;font-weight:700;color:#10B981">S/ 180</span>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100)">
+          <span style="font-size:13px;font-weight:700;color:var(--gray-800)">Historial</span>
+          <button style="display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:8px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:600;cursor:pointer">+ Nueva venta</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 15:42</div></div>
+          <span style="font-size:13px;font-weight:700;color:#10B981">S/ 250</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 15:19</div></div>
+          <span style="font-size:13px;font-weight:700;color:#10B981">S/ 89</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 14:58</div></div>
+          <span style="font-size:13px;font-weight:700;color:#10B981">S/ 180</span>
+        </div>
       </div>
     </div>
 
-    <div class="ej-divider"></div>
-    <p class="ej-section-label">Sección — Ventas</p>
-
-    <div style="display:flex;gap:8px;margin-bottom:14px">
-      <div class="card" style="flex:1;padding:14px;text-align:center">
-        <div style="font-size:11px;color:var(--gray-400);font-weight:600;margin-bottom:4px">Hoy</div>
-        <div style="font-size:20px;font-weight:800;color:var(--primary)">S/ 519</div>
+    <!-- SB: Sección acordeón con detalle de items -->
+    <div id="ven-SB" class="mvis-ven" style="display:none">
+      <p class="ej-section-label">Sección — Historial con detalle de productos <span class="badge-prop">PROPUESTA</span></p>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">HOY</div><div style="font-size:18px;font-weight:800;color:var(--primary)">S/ 519</div></div>
+        <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">MES</div><div style="font-size:18px;font-weight:800;color:var(--gray-800)">S/ 8,240</div></div>
+        <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">VENTAS</div><div style="font-size:18px;font-weight:800;color:var(--gray-800)">47</div></div>
       </div>
-      <div class="card" style="flex:1;padding:14px;text-align:center">
-        <div style="font-size:11px;color:var(--gray-400);font-weight:600;margin-bottom:4px">Este mes</div>
-        <div style="font-size:20px;font-weight:800;color:var(--gray-800)">S/ 8,240</div>
-      </div>
-      <div class="card" style="flex:1;padding:14px;text-align:center">
-        <div style="font-size:11px;color:var(--gray-400);font-weight:600;margin-bottom:4px">Ventas</div>
-        <div style="font-size:20px;font-weight:800;color:var(--gray-800)">47</div>
-      </div>
-    </div>
-
-    <div class="card" style="padding:0;overflow:hidden">
-      <div style="padding:12px 16px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
         <span style="font-size:13px;font-weight:700;color:var(--gray-800)">Historial</span>
-        <button style="display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:8px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:600;cursor:pointer"><i data-lucide="plus" style="width:13px;height:13px"></i> Nueva venta</button>
+        <button style="display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:8px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:600;cursor:pointer">+ Nueva venta</button>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 15:42</div></div>
-        <span style="font-size:13px;font-weight:700;color:#10B981">S/ 250</span>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
+          <div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer">
+            <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta #047</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 15:42 · 2 productos</div></div>
+            <span style="font-size:13px;font-weight:700;color:#10B981">S/ 339</span>
+            <svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div style="display:none;padding:0 16px 12px;background:var(--gray-50)">
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--gray-100);font-size:12px"><span style="color:var(--gray-600)">Zapatillas Nike × 1</span><span style="font-weight:700;color:var(--gray-800)">S/ 250</span></div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:12px"><span style="color:var(--gray-600)">Polo Adidas × 1</span><span style="font-weight:700;color:var(--gray-800)">S/ 89</span></div>
+          </div>
+        </div>
+        <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
+          <div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer">
+            <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta #046</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 14:58 · 1 producto</div></div>
+            <span style="font-size:13px;font-weight:700;color:#10B981">S/ 180</span>
+            <svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div style="display:none;padding:0 16px 12px;background:var(--gray-50)">
+            <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:12px"><span style="color:var(--gray-600)">Casaca Puma L × 1</span><span style="font-weight:700;color:var(--gray-800)">S/ 180</span></div>
+          </div>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 15:19</div></div>
-        <span style="font-size:13px;font-weight:700;color:#10B981">S/ 89</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 14:58</div></div>
-        <span style="font-size:13px;font-weight:700;color:#10B981">S/ 180</span>
-      </div>
+      <p class="vista-note">Al expandir cada venta se ven los productos incluidos.</p>
     </div>
     <div style="height:80px"></div>
   </div><!-- /pagina-ventas -->
@@ -1428,46 +1456,106 @@
   <!-- ══════════════════════════════════ -->
   <div id="pagina-inventario" style="display:none;padding:16px;max-width:440px;margin:0 auto">
 
-    <p class="ej-section-label">Widget — Dashboard</p>
-    <div class="card" style="padding:0;overflow:hidden;margin-bottom:8px">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px">
-        <h3 style="font-size:14px;font-weight:700;color:var(--gray-800);margin:0">Stock Bajo</h3>
-        <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver todos</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--gray-100)">
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike T42</div></div>
-        <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#FEE2E2;color:#DC2626;font-weight:700">Sin stock</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--gray-100)">
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas M</div></div>
-        <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">2 unidades</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--gray-100)">
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma L</div></div>
-        <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">1 unidad</span>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+      <button class="vista-btn active" onclick="mvista('inv','WA',this)">WA · Widget lista</button>
+      <button class="vista-btn" onclick="mvista('inv','WB',this)">WB · Widget stats</button>
+      <button class="vista-btn" onclick="mvista('inv','SA',this)">SA · Sección actual</button>
+      <button class="vista-btn" onclick="mvista('inv','SB',this)">SB · Con stock visual</button>
+    </div>
+
+    <!-- WA -->
+    <div id="inv-WA" class="mvis-inv">
+      <p class="ej-section-label">Widget — Stock Bajo (lista) <span class="badge-actual">ACTUAL</span></p>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--gray-100)">
+          <h3 style="font-size:14px;font-weight:700;color:var(--gray-800);margin:0">Stock Bajo</h3>
+          <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver todos</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike T42</div></div>
+          <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#FEE2E2;color:#DC2626;font-weight:700">Sin stock</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas M</div></div>
+          <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">2 unidades</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma L</div></div>
+          <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">1 unidad</span>
+        </div>
       </div>
     </div>
 
-    <div class="ej-divider"></div>
-    <p class="ej-section-label">Sección — Inventario</p>
+    <!-- WB -->
+    <div id="inv-WB" class="mvis-inv" style="display:none">
+      <p class="ej-section-label">Widget — Stats + Stock Bajo <span class="badge-prop">PROPUESTA</span></p>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">PRODUCTOS</div><div style="font-size:22px;font-weight:800;color:var(--primary)">38</div></div>
+        <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">STOCK BAJO</div><div style="font-size:22px;font-weight:800;color:#F59E0B">3</div></div>
+        <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">SIN STOCK</div><div style="font-size:22px;font-weight:800;color:#EF4444">1</div></div>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid var(--gray-100)"><span style="font-size:13px;font-weight:700;color:var(--gray-800)">Alertas de stock</span></div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike T42</div></div>
+          <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#FEE2E2;color:#DC2626;font-weight:700">Sin stock</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas M</div></div>
+          <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">2 unidades</span>
+        </div>
+      </div>
+      <p class="vista-note">Muestra totales globales y solo las alertas críticas.</p>
+    </div>
 
-    <div class="card" style="padding:0;overflow:hidden;margin-bottom:12px">
-      <div style="padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100)">
-        <input type="text" placeholder="Buscar producto..." style="flex:1;border:1.5px solid var(--gray-200);border-radius:8px;padding:8px 12px;font-size:13px;outline:none">
-        <button style="padding:8px 14px;border-radius:8px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">+ Agregar</button>
+    <!-- SA -->
+    <div id="inv-SA" class="mvis-inv" style="display:none">
+      <p class="ej-section-label">Sección — Lista de productos <span class="badge-actual">ACTUAL</span></p>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:12px 16px;display:flex;gap:8px;border-bottom:1px solid var(--gray-100)">
+          <input type="text" placeholder="Buscar producto..." style="flex:1;border:1.5px solid var(--gray-200);border-radius:8px;padding:8px 12px;font-size:13px;outline:none">
+          <button style="padding:8px 14px;border-radius:8px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">+ Agregar</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike T42</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Calzado · S/ 250</div></div>
+          <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:#FEE2E2;color:#DC2626;font-weight:700">0</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas M</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Ropa · S/ 89</div></div>
+          <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">2</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma L</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Ropa · S/ 180</div></div>
+          <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">14</span>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike T42</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Calzado · S/ 250</div></div>
-        <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#FEE2E2;color:#DC2626;font-weight:700">0</span>
+    </div>
+
+    <!-- SB -->
+    <div id="inv-SB" class="mvis-inv" style="display:none">
+      <p class="ej-section-label">Sección — Con barra de stock visual <span class="badge-prop">PROPUESTA</span></p>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:12px 16px;display:flex;gap:8px;border-bottom:1px solid var(--gray-100)">
+          <input type="text" placeholder="Buscar producto..." style="flex:1;border:1.5px solid var(--gray-200);border-radius:8px;padding:8px 12px;font-size:13px;outline:none">
+          <button style="padding:8px 14px;border-radius:8px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">+ Agregar</button>
+        </div>
+        <div style="padding:12px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike T42</span><span style="font-size:12px;font-weight:700;color:#DC2626">0 / 10</span></div>
+          <div style="height:6px;background:var(--gray-100);border-radius:3px"><div style="height:6px;width:0%;background:#DC2626;border-radius:3px"></div></div>
+          <div style="font-size:11px;color:var(--gray-400);margin-top:4px">Calzado · S/ 250</div>
+        </div>
+        <div style="padding:12px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas M</span><span style="font-size:12px;font-weight:700;color:#D97706">2 / 20</span></div>
+          <div style="height:6px;background:var(--gray-100);border-radius:3px"><div style="height:6px;width:10%;background:#F59E0B;border-radius:3px"></div></div>
+          <div style="font-size:11px;color:var(--gray-400);margin-top:4px">Ropa · S/ 89</div>
+        </div>
+        <div style="padding:12px 16px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma L</span><span style="font-size:12px;font-weight:700;color:#065F46">14 / 20</span></div>
+          <div style="height:6px;background:var(--gray-100);border-radius:3px"><div style="height:6px;width:70%;background:#10B981;border-radius:3px"></div></div>
+          <div style="font-size:11px;color:var(--gray-400);margin-top:4px">Ropa · S/ 180</div>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas M</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Ropa · S/ 89</div></div>
-        <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">2</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma L</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Ropa · S/ 180</div></div>
-        <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">14</span>
-      </div>
+      <p class="vista-note">Barra de progreso muestra stock actual vs mínimo. Rojo = sin stock, amarillo = bajo, verde = ok.</p>
     </div>
     <div style="height:80px"></div>
   </div><!-- /pagina-inventario -->
@@ -1477,52 +1565,127 @@
   <!-- ══════════════════════════════════ -->
   <div id="pagina-caja" style="display:none;padding:16px;max-width:440px;margin:0 auto">
 
-    <p class="ej-section-label">Widget — Dashboard</p>
-    <div class="card" style="padding:16px;margin-bottom:8px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <span style="font-size:14px;font-weight:700;color:var(--gray-800)">Saldo en Caja</span>
-        <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver movimientos</span>
-      </div>
-      <div style="font-size:32px;font-weight:800;color:#10B981;margin-bottom:12px">S/ 1,240.00</div>
-      <div style="display:flex;gap:8px">
-        <div style="flex:1;text-align:center;padding:10px;background:#D1FAE5;border-radius:10px">
-          <div style="font-size:10px;font-weight:700;color:#065F46;margin-bottom:2px">INGRESOS</div>
-          <div style="font-size:15px;font-weight:800;color:#065F46">S/ 2,100</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+      <button class="vista-btn active" onclick="mvista('caj','WA',this)">WA · Widget saldo</button>
+      <button class="vista-btn" onclick="mvista('caj','WB',this)">WB · Widget barras</button>
+      <button class="vista-btn" onclick="mvista('caj','SA',this)">SA · Sección actual</button>
+      <button class="vista-btn" onclick="mvista('caj','SB',this)">SB · Con resumen día</button>
+    </div>
+
+    <!-- WA -->
+    <div id="caj-WA" class="mvis-caj">
+      <p class="ej-section-label">Widget — Saldo en caja <span class="badge-actual">ACTUAL</span></p>
+      <div class="card" style="padding:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <span style="font-size:14px;font-weight:700;color:var(--gray-800)">En Caja</span>
+          <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver movimientos</span>
         </div>
-        <div style="flex:1;text-align:center;padding:10px;background:#FEE2E2;border-radius:10px">
-          <div style="font-size:10px;font-weight:700;color:#DC2626;margin-bottom:2px">EGRESOS</div>
-          <div style="font-size:15px;font-weight:800;color:#DC2626">S/ 860</div>
+        <div style="font-size:30px;font-weight:800;color:#10B981;margin-bottom:12px">S/ 1,240.00</div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1;text-align:center;padding:10px;background:#D1FAE5;border-radius:10px">
+            <div style="font-size:10px;font-weight:700;color:#065F46;margin-bottom:2px">INGRESOS</div>
+            <div style="font-size:14px;font-weight:800;color:#065F46">S/ 2,100</div>
+          </div>
+          <div style="flex:1;text-align:center;padding:10px;background:#FEE2E2;border-radius:10px">
+            <div style="font-size:10px;font-weight:700;color:#DC2626;margin-bottom:2px">EGRESOS</div>
+            <div style="font-size:14px;font-weight:800;color:#DC2626">S/ 860</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="ej-divider"></div>
-    <p class="ej-section-label">Sección — Caja</p>
-
-    <div style="display:flex;gap:8px;margin-bottom:14px">
-      <button style="flex:1;padding:12px;border-radius:12px;border:none;background:#D1FAE5;color:#065F46;font-size:13px;font-weight:700;cursor:pointer">+ Ingreso</button>
-      <button style="flex:1;padding:12px;border-radius:12px;border:none;background:#FEE2E2;color:#DC2626;font-size:13px;font-weight:700;cursor:pointer">− Egreso</button>
+    <!-- WB -->
+    <div id="caj-WB" class="mvis-caj" style="display:none">
+      <p class="ej-section-label">Widget — Con últimos movimientos <span class="badge-prop">PROPUESTA</span></p>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100)">
+          <div>
+            <div style="font-size:12px;color:var(--gray-400);font-weight:600;margin-bottom:2px">SALDO ACTUAL</div>
+            <div style="font-size:24px;font-weight:800;color:#10B981">S/ 1,240.00</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:11px;color:#10B981;font-weight:700">↑ S/ 2,100</div>
+            <div style="font-size:11px;color:#EF4444;font-weight:700">↓ S/ 860</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="width:6px;height:6px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+          <div style="flex:1"><span style="font-size:12px;font-weight:600;color:var(--gray-700)">Venta — Zapatillas</span></div>
+          <span style="font-size:12px;font-weight:700;color:#10B981">+S/ 250</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="width:6px;height:6px;border-radius:50%;background:#EF4444;flex-shrink:0"></div>
+          <div style="flex:1"><span style="font-size:12px;font-weight:600;color:var(--gray-700)">Pago proveedor</span></div>
+          <span style="font-size:12px;font-weight:700;color:#EF4444">−S/ 400</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 16px">
+          <div style="width:6px;height:6px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+          <div style="flex:1"><span style="font-size:12px;font-weight:600;color:var(--gray-700)">Venta — Polo</span></div>
+          <span style="font-size:12px;font-weight:700;color:#10B981">+S/ 89</span>
+        </div>
+      </div>
+      <p class="vista-note">Muestra saldo + últimos movimientos directamente en el widget.</p>
     </div>
 
-    <div class="card" style="padding:0;overflow:hidden">
-      <div style="padding:12px 16px;border-bottom:1px solid var(--gray-100)">
-        <span style="font-size:13px;font-weight:700;color:var(--gray-800)">Movimientos de hoy</span>
+    <!-- SA -->
+    <div id="caj-SA" class="mvis-caj" style="display:none">
+      <p class="ej-section-label">Sección — Caja con botones de acción <span class="badge-actual">ACTUAL</span></p>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button style="flex:1;padding:14px;border-radius:12px;border:none;background:#D1FAE5;color:#065F46;font-size:14px;font-weight:700;cursor:pointer">+ Ingreso</button>
+        <button style="flex:1;padding:14px;border-radius:12px;border:none;background:#FEE2E2;color:#DC2626;font-size:14px;font-weight:700;cursor:pointer">− Egreso</button>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
-        <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta — Zapatillas</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">15:42</div></div>
-        <span style="font-size:13px;font-weight:700;color:#10B981">+S/ 250</span>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid var(--gray-100)"><span style="font-size:13px;font-weight:700;color:var(--gray-800)">Movimientos de hoy</span></div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta — Zapatillas</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">15:42</div></div>
+          <span style="font-size:13px;font-weight:700;color:#10B981">+S/ 250</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="width:8px;height:8px;border-radius:50%;background:#EF4444;flex-shrink:0"></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Pago proveedor</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">14:10</div></div>
+          <span style="font-size:13px;font-weight:700;color:#EF4444">−S/ 400</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+          <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta — Polo</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">13:05</div></div>
+          <span style="font-size:13px;font-weight:700;color:#10B981">+S/ 89</span>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
-        <div style="width:8px;height:8px;border-radius:50%;background:#EF4444;flex-shrink:0"></div>
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Pago proveedor</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">14:10</div></div>
-        <span style="font-size:13px;font-weight:700;color:#EF4444">−S/ 400</span>
+    </div>
+
+    <!-- SB -->
+    <div id="caj-SB" class="mvis-caj" style="display:none">
+      <p class="ej-section-label">Sección — Con resumen del día arriba <span class="badge-prop">PROPUESTA</span></p>
+      <div class="card" style="padding:14px;margin-bottom:12px">
+        <div style="font-size:11px;color:var(--gray-400);font-weight:700;margin-bottom:6px">RESUMEN DE HOY</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span style="font-size:22px;font-weight:800;color:#10B981">S/ 1,240</span>
+          <span style="font-size:12px;color:var(--gray-500);font-weight:600">saldo actual</span>
+        </div>
+        <div style="display:flex;gap:6px">
+          <div style="flex:1;padding:8px;background:#D1FAE5;border-radius:8px;text-align:center"><div style="font-size:10px;color:#065F46;font-weight:700">INGRESOS</div><div style="font-size:14px;font-weight:800;color:#065F46">S/ 2,100</div></div>
+          <div style="flex:1;padding:8px;background:#FEE2E2;border-radius:8px;text-align:center"><div style="font-size:10px;color:#DC2626;font-weight:700">EGRESOS</div><div style="font-size:14px;font-weight:800;color:#DC2626">S/ 860</div></div>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
-        <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta — Polo</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">13:05</div></div>
-        <span style="font-size:13px;font-weight:700;color:#10B981">+S/ 89</span>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button style="flex:1;padding:12px;border-radius:12px;border:none;background:#D1FAE5;color:#065F46;font-size:13px;font-weight:700;cursor:pointer">+ Ingreso</button>
+        <button style="flex:1;padding:12px;border-radius:12px;border:none;background:#FEE2E2;color:#DC2626;font-size:13px;font-weight:700;cursor:pointer">− Egreso</button>
       </div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid var(--gray-100)"><span style="font-size:13px;font-weight:700;color:var(--gray-800)">Movimientos</span></div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta — Zapatillas</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">15:42</div></div>
+          <span style="font-size:13px;font-weight:700;color:#10B981">+S/ 250</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+          <div style="width:8px;height:8px;border-radius:50%;background:#EF4444;flex-shrink:0"></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Pago proveedor</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">14:10</div></div>
+          <span style="font-size:13px;font-weight:700;color:#EF4444">−S/ 400</span>
+        </div>
+      </div>
+      <p class="vista-note">Resumen del día visible de entrada, sin tener que bajar a ver los movimientos.</p>
     </div>
     <div style="height:80px"></div>
   </div><!-- /pagina-caja -->
@@ -1532,54 +1695,119 @@
   <!-- ══════════════════════════════════ -->
   <div id="pagina-empleados" style="display:none;padding:16px;max-width:440px;margin:0 auto">
 
-    <p class="ej-section-label">Widget — Dashboard</p>
-    <div class="card" style="padding:16px;margin-bottom:8px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <span style="font-size:14px;font-weight:700;color:var(--gray-800)">Empleados</span>
-        <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver todos</span>
-      </div>
-      <div style="display:flex;gap:10px">
-        <div style="width:42px;height:42px;border-radius:50%;background:#EEF0FF;color:#6C63FF;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center">L</div>
-        <div style="width:42px;height:42px;border-radius:50%;background:#D1FAE5;color:#065F46;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center">M</div>
-        <div style="width:42px;height:42px;border-radius:50%;background:#FEF3C7;color:#92400E;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center">J</div>
-        <div style="width:42px;height:42px;border-radius:50%;background:var(--gray-100);color:var(--gray-500);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center">+2</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+      <button class="vista-btn active" onclick="mvista('emp','WA',this)">WA · Widget avatares</button>
+      <button class="vista-btn" onclick="mvista('emp','WB',this)">WB · Widget lista</button>
+      <button class="vista-btn" onclick="mvista('emp','SA',this)">SA · Sección lista</button>
+      <button class="vista-btn" onclick="mvista('emp','SB',this)">SB · Sección tarjetas</button>
+    </div>
+
+    <!-- WA -->
+    <div id="emp-WA" class="mvis-emp">
+      <p class="ej-section-label">Widget — Empleados avatares <span class="badge-actual">ACTUAL</span></p>
+      <div class="card" style="padding:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <span style="font-size:14px;font-weight:700;color:var(--gray-800)">Empleados</span>
+          <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver todos</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div style="width:42px;height:42px;border-radius:50%;background:#EEF0FF;color:#6C63FF;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center">L</div>
+          <div style="width:42px;height:42px;border-radius:50%;background:#D1FAE5;color:#065F46;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center">M</div>
+          <div style="width:42px;height:42px;border-radius:50%;background:#FEF3C7;color:#92400E;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center">J</div>
+          <div style="width:42px;height:42px;border-radius:50%;background:var(--gray-100);color:var(--gray-500);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center">+2</div>
+          <span style="font-size:12px;color:var(--gray-400);margin-left:4px">5 en total</span>
+        </div>
       </div>
     </div>
 
-    <div class="ej-divider"></div>
-    <p class="ej-section-label">Sección — Empleados</p>
+    <!-- WB -->
+    <div id="emp-WB" class="mvis-emp" style="display:none">
+      <p class="ej-section-label">Widget — Empleados con rol <span class="badge-prop">PROPUESTA</span></p>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--gray-100)">
+          <span style="font-size:14px;font-weight:700;color:var(--gray-800)">Empleados <span style="font-size:12px;color:var(--gray-400);font-weight:600">5</span></span>
+          <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver todos</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="width:34px;height:34px;border-radius:50%;background:#EEF0FF;color:#6C63FF;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0">L</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Luis Torres</div><div style="font-size:11px;color:var(--gray-400)">Administrador</div></div>
+          <span style="width:7px;height:7px;border-radius:50%;background:#10B981"></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="width:34px;height:34px;border-radius:50%;background:#D1FAE5;color:#065F46;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0">M</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">María Quispe</div><div style="font-size:11px;color:var(--gray-400)">Vendedor</div></div>
+          <span style="width:7px;height:7px;border-radius:50%;background:#10B981"></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 16px">
+          <div style="width:34px;height:34px;border-radius:50%;background:#FEF3C7;color:#92400E;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0">J</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Juan Ramos</div><div style="font-size:11px;color:var(--gray-400)">Almacén</div></div>
+          <span style="width:7px;height:7px;border-radius:50%;background:#EF4444"></span>
+        </div>
+      </div>
+      <p class="vista-note">Punto verde = activo, rojo = inactivo.</p>
+    </div>
 
-    <div class="card" style="padding:0;overflow:hidden">
-      <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100)">
+    <!-- SA -->
+    <div id="emp-SA" class="mvis-emp" style="display:none">
+      <p class="ej-section-label">Sección — Lista de empleados <span class="badge-actual">ACTUAL</span></p>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100)">
+          <span style="font-size:13px;font-weight:700;color:var(--gray-800)">5 empleados</span>
+          <button style="padding:6px 12px;border-radius:8px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:600;cursor:pointer">+ Agregar</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="width:38px;height:38px;border-radius:50%;background:#EEF0FF;color:#6C63FF;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">L</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Luis Torres</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Administrador</div></div>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">Activo</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+          <div style="width:38px;height:38px;border-radius:50%;background:#D1FAE5;color:#065F46;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">M</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">María Quispe</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Vendedor</div></div>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">Activo</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+          <div style="width:38px;height:38px;border-radius:50%;background:#FEF3C7;color:#92400E;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">J</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Juan Ramos</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Almacén</div></div>
+          <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#FEE2E2;color:#DC2626;font-weight:700">Inactivo</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SB -->
+    <div id="emp-SB" class="mvis-emp" style="display:none">
+      <p class="ej-section-label">Sección — Tarjetas de empleado <span class="badge-prop">PROPUESTA</span></p>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
         <span style="font-size:13px;font-weight:700;color:var(--gray-800)">5 empleados</span>
         <button style="padding:6px 12px;border-radius:8px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:600;cursor:pointer">+ Agregar</button>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
-        <div style="width:38px;height:38px;border-radius:50%;background:#EEF0FF;color:#6C63FF;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0">L</div>
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Luis Torres</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Administrador</div></div>
-        <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">Activo</span>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="card" style="padding:14px;display:flex;align-items:center;gap:12px">
+          <div style="width:46px;height:46px;border-radius:50%;background:#EEF0FF;color:#6C63FF;font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0">L</div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--gray-800)">Luis Torres</div><div style="font-size:12px;color:var(--gray-400);margin-top:2px">Administrador · 923 111 222</div></div>
+          <span style="font-size:10px;padding:3px 9px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">Activo</span>
+        </div>
+        <div class="card" style="padding:14px;display:flex;align-items:center;gap:12px">
+          <div style="width:46px;height:46px;border-radius:50%;background:#D1FAE5;color:#065F46;font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0">M</div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--gray-800)">María Quispe</div><div style="font-size:12px;color:var(--gray-400);margin-top:2px">Vendedor · 912 333 444</div></div>
+          <span style="font-size:10px;padding:3px 9px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">Activo</span>
+        </div>
+        <div class="card" style="padding:14px;display:flex;align-items:center;gap:12px;opacity:0.6">
+          <div style="width:46px;height:46px;border-radius:50%;background:#FEF3C7;color:#92400E;font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0">J</div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--gray-800)">Juan Ramos</div><div style="font-size:12px;color:var(--gray-400);margin-top:2px">Almacén · 901 555 666</div></div>
+          <span style="font-size:10px;padding:3px 9px;border-radius:20px;background:#FEE2E2;color:#DC2626;font-weight:700">Inactivo</span>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
-        <div style="width:38px;height:38px;border-radius:50%;background:#D1FAE5;color:#065F46;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0">M</div>
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">María Quispe</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Vendedor</div></div>
-        <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">Activo</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
-        <div style="width:38px;height:38px;border-radius:50%;background:#FEF3C7;color:#92400E;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0">J</div>
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Juan Ramos</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Almacén</div></div>
-        <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#FEE2E2;color:#DC2626;font-weight:700">Inactivo</span>
-      </div>
+      <p class="vista-note">Cada empleado en su tarjeta propia con teléfono y estado visible.</p>
     </div>
     <div style="height:80px"></div>
   </div><!-- /pagina-empleados -->
 
   <script>
-    lucide.createIcons();
-    mostrarPagina('agenda');
     const PAGINAS = ['clientes','selecciones','dashboard','nuevacita','vistascitas','agenda','ventas','inventario','caja','empleados'];
     const BTNS    = [['btnClientes','clientes'],['btnSelecciones','selecciones'],['btnDashboard','dashboard'],
                      ['btnAgenda','agenda'],['btnVentas','ventas'],['btnInventario','inventario'],
-                     ['btnCaja','caja'],['btnEmpleados','empleados']];
+                     ['btnCaja','caja'],['btnEmpleados','empleados'],
+                     ['btnNuevaCita','nuevacita'],['btnVistasCitas','vistascitas']];
     function mostrarPagina(p) {
       PAGINAS.forEach(id => {
         const el = document.getElementById('pagina-' + id);
@@ -1591,6 +1819,37 @@
         el.classList.toggle('active', p === id);
       });
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function ncAcord(seccion) {
+      const secciones = ['cliente', 'detalles'];
+      secciones.forEach(s => {
+        const body    = document.getElementById('nc-body-' + s);
+        const chevron = document.getElementById('nc-chevron-' + s);
+        const numEl   = document.getElementById('nc-num-' + s);
+        const abierto = s === seccion;
+        body.style.display        = abierto ? 'block' : 'none';
+        chevron.style.transform   = abierto ? 'rotate(180deg)' : '';
+        if (numEl) numEl.style.background = abierto ? 'var(--primary)' : 'var(--gray-300)';
+      });
+    }
+    function citaMostrarOpcion(op) {
+      const esNuevo = op === 'nuevo';
+      document.getElementById('selectClienteExistente').style.display = esNuevo ? 'none' : 'block';
+      document.getElementById('nuevoClienteInline').style.display = esNuevo ? 'flex' : 'none';
+      const btnE = document.getElementById('btnOpcionExistente');
+      const btnN = document.getElementById('btnOpcionNuevo');
+      btnE.style.borderColor = !esNuevo ? 'var(--primary)' : 'var(--gray-200)';
+      btnE.style.background  = !esNuevo ? 'var(--primary-light)' : 'var(--white)';
+      btnE.querySelector('svg').setAttribute('stroke', !esNuevo ? 'var(--primary)' : 'var(--gray-400)');
+      btnN.style.borderColor = esNuevo ? 'var(--primary)' : 'var(--gray-200)';
+      btnN.style.background  = esNuevo ? 'var(--primary-light)' : 'var(--white)';
+      btnN.querySelector('svg').setAttribute('stroke', esNuevo ? 'var(--primary)' : 'var(--gray-400)');
+    }
+    function mvista(prefix, id, btn) {
+      document.querySelectorAll('.mvis-' + prefix).forEach(el => el.style.display = 'none');
+      document.getElementById(prefix + '-' + id).style.display = 'block';
+      btn.closest('div').querySelectorAll('.vista-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
     }
     function toggleAgendaEj(header) {
       const detail  = header.nextElementSibling;
@@ -1866,6 +2125,9 @@
       ejDiaSeleccionado = null;
       ejRenderMes();
     }
+
+    lucide.createIcons();
+    mostrarPagina('agenda');
 
   </script>
 
