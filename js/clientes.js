@@ -143,9 +143,11 @@ function renderClientesLista(lista) {
   const el = document.getElementById('citaClientesLista');
   if (!el) return;
   if (!lista.length) {
+    el.style.marginTop = '8px';
     el.innerHTML = '<p style="padding:12px;font-size:13px;color:var(--gray-400);text-align:center">Sin clientes</p>';
     return;
   }
+  el.style.marginTop = '8px';
   el.innerHTML = lista.map(c => `
     <div onclick="seleccionarClienteCita('${c.id}', '${c.nombre.replace(/'/g, "\\'")}')"
       style="padding:10px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--gray-100);color:var(--gray-800);transition:background 0.15s"
@@ -158,7 +160,9 @@ function renderClientesLista(lista) {
 function filtrarClientesLista() {
   const q = document.getElementById('citaBuscarCliente').value.toLowerCase();
   if (!q) {
-    document.getElementById('citaClientesLista').innerHTML = '';
+    const el = document.getElementById('citaClientesLista');
+    el.innerHTML = '';
+    el.style.marginTop = '';
     return;
   }
   const filtrados = _clientesLista.filter(c => c.nombre.toLowerCase().includes(q));
@@ -168,5 +172,7 @@ function filtrarClientesLista() {
 function seleccionarClienteCita(id, nombre) {
   document.getElementById('citaClienteId').value = id;
   document.getElementById('citaBuscarCliente').value = nombre;
-  document.getElementById('citaClientesLista').innerHTML = '';
+  const el2 = document.getElementById('citaClientesLista');
+  el2.innerHTML = '';
+  el2.style.marginTop = '';
 }
