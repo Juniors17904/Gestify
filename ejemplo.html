@@ -762,7 +762,51 @@
             </div>
             <div class="form-group">
               <label>Hora</label>
-              <input type="time" id="citaHora">
+              <input type="hidden" id="citaHora">
+              <div style="display:flex;align-items:center;gap:4px;padding:6px 0">
+                <!-- Horas 1-12 -->
+                <div style="position:relative;height:84px;flex:1;overflow:hidden">
+                  <div style="position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(to bottom,white 0%,transparent 30%,transparent 70%,white 100%)"></div>
+                  <div style="position:absolute;top:50%;left:2px;right:2px;height:28px;transform:translateY(-50%);background:var(--primary-light);border-radius:6px;z-index:1"></div>
+                  <div id="nc-drum-h" onscroll="ejNcHoraLive()" style="overflow-y:scroll;height:84px;scroll-snap-type:y mandatory;scrollbar-width:none;position:relative;z-index:3;text-align:center">
+                    <div style="height:28px"></div>
+                    <div style="scroll-snap-align:center;height:28px;line-height:28px;font-size:15px;font-weight:700;color:var(--gray-700)" data-h="1">1</div>
+                    <div style="scroll-snap-align:center;height:28px;line-height:28px;font-size:15px;font-weight:700;color:var(--gray-700)" data-h="2">2</div>
+                    <div style="scroll-snap-align:center;height:28px;line-height:28px;font-size:15px;font-weight:700;color:var(--gray-700)" data-h="3">3</div>
+                    <div style="scroll-snap-align:center;height:28px;line-height:28px;font-size:15px;font-weight:700;color:var(--gray-700)" data-h="4">4</div>
+                    <div style="scroll-snap-align:center;height:28px;line-height:28px;font-size:15px;font-weight:700;color:var(--gray-700)" data-h="5">5</div>
+                    <div style="scroll-snap-align:center;height:28px;line-height:28px;font-size:15px;font-weight:700;color:var(--gray-700)" data-h="6">6</div>
+                    <div style="scroll-snap-align:center;height:28px;line-height:28px;font-size:15px;font-weight:700;color:var(--gray-700)" data-h="7">7</div>
+                    <div style="scroll-snap-align:center;height:28px;line-height:28px;font-size:15px;font-weight:700;color:var(--gray-700)" data-h="8">8</div>
+                    <div style="scroll-snap-align:center;height:28px;line-height:28px;font-size:15px;font-weight:700;color:var(--gray-700)" data-h="9">9</div>
+                    <div style="scroll-snap-align:center;height:28px;line-height:28px;font-size:15px;font-weight:700;color:var(--gray-700)" data-h="10">10</div>
+                    <div style="scroll-snap-align:center;height:28px;line-height:28px;font-size:15px;font-weight:700;color:var(--gray-700)" data-h="11">11</div>
+                    <div style="scroll-snap-align:center;height:28px;line-height:28px;font-size:15px;font-weight:700;color:var(--gray-700)" data-h="12">12</div>
+                    <div style="height:28px"></div>
+                  </div>
+                </div>
+                <div style="font-size:16px;font-weight:800;color:var(--gray-300);flex-shrink:0">:</div>
+                <!-- Minutos 00-59 -->
+                <div style="position:relative;height:84px;flex:1;overflow:hidden">
+                  <div style="position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(to bottom,white 0%,transparent 30%,transparent 70%,white 100%)"></div>
+                  <div style="position:absolute;top:50%;left:2px;right:2px;height:28px;transform:translateY(-50%);background:var(--primary-light);border-radius:6px;z-index:1"></div>
+                  <div id="nc-drum-m" onscroll="ejNcHoraLive()" style="overflow-y:scroll;height:84px;scroll-snap-type:y mandatory;scrollbar-width:none;position:relative;z-index:3;text-align:center">
+                    <div style="height:28px"></div>
+                    <div style="height:28px"></div><!-- mins JS -->
+                  </div>
+                </div>
+                <!-- AM/PM -->
+                <div style="position:relative;height:84px;flex:1;overflow:hidden">
+                  <div style="position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(to bottom,white 0%,transparent 30%,transparent 70%,white 100%)"></div>
+                  <div style="position:absolute;top:50%;left:2px;right:2px;height:28px;transform:translateY(-50%);background:#EFF6FF;border-radius:6px;z-index:1"></div>
+                  <div id="nc-drum-ampm" onscroll="ejNcHoraLive()" style="overflow-y:scroll;height:84px;scroll-snap-type:y mandatory;scrollbar-width:none;position:relative;z-index:3;text-align:center">
+                    <div style="height:28px"></div>
+                    <div style="scroll-snap-align:center;height:28px;line-height:28px;font-size:12px;font-weight:800;color:var(--gray-700)" data-ampm="AM">AM</div>
+                    <div style="scroll-snap-align:center;height:28px;line-height:28px;font-size:12px;font-weight:800;color:var(--gray-700)" data-ampm="PM">PM</div>
+                    <div style="height:28px"></div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="form-group">
               <label>Duración</label>
@@ -2091,6 +2135,33 @@
       if (!found) return null;
       const key = attr.replace('data-','');
       return found.dataset[key] ?? null;
+    }
+
+    // Drum del formulario: generar minutos 00-59
+    (function() {
+      const drum = document.getElementById('nc-drum-m');
+      if (!drum) return;
+      drum.innerHTML = '<div style="height:28px"></div>';
+      for (let i = 0; i < 60; i++) {
+        const mm = String(i).padStart(2,'0');
+        const d = document.createElement('div');
+        d.setAttribute('data-m', mm);
+        d.style.cssText = 'scroll-snap-align:center;height:28px;line-height:28px;font-size:15px;font-weight:700;color:var(--gray-700)';
+        d.textContent = mm;
+        drum.appendChild(d);
+      }
+      const end = document.createElement('div'); end.style.height = '28px'; drum.appendChild(end);
+      drum.scrollTop = 0;
+    })();
+
+    function ejNcHoraLive() {
+      const h12  = parseInt(ejDrumGet(document.getElementById('nc-drum-h'),    'data-h')    || '9');
+      const m    = ejDrumGet(document.getElementById('nc-drum-m'),    'data-m')    || '00';
+      const ampm = ejDrumGet(document.getElementById('nc-drum-ampm'),'data-ampm') || 'AM';
+      let h24 = h12;
+      if (ampm === 'AM' && h12 === 12) h24 = 0;
+      else if (ampm === 'PM' && h12 !== 12) h24 = h12 + 12;
+      document.getElementById('citaHora').value = String(h24).padStart(2,'0') + ':' + m;
     }
 
     // OA: generar minutos 00-59
