@@ -134,7 +134,9 @@ async function actualizarSelectClientes() {
     .order('nombre');
 
   _clientesLista = data || [];
-  renderClientesLista(_clientesLista);
+  // No mostrar lista hasta que el usuario escriba
+  const el = document.getElementById('citaClientesLista');
+  if (el) el.innerHTML = '';
 }
 
 function renderClientesLista(lista) {
@@ -155,6 +157,10 @@ function renderClientesLista(lista) {
 
 function filtrarClientesLista() {
   const q = document.getElementById('citaBuscarCliente').value.toLowerCase();
+  if (!q) {
+    document.getElementById('citaClientesLista').innerHTML = '';
+    return;
+  }
   const filtrados = _clientesLista.filter(c => c.nombre.toLowerCase().includes(q));
   renderClientesLista(filtrados);
 }

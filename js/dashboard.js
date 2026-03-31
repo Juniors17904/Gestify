@@ -127,7 +127,7 @@ async function loadDashboard() {
 
     const { data: ultimos } = await db.from('clientes')
       .select('id, nombre, telefono').eq('negocio_id', negocioId)
-      .order('created_at', { ascending: false }).limit(5);
+      .order('created_at', { ascending: false }).limit(3);
     renderUltimosClientes(ultimos || []);
   }
 
@@ -205,15 +205,15 @@ function renderCitasHoy(lista) {
     const nombre = c.clientes?.nombre || 'Sin cliente asignado';
     const badge = estadoBadge[c.estado] || estadoBadge.pendiente;
     return `
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-100)">
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-100)">
         <div style="width:36px;height:36px;border-radius:10px;background:${badge.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0">
           <i data-lucide="calendar" style="width:16px;height:16px;stroke:${badge.color}"></i>
         </div>
-        <div style="flex:1;min-width:0">
+        <div style="flex:1;min-width:0;text-align:left">
           <div style="font-weight:600;font-size:13px;color:var(--gray-800)">${nombre}</div>
-          <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+          <div style="margin-top:3px">
             <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:${badge.bg};color:${badge.color};font-weight:700">${badge.label}</span>
-            ${c.servicio ? `<span style="font-size:11px;color:var(--gray-400)">${c.servicio}</span>` : ''}
+            ${c.servicio ? `<span style="font-size:11px;color:var(--gray-400);margin-left:4px">${c.servicio}</span>` : ''}
           </div>
         </div>
         <span style="font-size:14px;font-weight:700;color:var(--gray-600);flex-shrink:0">${hora}</span>
