@@ -95,22 +95,22 @@ function renderAgendaLista(lista) {
 
     return `
       <div>
-        <div onclick="toggleAgendaAcordeon(this)" style="display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;border-bottom:${isLast ? 'none' : '1px solid var(--gray-100)'}${c.estado === 'cancelada' ? ';opacity:0.5' : ''}">
-          <span style="font-size:13px;font-weight:800;color:${est.dot};width:40px;flex-shrink:0">${hora}</span>
-          <span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${nombre}</span>
-          <span style="width:8px;height:8px;border-radius:50%;background:${est.dot};flex-shrink:0"></span>
-          <svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+        <div onclick="toggleAgendaAcordeon(this)" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;border-bottom:${isLast ? 'none' : '1px solid var(--gray-100)'}${c.estado === 'cancelada' ? ';opacity:0.5' : ''}">
+          <span style="font-size:15px;font-weight:800;color:${est.dot};width:46px;flex-shrink:0">${hora}</span>
+          <span style="font-size:16px;font-weight:600;color:var(--gray-800);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${nombre}</span>
+          <span style="width:10px;height:10px;border-radius:50%;background:${est.dot};flex-shrink:0"></span>
+          <svg class="acord-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <div class="acord-detail" style="display:none;padding:10px 16px 12px;background:var(--gray-50);border-bottom:${isLast ? 'none' : '1px solid var(--gray-100)'}">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
-            <span style="display:inline-flex;align-items:center;gap:3px;font-size:12px;color:var(--gray-400)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${durLabel}</span>
-            ${c.servicio ? `<span style="font-size:12px;color:var(--gray-400)">· ${c.servicio}</span>` : ''}
-            ${telefono ? `<span style="display:inline-flex;align-items:center;gap:3px;font-size:12px;color:var(--gray-400)">· <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.1a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> ${telefono}</span>` : ''}
-            <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:${est.bg};color:${est.color};font-weight:700">${est.label}</span>
+        <div class="acord-detail" style="display:none;padding:12px 16px 14px;background:var(--gray-50);border-bottom:${isLast ? 'none' : '1px solid var(--gray-100)'}">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+            <span style="display:inline-flex;align-items:center;gap:3px;font-size:13px;color:var(--gray-400)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${durLabel}</span>
+            ${c.servicio ? `<span style="font-size:13px;color:var(--gray-400)">· ${c.servicio}</span>` : ''}
+            ${telefono ? `<span style="display:inline-flex;align-items:center;gap:3px;font-size:13px;color:var(--gray-400)">· <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.1a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> ${telefono}</span>` : ''}
+            <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:${est.bg};color:${est.color};font-weight:700">${est.label}</span>
           </div>
           <div style="display:flex;gap:8px">
-            <button onclick="editarCita('${c.id}')" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:7px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:12px;font-weight:600;color:var(--gray-600);cursor:pointer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Editar</button>
-            <button onclick="eliminarCita('${c.id}')" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:7px;border-radius:10px;border:none;background:#FEE2E2;font-size:12px;font-weight:600;color:#DC2626;cursor:pointer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg> Eliminar</button>
+            <button onclick="editarCita('${c.id}')" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:13px;font-weight:600;color:var(--gray-600);cursor:pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Editar</button>
+            <button onclick="eliminarCita('${c.id}')" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border-radius:10px;border:none;background:#FEE2E2;font-size:13px;font-weight:600;color:#DC2626;cursor:pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg> Eliminar</button>
           </div>
         </div>
       </div>
@@ -532,24 +532,24 @@ async function agendaCargarSemana() {
         const nombre = c.clientes?.nombre || 'Sin cliente';
         const est    = estadoInfo[c.estado] || estadoInfo.pendiente;
         const borde  = idx < citasDia.length - 1 ? 'border-bottom:1px solid var(--gray-100)' : '';
-        return `<div style="display:flex;align-items:center;gap:10px;padding:8px 4px;${borde}">
-          <span style="font-size:12px;font-weight:800;color:${est.dot};width:36px">${hora}</span>
-          <span style="font-size:13px;font-weight:600;color:var(--gray-800);flex:1">${nombre}</span>
-          <span style="width:7px;height:7px;border-radius:50%;background:${est.dot}"></span>
+        return `<div style="display:flex;align-items:center;gap:10px;padding:10px 4px;${borde}">
+          <span style="font-size:14px;font-weight:800;color:${est.dot};width:40px">${hora}</span>
+          <span style="font-size:15px;font-weight:600;color:var(--gray-800);flex:1">${nombre}</span>
+          <span style="width:9px;height:9px;border-radius:50%;background:${est.dot}"></span>
         </div>`;
       }).join('');
       html += `<div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06)${bordeHoy}">
         <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.ags-chv').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':''" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--gray-100)">
           <div style="display:flex;align-items:center;gap:8px">
-            <span style="font-size:13px;font-weight:700;color:${esHoy?'var(--primary)':'var(--gray-700)'}">${label}</span>
-            ${esHoy?'<span style="font-size:10px;padding:1px 7px;border-radius:20px;background:var(--primary);color:white;font-weight:700">Hoy</span>':''}
+            <span style="font-size:15px;font-weight:700;color:${esHoy?'var(--primary)':'var(--gray-700)'}">${label}</span>
+            ${esHoy?'<span style="font-size:11px;padding:2px 8px;border-radius:20px;background:var(--primary);color:white;font-weight:700">Hoy</span>':''}
           </div>
           <div style="display:flex;align-items:center;gap:8px">
-            <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:var(--primary-light);color:var(--primary);font-weight:700">${citasDia.length} cita${citasDia.length>1?'s':''}</span>
-            <svg class="ags-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .2s${esHoy?';transform:rotate(180deg)':''}"><polyline points="6 9 12 15 18 9"/></svg>
+            <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:var(--primary-light);color:var(--primary);font-weight:700">${citasDia.length} cita${citasDia.length>1?'s':''}</span>
+            <svg class="ags-chv" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .2s${esHoy?';transform:rotate(180deg)':''}"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
         </div>
-        <div style="display:${esHoy?'block':'none'};padding:8px 12px">${citasHTML}</div>
+        <div style="display:${esHoy?'block':'none'};padding:8px 14px">${citasHTML}</div>
       </div>`;
     }
   }
@@ -667,10 +667,10 @@ function agendaMesRenderDetalle(fechaStr, lista) {
       const hora   = c.hora ? c.hora.slice(0,5) : '--:--';
       const est    = estadoInfo[c.estado] || estadoInfo.pendiente;
       const isLast = i === lista.length - 1;
-      return `<div style="display:flex;align-items:center;gap:10px;padding:11px 16px;${isLast?'':'border-bottom:1px solid var(--gray-100)'}">
-        <span style="font-size:13px;font-weight:800;color:${est.dot};width:40px;flex-shrink:0">${hora}</span>
-        <span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">${nombre}</span>
-        <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:${est.bg};color:${est.color};font-weight:700">${est.label}</span>
+      return `<div style="display:flex;align-items:center;gap:10px;padding:13px 16px;${isLast?'':'border-bottom:1px solid var(--gray-100)'}">
+        <span style="font-size:15px;font-weight:800;color:${est.dot};width:46px;flex-shrink:0">${hora}</span>
+        <span style="font-size:16px;font-weight:600;color:var(--gray-800);flex:1">${nombre}</span>
+        <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:${est.bg};color:${est.color};font-weight:700">${est.label}</span>
       </div>`;
     }).join('') + '</div>';
 }
