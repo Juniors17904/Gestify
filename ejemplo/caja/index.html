@@ -1,0 +1,151 @@
+<!-- CSS compartido -->
+<link rel="stylesheet" href="../../css/style.css">
+<link rel="stylesheet" href="../../css/dashboard.css">
+
+<!-- CSS específico -->
+<style>
+  .vista-btn { flex-shrink:0; padding:8px 16px; border:none; border-radius:20px; font-size:13px; font-weight:600; cursor:pointer; background:var(--white); color:var(--gray-600); box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+  .vista-btn.active { background:var(--primary); color:white; }
+  .ej-section-label { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gray-400);margin:0 0 10px;padding:0 2px; }
+  .badge-actual { display:inline-block; font-size:10px; padding:2px 8px; border-radius:6px; font-weight:700; margin-left:6px; background:#FEF3C7; color:#D97706; vertical-align:middle; text-transform:none; letter-spacing:0; }
+  .badge-prop   { display:inline-block; font-size:10px; padding:2px 8px; border-radius:6px; font-weight:700; margin-left:6px; background:var(--primary-light); color:var(--primary); vertical-align:middle; text-transform:none; letter-spacing:0; }
+  .vista-note { font-size:11px; color:var(--gray-400); margin-top:10px; line-height:1.5; }
+</style>
+
+<!-- HTML de la página -->
+<div style="padding:16px;max-width:440px;margin:0 auto">
+
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+    <button class="vista-btn active" onclick="mvista('caj','WA',this)">WA · Widget saldo</button>
+    <button class="vista-btn" onclick="mvista('caj','WB',this)">WB · Widget barras</button>
+    <button class="vista-btn" onclick="mvista('caj','SA',this)">SA · Sección actual</button>
+    <button class="vista-btn" onclick="mvista('caj','SB',this)">SB · Con resumen día</button>
+  </div>
+
+  <!-- WA -->
+  <div id="caj-WA" class="mvis-caj">
+    <p class="ej-section-label">Widget — Saldo en caja <span class="badge-actual">ACTUAL</span></p>
+    <div class="card" style="padding:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span style="font-size:14px;font-weight:700;color:var(--gray-800)">En Caja</span>
+        <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver movimientos</span>
+      </div>
+      <div style="font-size:30px;font-weight:800;color:#10B981;margin-bottom:12px">S/ 1,240.00</div>
+      <div style="display:flex;gap:8px">
+        <div style="flex:1;text-align:center;padding:10px;background:#D1FAE5;border-radius:10px">
+          <div style="font-size:10px;font-weight:700;color:#065F46;margin-bottom:2px">INGRESOS</div>
+          <div style="font-size:14px;font-weight:800;color:#065F46">S/ 2,100</div>
+        </div>
+        <div style="flex:1;text-align:center;padding:10px;background:#FEE2E2;border-radius:10px">
+          <div style="font-size:10px;font-weight:700;color:#DC2626;margin-bottom:2px">EGRESOS</div>
+          <div style="font-size:14px;font-weight:800;color:#DC2626">S/ 860</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WB -->
+  <div id="caj-WB" class="mvis-caj" style="display:none">
+    <p class="ej-section-label">Widget — Con últimos movimientos <span class="badge-prop">PROPUESTA</span></p>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100)">
+        <div>
+          <div style="font-size:12px;color:var(--gray-400);font-weight:600;margin-bottom:2px">SALDO ACTUAL</div>
+          <div style="font-size:24px;font-weight:800;color:#10B981">S/ 1,240.00</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:#10B981;font-weight:700">↑ S/ 2,100</div>
+          <div style="font-size:11px;color:#EF4444;font-weight:700">↓ S/ 860</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="width:6px;height:6px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+        <div style="flex:1"><span style="font-size:12px;font-weight:600;color:var(--gray-700)">Venta — Zapatillas</span></div>
+        <span style="font-size:12px;font-weight:700;color:#10B981">+S/ 250</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="width:6px;height:6px;border-radius:50%;background:#EF4444;flex-shrink:0"></div>
+        <div style="flex:1"><span style="font-size:12px;font-weight:600;color:var(--gray-700)">Pago proveedor</span></div>
+        <span style="font-size:12px;font-weight:700;color:#EF4444">−S/ 400</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 16px">
+        <div style="width:6px;height:6px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+        <div style="flex:1"><span style="font-size:12px;font-weight:600;color:var(--gray-700)">Venta — Polo</span></div>
+        <span style="font-size:12px;font-weight:700;color:#10B981">+S/ 89</span>
+      </div>
+    </div>
+    <p class="vista-note">Muestra saldo + últimos movimientos directamente en el widget.</p>
+  </div>
+
+  <!-- SA -->
+  <div id="caj-SA" class="mvis-caj" style="display:none">
+    <p class="ej-section-label">Sección — Caja con botones de acción <span class="badge-actual">ACTUAL</span></p>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <button style="flex:1;padding:14px;border-radius:12px;border:none;background:#D1FAE5;color:#065F46;font-size:14px;font-weight:700;cursor:pointer">+ Ingreso</button>
+      <button style="flex:1;padding:14px;border-radius:12px;border:none;background:#FEE2E2;color:#DC2626;font-size:14px;font-weight:700;cursor:pointer">− Egreso</button>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--gray-100)"><span style="font-size:13px;font-weight:700;color:var(--gray-800)">Movimientos de hoy</span></div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta — Zapatillas</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">15:42</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">+S/ 250</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="width:8px;height:8px;border-radius:50%;background:#EF4444;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Pago proveedor</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">14:10</div></div>
+        <span style="font-size:13px;font-weight:700;color:#EF4444">−S/ 400</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+        <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta — Polo</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">13:05</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">+S/ 89</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SB -->
+  <div id="caj-SB" class="mvis-caj" style="display:none">
+    <p class="ej-section-label">Sección — Con resumen del día arriba <span class="badge-prop">PROPUESTA</span></p>
+    <div class="card" style="padding:14px;margin-bottom:12px">
+      <div style="font-size:11px;color:var(--gray-400);font-weight:700;margin-bottom:6px">RESUMEN DE HOY</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:22px;font-weight:800;color:#10B981">S/ 1,240</span>
+        <span style="font-size:12px;color:var(--gray-500);font-weight:600">saldo actual</span>
+      </div>
+      <div style="display:flex;gap:6px">
+        <div style="flex:1;padding:8px;background:#D1FAE5;border-radius:8px;text-align:center"><div style="font-size:10px;color:#065F46;font-weight:700">INGRESOS</div><div style="font-size:14px;font-weight:800;color:#065F46">S/ 2,100</div></div>
+        <div style="flex:1;padding:8px;background:#FEE2E2;border-radius:8px;text-align:center"><div style="font-size:10px;color:#DC2626;font-weight:700">EGRESOS</div><div style="font-size:14px;font-weight:800;color:#DC2626">S/ 860</div></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <button style="flex:1;padding:12px;border-radius:12px;border:none;background:#D1FAE5;color:#065F46;font-size:13px;font-weight:700;cursor:pointer">+ Ingreso</button>
+      <button style="flex:1;padding:12px;border-radius:12px;border:none;background:#FEE2E2;color:#DC2626;font-size:13px;font-weight:700;cursor:pointer">− Egreso</button>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--gray-100)"><span style="font-size:13px;font-weight:700;color:var(--gray-800)">Movimientos</span></div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta — Zapatillas</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">15:42</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">+S/ 250</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+        <div style="width:8px;height:8px;border-radius:50%;background:#EF4444;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Pago proveedor</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">14:10</div></div>
+        <span style="font-size:13px;font-weight:700;color:#EF4444">−S/ 400</span>
+      </div>
+    </div>
+    <p class="vista-note">Resumen del día visible de entrada, sin tener que bajar a ver los movimientos.</p>
+  </div>
+  <div style="height:80px"></div>
+</div>
+
+<script>
+  function mvista(prefix, id, btn) {
+    document.querySelectorAll('.mvis-' + prefix).forEach(el => el.style.display = 'none');
+    document.getElementById(prefix + '-' + id).style.display = 'block';
+    btn.closest('div').querySelectorAll('.vista-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  document.addEventListener('DOMContentLoaded', () => { if (window.lucide) lucide.createIcons(); });
+</script>

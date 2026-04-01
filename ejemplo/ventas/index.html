@@ -1,0 +1,186 @@
+<!-- CSS compartido -->
+<link rel="stylesheet" href="../../css/style.css">
+<link rel="stylesheet" href="../../css/dashboard.css">
+
+<!-- CSS específico -->
+<style>
+  .vista-btn { flex-shrink:0; padding:8px 16px; border:none; border-radius:20px; font-size:13px; font-weight:600; cursor:pointer; background:var(--white); color:var(--gray-600); box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+  .vista-btn.active { background:var(--primary); color:white; }
+  .ej-section-label { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gray-400);margin:0 0 10px;padding:0 2px; }
+  .badge-actual { display:inline-block; font-size:10px; padding:2px 8px; border-radius:6px; font-weight:700; margin-left:6px; background:#FEF3C7; color:#D97706; vertical-align:middle; text-transform:none; letter-spacing:0; }
+  .badge-prop   { display:inline-block; font-size:10px; padding:2px 8px; border-radius:6px; font-weight:700; margin-left:6px; background:var(--primary-light); color:var(--primary); vertical-align:middle; text-transform:none; letter-spacing:0; }
+  .vista-note { font-size:11px; color:var(--gray-400); margin-top:10px; line-height:1.5; }
+  .acord-chevron { transition:transform .2s; }
+</style>
+
+<!-- HTML de la página -->
+<div style="padding:16px;max-width:440px;margin:0 auto">
+
+  <!-- Tabs -->
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+    <button class="vista-btn active" onclick="mvista('ven','OG',this)">OG · Original</button>
+    <button class="vista-btn" onclick="mvista('ven','WA',this)">WA · Widget simple</button>
+    <button class="vista-btn" onclick="mvista('ven','WB',this)">WB · Widget con stats</button>
+    <button class="vista-btn" onclick="mvista('ven','SA',this)">SA · Sección lista</button>
+    <button class="vista-btn" onclick="mvista('ven','SB',this)">SB · Sección acordeón</button>
+  </div>
+
+  <!-- OG: Dashboard original -->
+  <div id="ven-OG" class="mvis-ven" style="">
+    <p class="ej-section-label">Dashboard original <span class="badge-actual">ACTUAL</span></p>
+    <div class="section-toolbar" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <input type="date" class="date-input" id="filtroFechaVenta-ej">
+      <button class="btn-primary">+ Nueva Venta</button>
+    </div>
+    <div class="card">
+      <table class="data-table">
+        <thead>
+          <tr><th>Hora</th><th>Producto</th><th>Cant.</th><th>Total</th><th>Vendedor</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>15:42</td><td>Zapatillas Nike</td><td>1</td><td>S/ 250</td><td>Luis</td></tr>
+          <tr><td>15:19</td><td>Polo Adidas</td><td>2</td><td>S/ 178</td><td>Luis</td></tr>
+          <tr><td>14:58</td><td>Casaca Puma</td><td>1</td><td>S/ 180</td><td>Ana</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- WA: Widget simple -->
+  <div id="ven-WA" class="mvis-ven" style="display:none">
+    <p class="ej-section-label">Widget — Últimas Ventas (simple) <span class="badge-actual">ACTUAL</span></p>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--gray-100)">
+        <h3 style="font-size:14px;font-weight:700;color:var(--gray-800);margin:0">Últimas Ventas</h3>
+        <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver todas</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">hace 5 min</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">S/ 250</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">hace 23 min</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">S/ 89</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">hace 1h</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">S/ 180</span>
+      </div>
+    </div>
+    <p class="vista-note">Lista plana sin stat de total. Igual al actual.</p>
+  </div>
+
+  <!-- WB: Widget con stats -->
+  <div id="ven-WB" class="mvis-ven" style="display:none">
+    <p class="ej-section-label">Widget — Últimas Ventas con total del día <span class="badge-prop">PROPUESTA</span></p>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--gray-100)">
+        <h3 style="font-size:14px;font-weight:700;color:var(--gray-800);margin:0">Ventas Hoy</h3>
+        <div style="text-align:right">
+          <div style="font-size:18px;font-weight:800;color:#10B981">S/ 519</div>
+          <div style="font-size:10px;color:var(--gray-400);font-weight:600">3 ventas</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike</div><div style="font-size:11px;color:var(--gray-400)">15:42</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">S/ 250</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas</div><div style="font-size:11px;color:var(--gray-400)">15:19</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">S/ 89</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+        <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma</div><div style="font-size:11px;color:var(--gray-400)">14:58</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">S/ 180</span>
+      </div>
+    </div>
+    <p class="vista-note">Muestra el total del día y cantidad de ventas en el header.</p>
+  </div>
+
+  <!-- SA: Sección lista -->
+  <div id="ven-SA" class="mvis-ven" style="display:none">
+    <p class="ej-section-label">Sección — Historial lista <span class="badge-actual">ACTUAL</span></p>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">HOY</div><div style="font-size:18px;font-weight:800;color:var(--primary)">S/ 519</div></div>
+      <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">MES</div><div style="font-size:18px;font-weight:800;color:var(--gray-800)">S/ 8,240</div></div>
+      <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">VENTAS</div><div style="font-size:18px;font-weight:800;color:var(--gray-800)">47</div></div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray-100)">
+        <span style="font-size:13px;font-weight:700;color:var(--gray-800)">Historial</span>
+        <button style="display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:8px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:600;cursor:pointer">+ Nueva venta</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 15:42</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">S/ 250</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 15:19</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">S/ 89</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 14:58</div></div>
+        <span style="font-size:13px;font-weight:700;color:#10B981">S/ 180</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SB: Sección acordeón con detalle de items -->
+  <div id="ven-SB" class="mvis-ven" style="display:none">
+    <p class="ej-section-label">Sección — Historial con detalle de productos <span class="badge-prop">PROPUESTA</span></p>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">HOY</div><div style="font-size:18px;font-weight:800;color:var(--primary)">S/ 519</div></div>
+      <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">MES</div><div style="font-size:18px;font-weight:800;color:var(--gray-800)">S/ 8,240</div></div>
+      <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">VENTAS</div><div style="font-size:18px;font-weight:800;color:var(--gray-800)">47</div></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <span style="font-size:13px;font-weight:700;color:var(--gray-800)">Historial</span>
+      <button style="display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:8px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:600;cursor:pointer">+ Nueva venta</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
+        <div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta #047</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 15:42 · 2 productos</div></div>
+          <span style="font-size:13px;font-weight:700;color:#10B981">S/ 339</span>
+          <svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div style="display:none;padding:0 16px 12px;background:var(--gray-50)">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--gray-100);font-size:12px"><span style="color:var(--gray-600)">Zapatillas Nike × 1</span><span style="font-weight:700;color:var(--gray-800)">S/ 250</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:12px"><span style="color:var(--gray-600)">Polo Adidas × 1</span><span style="font-weight:700;color:var(--gray-800)">S/ 89</span></div>
+        </div>
+      </div>
+      <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
+        <div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer">
+          <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta #046</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">30 mar · 14:58 · 1 producto</div></div>
+          <span style="font-size:13px;font-weight:700;color:#10B981">S/ 180</span>
+          <svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div style="display:none;padding:0 16px 12px;background:var(--gray-50)">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:12px"><span style="color:var(--gray-600)">Casaca Puma L × 1</span><span style="font-weight:700;color:var(--gray-800)">S/ 180</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="vista-note">Al expandir cada venta se ven los productos incluidos.</p>
+  </div>
+  <div style="height:80px"></div>
+</div>
+
+<script>
+  function mvista(prefix, id, btn) {
+    document.querySelectorAll('.mvis-' + prefix).forEach(el => el.style.display = 'none');
+    document.getElementById(prefix + '-' + id).style.display = 'block';
+    btn.closest('div').querySelectorAll('.vista-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  function toggleAgendaEj(header) {
+    const detail  = header.nextElementSibling;
+    const chevron = header.querySelector('.acord-chevron');
+    const abierto = detail.style.display !== 'none';
+    detail.style.display    = abierto ? 'none' : 'block';
+    if (chevron) chevron.style.transform = abierto ? '' : 'rotate(180deg)';
+  }
+  document.addEventListener('DOMContentLoaded', () => { if (window.lucide) lucide.createIcons(); });
+</script>

@@ -1,0 +1,332 @@
+<!-- CSS compartido -->
+<link rel="stylesheet" href="../../css/style.css">
+<link rel="stylesheet" href="../../css/dashboard.css">
+
+<!-- CSS específico -->
+<style>
+  .acord-chevron { transition:transform .2s; }
+</style>
+
+<!-- HTML de la página -->
+<div style="padding:16px;max-width:440px;margin:0 auto">
+
+  <!-- Toggle Día / Semana / Mes -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <h2 style="font-size:1.1rem;font-weight:700;color:var(--gray-800);margin:0">Citas</h2>
+    <div style="display:flex;background:var(--gray-100);border-radius:8px;padding:3px">
+      <button id="ej-btn-dia"    onclick="ejVista('dia')"    style="padding:4px 12px;border-radius:6px;border:none;background:var(--white);font-size:12px;font-weight:700;color:var(--primary);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Día</button>
+      <button id="ej-btn-semana" onclick="ejVista('semana')" style="padding:4px 12px;border-radius:6px;border:none;background:transparent;font-size:12px;font-weight:600;color:var(--gray-500);cursor:pointer">Semana</button>
+      <button id="ej-btn-mes"    onclick="ejVista('mes')"    style="padding:4px 12px;border-radius:6px;border:none;background:transparent;font-size:12px;font-weight:600;color:var(--gray-500);cursor:pointer">Mes</button>
+    </div>
+  </div>
+
+  <!-- Vista DÍA -->
+  <div id="ej-vista-dia" style="display:block">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <button onclick="ejDiaCambiar(-1)" style="width:40px;height:40px;border-radius:12px;border:1.5px solid var(--gray-200);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.08)"><i data-lucide="chevron-left" style="width:18px;height:18px;stroke:var(--gray-600);stroke-width:2.5"></i></button>
+      <div style="text-align:center">
+        <div id="ej-dia-relativo" style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:1px">Hoy</div>
+        <div id="ej-dia-nombre" style="font-size:14px;font-weight:700;color:var(--gray-800)">Domingo</div>
+        <div id="ej-dia-fecha" style="font-size:12px;color:var(--gray-400);margin-top:2px">29 de marzo</div>
+      </div>
+      <button onclick="ejDiaCambiar(1)" style="width:40px;height:40px;border-radius:12px;border:1.5px solid var(--gray-200);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.08)"><i data-lucide="chevron-right" style="width:18px;height:18px;stroke:var(--gray-600);stroke-width:2.5"></i></button>
+    </div>
+    <div class="card agenda-card">
+      <div style="background:var(--white);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.07)">
+        <div><div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;border-bottom:1px solid var(--gray-100)"><span style="font-size:13px;font-weight:800;color:#F59E0B;width:40px;flex-shrink:0">16:27</span><span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">Mila</span><span style="width:8px;height:8px;border-radius:50%;background:#F59E0B;flex-shrink:0"></span><svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg></div><div style="display:none;padding:10px 16px 12px;background:var(--gray-50);border-bottom:1px solid var(--gray-100)"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap"><span style="font-size:12px;color:var(--gray-400)">1h · Consulta</span><span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#FEF3C7;color:#92400E;font-weight:700">Pendiente</span></div><div style="display:flex;gap:8px"><button style="flex:1;padding:7px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:12px;font-weight:600;color:var(--gray-600);cursor:pointer">Editar</button><button style="flex:1;padding:7px;border-radius:10px;border:none;background:#FEE2E2;font-size:12px;font-weight:600;color:#DC2626;cursor:pointer">Eliminar</button></div></div></div>
+        <div><div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;border-bottom:1px solid var(--gray-100)"><span style="font-size:13px;font-weight:800;color:#F59E0B;width:40px;flex-shrink:0">16:29</span><span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">Daniel F</span><span style="width:8px;height:8px;border-radius:50%;background:#F59E0B;flex-shrink:0"></span><svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg></div><div style="display:none;padding:10px 16px 12px;background:var(--gray-50);border-bottom:1px solid var(--gray-100)"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap"><span style="font-size:12px;color:var(--gray-400)">1h · 902333333</span><span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#FEF3C7;color:#92400E;font-weight:700">Pendiente</span></div><div style="display:flex;gap:8px"><button style="flex:1;padding:7px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:12px;font-weight:600;color:var(--gray-600);cursor:pointer">Editar</button><button style="flex:1;padding:7px;border-radius:10px;border:none;background:#FEE2E2;font-size:12px;font-weight:600;color:#DC2626;cursor:pointer">Eliminar</button></div></div></div>
+        <div><div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer"><span style="font-size:13px;font-weight:800;color:#10B981;width:40px;flex-shrink:0">18:03</span><span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">Dante</span><span style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></span><svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg></div><div style="display:none;padding:10px 16px 12px;background:var(--gray-50)"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap"><span style="font-size:12px;color:var(--gray-400)">1h</span><span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">Confirmada</span></div><div style="display:flex;gap:8px"><button style="flex:1;padding:7px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:12px;font-weight:600;color:var(--gray-600);cursor:pointer">Editar</button><button style="flex:1;padding:7px;border-radius:10px;border:none;background:#FEE2E2;font-size:12px;font-weight:600;color:#DC2626;cursor:pointer">Eliminar</button></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista SEMANA -->
+  <div id="ej-vista-semana" style="display:none">
+    <div class="agenda-nav" style="margin-bottom:12px">
+      <button class="btn-icon" onclick="ejSemanaCambiar(-1)"><i data-lucide="chevron-left"></i></button>
+      <span id="ej-semana-label" class="agenda-fecha-label">24 — 30 mar.</span>
+      <button class="btn-icon" onclick="ejSemanaCambiar(1)"><i data-lucide="chevron-right"></i></button>
+      <button id="ej-semana-hoy" class="btn-secondary btn-sm" onclick="ejSemanaIrHoy()" style="display:none">Hoy</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px">
+          <span style="font-size:13px;font-weight:700;color:var(--gray-600)">Lun 24</span>
+          <span style="font-size:12px;color:var(--gray-300)">Sin citas</span>
+        </div>
+      </div>
+      <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+        <div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--gray-100)">
+          <span style="font-size:13px;font-weight:700;color:var(--gray-700)">Mar 25</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:var(--primary-light);color:var(--primary);font-weight:700">1 cita</span>
+            <svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div style="display:none;padding:8px 12px">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 4px">
+            <span style="font-size:12px;font-weight:800;color:#3B82F6;width:36px">10:00</span>
+            <span style="font-size:13px;font-weight:600;color:var(--gray-800);flex:1">Ernesto</span>
+            <span style="width:7px;height:7px;border-radius:50%;background:#3B82F6"></span>
+          </div>
+        </div>
+      </div>
+      <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px">
+          <span style="font-size:13px;font-weight:700;color:var(--gray-600)">Mié 26</span>
+          <span style="font-size:12px;color:var(--gray-300)">Sin citas</span>
+        </div>
+      </div>
+      <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+        <div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--gray-100)">
+          <span style="font-size:13px;font-weight:700;color:var(--gray-700)">Jue 27</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:var(--primary-light);color:var(--primary);font-weight:700">2 citas</span>
+            <svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div style="display:none;padding:8px 12px">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--gray-100)">
+            <span style="font-size:12px;font-weight:800;color:#F59E0B;width:36px">09:00</span>
+            <span style="font-size:13px;font-weight:600;color:var(--gray-800);flex:1">Juniors</span>
+            <span style="width:7px;height:7px;border-radius:50%;background:#F59E0B"></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 4px">
+            <span style="font-size:12px;font-weight:800;color:#10B981;width:36px">11:30</span>
+            <span style="font-size:13px;font-weight:600;color:var(--gray-800);flex:1">María</span>
+            <span style="width:7px;height:7px;border-radius:50%;background:#10B981"></span>
+          </div>
+        </div>
+      </div>
+      <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px">
+          <span style="font-size:13px;font-weight:700;color:var(--gray-600)">Vie 28</span>
+          <span style="font-size:12px;color:var(--gray-300)">Sin citas</span>
+        </div>
+      </div>
+      <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06);border:2px solid var(--primary)">
+        <div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--gray-100)">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:13px;font-weight:700;color:var(--primary)">Dom 29</span>
+            <span style="font-size:10px;padding:1px 7px;border-radius:20px;background:var(--primary);color:white;font-weight:700">Hoy</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:var(--primary-light);color:var(--primary);font-weight:700">3 citas</span>
+            <svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div style="display:none;padding:8px 12px">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--gray-100)"><span style="font-size:12px;font-weight:800;color:#F59E0B;width:36px">16:27</span><span style="font-size:13px;font-weight:600;color:var(--gray-800);flex:1">Mila</span><span style="width:7px;height:7px;border-radius:50%;background:#F59E0B"></span></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--gray-100)"><span style="font-size:12px;font-weight:800;color:#F59E0B;width:36px">16:29</span><span style="font-size:13px;font-weight:600;color:var(--gray-800);flex:1">Daniel F</span><span style="width:7px;height:7px;border-radius:50%;background:#F59E0B"></span></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 4px"><span style="font-size:12px;font-weight:800;color:#10B981;width:36px">18:03</span><span style="font-size:13px;font-weight:600;color:var(--gray-800);flex:1">Dante</span><span style="width:7px;height:7px;border-radius:50%;background:#10B981"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista MES -->
+  <div id="ej-vista-mes" style="display:none">
+    <div class="agenda-nav" style="margin-bottom:12px">
+      <button class="btn-icon" onclick="ejMesCambiar(-1)"><i data-lucide="chevron-left"></i></button>
+      <span id="ej-mes-label" class="agenda-fecha-label">Marzo 2026</span>
+      <button class="btn-icon" onclick="ejMesCambiar(1)"><i data-lucide="chevron-right"></i></button>
+      <button id="ej-mes-hoy" class="btn-secondary btn-sm" onclick="ejMesIrHoy()" style="display:none">Hoy</button>
+    </div>
+    <div class="card" style="padding:12px">
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:6px">
+        <span style="text-align:center;font-size:11px;font-weight:700;color:var(--gray-400)">L</span>
+        <span style="text-align:center;font-size:11px;font-weight:700;color:var(--gray-400)">M</span>
+        <span style="text-align:center;font-size:11px;font-weight:700;color:var(--gray-400)">X</span>
+        <span style="text-align:center;font-size:11px;font-weight:700;color:var(--gray-400)">J</span>
+        <span style="text-align:center;font-size:11px;font-weight:700;color:var(--gray-400)">V</span>
+        <span style="text-align:center;font-size:11px;font-weight:700;color:var(--primary)">S</span>
+        <span style="text-align:center;font-size:11px;font-weight:700;color:var(--primary)">D</span>
+      </div>
+      <div id="ej-mes-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px"></div>
+    </div>
+    <div id="ej-mes-detalle" style="margin-top:10px"></div>
+  </div>
+
+  <div style="height:80px"></div>
+</div>
+
+<script>
+  function toggleAgendaEj(header) {
+    const detail  = header.nextElementSibling;
+    const chevron = header.querySelector('.acord-chevron');
+    const abierto = detail.style.display !== 'none';
+    detail.style.display    = abierto ? 'none' : 'block';
+    if (chevron) chevron.style.transform = abierto ? '' : 'rotate(180deg)';
+  }
+
+  function ejVista(v) {
+    ['dia','semana','mes'].forEach(id => {
+      document.getElementById('ej-vista-' + id).style.display = v === id ? 'block' : 'none';
+      const btn = document.getElementById('ej-btn-' + id);
+      btn.style.background = v === id ? 'var(--white)' : 'transparent';
+      btn.style.color      = v === id ? 'var(--primary)' : 'var(--gray-500)';
+      btn.style.fontWeight = v === id ? '700' : '600';
+      btn.style.boxShadow  = v === id ? '0 1px 3px rgba(0,0,0,0.1)' : 'none';
+    });
+    if (v === 'mes') ejRenderMes();
+  }
+
+  let ejDiaActual = new Date(2026, 2, 29);
+  const diasNombre  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const mesesNombre = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const mesesCorto  = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
+  function ejDiaActualizarLabel() {
+    const hoy = new Date();
+    const ayer   = new Date(hoy); ayer.setDate(hoy.getDate() - 1);
+    const manana = new Date(hoy); manana.setDate(hoy.getDate() + 1);
+    let relativo = '';
+    if      (ejDiaActual.toDateString() === hoy.toDateString())    relativo = 'Hoy';
+    else if (ejDiaActual.toDateString() === ayer.toDateString())   relativo = 'Ayer';
+    else if (ejDiaActual.toDateString() === manana.toDateString()) relativo = 'Mañana';
+    const rel = document.getElementById('ej-dia-relativo');
+    rel.textContent  = relativo;
+    rel.style.visibility = relativo ? 'visible' : 'hidden';
+    document.getElementById('ej-dia-nombre').textContent = diasNombre[ejDiaActual.getDay()];
+    document.getElementById('ej-dia-fecha').textContent  = ejDiaActual.getDate() + ' de ' + mesesNombre[ejDiaActual.getMonth()];
+  }
+  function ejDiaCambiar(delta) {
+    ejDiaActual = new Date(ejDiaActual);
+    ejDiaActual.setDate(ejDiaActual.getDate() + delta);
+    ejDiaActualizarLabel();
+  }
+
+  let ejSemanaRef = new Date(2026, 2, 24);
+  function ejSemanaActualizarLabel() {
+    const fin = new Date(ejSemanaRef); fin.setDate(ejSemanaRef.getDate() + 6);
+    const mismoMes = ejSemanaRef.getMonth() === fin.getMonth();
+    let label;
+    if (mismoMes) label = ejSemanaRef.getDate() + ' — ' + fin.getDate() + ' ' + mesesCorto[fin.getMonth()] + '.';
+    else label = ejSemanaRef.getDate() + ' ' + mesesCorto[ejSemanaRef.getMonth()] + '. — ' + fin.getDate() + ' ' + mesesCorto[fin.getMonth()] + '.';
+    document.getElementById('ej-semana-label').textContent = label;
+    const hoy = new Date();
+    const diffDia = hoy.getDay() === 0 ? -6 : 1 - hoy.getDay();
+    const lunesHoy = new Date(hoy); lunesHoy.setDate(hoy.getDate() + diffDia); lunesHoy.setHours(0,0,0,0);
+    const lunesRef = new Date(ejSemanaRef); lunesRef.setHours(0,0,0,0);
+    const btnHoy = document.getElementById('ej-semana-hoy');
+    if (btnHoy) btnHoy.style.display = lunesRef.getTime() === lunesHoy.getTime() ? 'none' : '';
+  }
+  function ejSemanaCambiar(delta) {
+    ejSemanaRef = new Date(ejSemanaRef);
+    ejSemanaRef.setDate(ejSemanaRef.getDate() + delta * 7);
+    ejSemanaActualizarLabel();
+  }
+  function ejSemanaIrHoy() {
+    const hoy = new Date();
+    const dia = hoy.getDay();
+    const diff = dia === 0 ? -6 : 1 - dia;
+    ejSemanaRef = new Date(hoy);
+    ejSemanaRef.setDate(hoy.getDate() + diff);
+    ejSemanaActualizarLabel();
+  }
+
+  const ejCitasMes = {
+    '2026-03-25': [{ color:'#3B82F6' }],
+    '2026-03-27': [{ color:'#F59E0B' }, { color:'#10B981' }],
+    '2026-03-29': [{ color:'#F59E0B' }, { color:'#F59E0B' }, { color:'#10B981' }],
+  };
+  let ejMesActual = new Date(2026, 2, 1);
+  let ejDiaSeleccionado = null;
+  const ejDetalleCitas = {
+    '2026-03-25': [{ hora:'10:00', nombre:'Ernesto',  color:'#3B82F6', servicio:'Control',  estado:'Confirmada', bg:'#DBEAFE', tc:'#1E40AF' }],
+    '2026-03-27': [
+      { hora:'09:00', nombre:'Juniors', color:'#F59E0B', servicio:'Consulta', estado:'Pendiente',  bg:'#FEF3C7', tc:'#92400E' },
+      { hora:'11:30', nombre:'María',   color:'#10B981', servicio:'Terapia',  estado:'Completada', bg:'#D1FAE5', tc:'#065F46' }
+    ],
+    '2026-03-29': [
+      { hora:'16:27', nombre:'Mila',     color:'#F59E0B', servicio:'Consulta', estado:'Pendiente',  bg:'#FEF3C7', tc:'#92400E' },
+      { hora:'16:29', nombre:'Daniel F', color:'#F59E0B', servicio:'',         estado:'Pendiente',  bg:'#FEF3C7', tc:'#92400E' },
+      { hora:'18:03', nombre:'Dante',    color:'#10B981', servicio:'',         estado:'Confirmada', bg:'#DBEAFE', tc:'#1E40AF' }
+    ],
+  };
+
+  function ejRenderMes() {
+    const año  = ejMesActual.getFullYear();
+    const mes  = ejMesActual.getMonth();
+    const hoy  = new Date();
+    const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    document.getElementById('ej-mes-label').textContent = meses[mes] + ' ' + año;
+    const btnHoyMes = document.getElementById('ej-mes-hoy');
+    if (btnHoyMes) btnHoyMes.style.display = (año === hoy.getFullYear() && mes === hoy.getMonth()) ? 'none' : '';
+    const primerDia = new Date(año, mes, 1);
+    let offset = primerDia.getDay() - 1;
+    if (offset < 0) offset = 6;
+    const diasEnMes = new Date(año, mes + 1, 0).getDate();
+    let html = '';
+    for (let i = 0; i < offset; i++) html += `<div></div>`;
+    for (let d = 1; d <= diasEnMes; d++) {
+      const fecha = año + '-' + String(mes+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+      const esHoy = hoy.getFullYear()===año && hoy.getMonth()===mes && hoy.getDate()===d;
+      const selec = ejDiaSeleccionado === fecha;
+      const citas = ejCitasMes[fecha] || [];
+      const dotsDia = citas.slice(0,3).map(c => `<span style="width:5px;height:5px;border-radius:50%;background:${selec?'white':c.color};display:inline-block"></span>`).join('');
+      html += `<div onclick="ejSelDia('${fecha}')" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 2px;border-radius:10px;cursor:pointer;min-height:44px;background:${selec ? 'var(--primary)' : esHoy ? 'var(--primary-light)' : 'transparent'};transition:background 0.15s">
+        <span style="font-size:13px;font-weight:${esHoy||selec?'800':'600'};color:${selec?'white':esHoy?'var(--primary)':'var(--gray-700)'}">${d}</span>
+        <div style="display:flex;gap:2px;margin-top:2px;min-height:7px">${dotsDia}</div>
+      </div>`;
+    }
+    document.getElementById('ej-mes-grid').innerHTML = html;
+    ejRenderDetalleMes();
+  }
+  function ejSelDia(fecha) {
+    ejDiaSeleccionado = ejDiaSeleccionado === fecha ? null : fecha;
+    ejRenderMes();
+  }
+  function ejRenderDetalleMes() {
+    const cont = document.getElementById('ej-mes-detalle');
+    if (!ejDiaSeleccionado) { cont.innerHTML = ''; return; }
+    const lista = ejDetalleCitas[ejDiaSeleccionado] || [];
+    const [a, m, d] = ejDiaSeleccionado.split('-');
+    const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const label = `${parseInt(d)} de ${meses[parseInt(m)-1]}`;
+    if (!lista.length) {
+      cont.innerHTML = `<p style="font-size:13px;font-weight:700;color:var(--gray-500);padding:0 4px;margin:0 0 8px">${label}</p><div class="card" style="padding:16px;text-align:center;color:var(--gray-400);font-size:14px">Sin citas este día</div>`;
+      return;
+    }
+    cont.innerHTML = `<p style="font-size:13px;font-weight:700;color:var(--gray-700);padding:0 4px;margin:0 0 8px">${label}</p>
+      <div style="background:var(--white);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.07)">` +
+      lista.map((c, i) => {
+        const isLast = i === lista.length - 1;
+        return `<div>
+          <div onclick="toggleAgendaEj(this)" style="display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;${isLast?'':'border-bottom:1px solid var(--gray-100)'}">
+            <span style="font-size:13px;font-weight:800;color:${c.color};width:40px;flex-shrink:0">${c.hora}</span>
+            <span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">${c.nombre}</span>
+            <span style="width:8px;height:8px;border-radius:50%;background:${c.color};flex-shrink:0"></span>
+            <svg class="acord-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div style="display:none;padding:10px 16px 12px;background:var(--gray-50);${isLast?'':'border-bottom:1px solid var(--gray-100)'}">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+              <span style="font-size:12px;color:var(--gray-400)">1h${c.servicio ? ' · '+c.servicio : ''}</span>
+              <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:${c.bg};color:${c.tc};font-weight:700">${c.estado}</span>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button style="flex:1;padding:7px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:12px;font-weight:600;color:var(--gray-600);cursor:pointer">Editar</button>
+              <button style="flex:1;padding:7px;border-radius:10px;border:none;background:#FEE2E2;font-size:12px;font-weight:600;color:#DC2626;cursor:pointer">Eliminar</button>
+            </div>
+          </div>
+        </div>`;
+      }).join('') + `</div>`;
+  }
+  function ejMesCambiar(delta) {
+    ejMesActual = new Date(ejMesActual.getFullYear(), ejMesActual.getMonth() + delta, 1);
+    ejDiaSeleccionado = null;
+    ejRenderMes();
+  }
+  function ejMesIrHoy() {
+    const hoy = new Date();
+    ejMesActual = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+    ejDiaSeleccionado = null;
+    ejRenderMes();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (window.lucide) lucide.createIcons();
+    ejDiaActualizarLabel();
+    ejSemanaActualizarLabel();
+  });
+</script>

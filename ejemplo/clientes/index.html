@@ -1,0 +1,360 @@
+<!-- CSS compartido -->
+<link rel="stylesheet" href="../../css/style.css">
+<link rel="stylesheet" href="../../css/dashboard.css">
+
+<!-- CSS específico de clientes -->
+<style>
+  /* Avatar letra */
+  .av {
+    width:40px; height:40px; border-radius:50%;
+    background:var(--primary-light); color:var(--primary);
+    font-weight:800; font-size:15px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .vista-btn { flex-shrink:0; padding:8px 16px; border:none; border-radius:20px; font-size:13px; font-weight:600; cursor:pointer; background:var(--white); color:var(--gray-600); box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+  .vista-btn.active { background:var(--primary); color:white; }
+  .vista { display:none; }
+  .vista.visible { display:block; }
+  .vista-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--gray-400); margin:0 0 10px; }
+  .badge-actual { display:inline-block; font-size:10px; padding:2px 8px; border-radius:6px; font-weight:700; margin-left:6px; background:#FEF3C7; color:#D97706; vertical-align:middle; text-transform:none; letter-spacing:0; }
+  .badge-prop   { display:inline-block; font-size:10px; padding:2px 8px; border-radius:6px; font-weight:700; margin-left:6px; background:var(--primary-light); color:var(--primary); vertical-align:middle; text-transform:none; letter-spacing:0; }
+  .vista-note { font-size:11px; color:var(--gray-400); margin-top:10px; line-height:1.5; }
+
+  /* ── B: TARJETAS ── */
+  .cards-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .c-card { background:var(--gray-50); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:8px; border:1.5px solid var(--gray-200); }
+  .c-card-top { display:flex; align-items:center; gap:10px; }
+  .c-card-name { font-weight:700; font-size:14px; color:var(--gray-800); }
+  .c-card-tel  { font-size:12px; color:var(--gray-400); }
+  .tag { display:inline-block; font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; align-self:flex-start; }
+  .tag-vip  { background:#FEF3C7; color:#92400E; }
+  .tag-ok   { background:#D1FAE5; color:#065F46; }
+  .tag-new  { background:var(--primary-light); color:var(--primary); }
+  .c-card-actions { display:flex; gap:6px; }
+  .c-btn { flex:1; padding:7px; border:none; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; }
+  .c-btn.edit { background:var(--primary-light); color:var(--primary); }
+  .c-btn.del  { background:#FEE2E2; color:var(--danger); }
+
+  /* ── C: LISTA ── */
+  .lista { display:flex; flex-direction:column; }
+  .lista-row { display:flex; align-items:center; gap:12px; padding:12px 4px; border-bottom:1px solid var(--gray-100); }
+  .lista-row:last-child { border-bottom:none; }
+  .lista-info { flex:1; min-width:0; }
+  .lista-nombre { font-weight:700; font-size:14px; color:var(--gray-800); }
+  .lista-sub { font-size:12px; color:var(--gray-400); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .lista-chevron { color:var(--gray-200); font-size:18px; }
+
+  /* ── D: ACORDEÓN ── */
+  .acords { display:flex; flex-direction:column; gap:6px; }
+  .acord { border-radius:12px; overflow:hidden; border:1.5px solid var(--gray-200); }
+  .acord-head { display:flex; align-items:center; gap:12px; padding:13px 14px; background:var(--white); cursor:pointer; }
+  .acord-info { flex:1; }
+  .acord-nombre { font-weight:700; font-size:14px; color:var(--gray-800); }
+  .acord-tel { font-size:12px; color:var(--gray-400); }
+  .acord-arrow { font-size:12px; color:var(--gray-200); transition:transform 0.2s; }
+  .acord-arrow.open { transform:rotate(180deg); }
+  .acord-body { display:none; padding:0 14px 14px; background:var(--white); }
+  .acord-body.open { display:block; }
+  .acord-row { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--gray-100); font-size:13px; }
+  .acord-row:last-child { border-bottom:none; }
+  .acord-lbl { color:var(--gray-400); font-weight:600; }
+  .acord-val { color:var(--gray-800); font-weight:600; }
+  .acord-acts { display:flex; gap:8px; margin-top:10px; }
+  .acord-btn { flex:1; padding:9px; border:none; border-radius:10px; font-size:12px; font-weight:700; cursor:pointer; }
+  .acord-btn.wa   { background:#D1FAE5; color:#065F46; }
+  .acord-btn.edit { background:var(--primary-light); color:var(--primary); }
+  .acord-btn.del  { background:#FEE2E2; color:var(--danger); }
+
+  /* ── E: KANBAN ── */
+  .kanban { display:flex; gap:10px; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; }
+  .kanban::-webkit-scrollbar { display:none; }
+  .k-col { flex-shrink:0; width:155px; }
+  .k-head { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; padding:6px 10px; border-radius:8px 8px 0 0; margin-bottom:6px; }
+  .k-vip   .k-head { background:#FEF3C7; color:#92400E; }
+  .k-reg   .k-head { background:#D1FAE5; color:#065F46; }
+  .k-new   .k-head { background:var(--primary-light); color:var(--primary); }
+  .k-none  .k-head { background:var(--gray-100); color:var(--gray-400); }
+  .k-card { background:var(--white); border-radius:10px; padding:10px; margin-bottom:6px; box-shadow:var(--shadow); }
+  .k-dot { width:8px; height:8px; border-radius:50%; margin-bottom:6px; }
+  .k-vip  .k-dot { background:var(--warning); }
+  .k-reg  .k-dot { background:var(--success); }
+  .k-new  .k-dot { background:var(--primary); }
+  .k-none .k-dot { background:var(--gray-200); }
+  .k-name { font-weight:700; font-size:13px; color:var(--gray-800); margin-bottom:3px; }
+  .k-tel  { font-size:11px; color:var(--gray-400); }
+
+  /* ── F: MOSAICO ── */
+  .mosaic-stats { display:flex; gap:8px; margin-bottom:12px; }
+  .m-stat { flex:1; background:var(--gray-50); border-radius:10px; padding:10px; text-align:center; }
+  .m-stat-val { font-size:20px; font-weight:800; color:var(--gray-800); }
+  .m-stat-lbl { font-size:10px; color:var(--gray-400); font-weight:600; margin-top:2px; }
+  .mosaic-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+  .m-item { background:var(--gray-50); border-radius:10px; padding:12px 8px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .m-av { width:38px; height:38px; border-radius:50%; background:var(--primary-light); color:var(--primary); font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center; }
+  .m-name { font-size:11px; font-weight:700; color:var(--gray-800); }
+
+  /* ── G: HISTORIAL ── */
+  .hist-lista { display:flex; flex-direction:column; gap:6px; }
+  .hist-item { display:flex; align-items:center; gap:12px; background:var(--white); border-radius:12px; padding:12px; box-shadow:var(--shadow); }
+  .hist-info { flex:1; min-width:0; }
+  .hist-nombre { font-weight:700; font-size:14px; color:var(--gray-800); }
+  .hist-sub { font-size:11px; color:var(--gray-400); margin-top:2px; }
+  .hist-monto { text-align:right; }
+  .hist-monto-val { font-weight:800; font-size:15px; color:var(--gray-800); }
+  .hist-monto-lbl { font-size:10px; color:var(--gray-400); }
+</style>
+
+<!-- HTML de la página -->
+<div style="display:flex;flex-direction:column;gap:6px">
+  <div style="display:flex;gap:6px">
+    <button class="vista-btn active" onclick="mostrar('A')">A · Tabla</button>
+    <button class="vista-btn" onclick="mostrar('B')">B · Tarjetas</button>
+    <button class="vista-btn" onclick="mostrar('C')">C · Lista</button>
+    <button class="vista-btn" onclick="mostrar('D')">D · Acordeón</button>
+  </div>
+  <div style="display:flex;gap:6px">
+    <button class="vista-btn" onclick="mostrar('E')">E · Kanban</button>
+    <button class="vista-btn" onclick="mostrar('F')">F · Mosaico</button>
+    <button class="vista-btn" onclick="mostrar('G')">G · Historial</button>
+  </div>
+</div>
+
+<!-- A: TABLA (actual) -->
+<div class="vista visible" id="v-A">
+  <p class="vista-label">A — Tabla <span class="badge-actual">ACTUAL</span></p>
+  <div class="section-toolbar">
+    <input type="text" class="search-input" placeholder="Buscar cliente...">
+    <button class="btn-primary">+ Agregar</button>
+  </div>
+  <div class="card">
+    <table class="data-table">
+      <thead>
+        <tr><th>Nombre</th><th>Teléfono</th><th>Email</th><th>Notas</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>María García</strong></td><td>999 111 222</td><td>maria@email.com</td>
+          <td style="max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Cliente frecuente, le gusta el producto X</td>
+          <td><button class="action-btn edit" title="Editar"><i data-lucide="pencil"></i></button><button class="action-btn delete" title="Eliminar"><i data-lucide="trash-2"></i></button></td>
+        </tr>
+        <tr>
+          <td><strong>Carlos López</strong></td><td>988 333 444</td><td>carlos@gmail.com</td><td>-</td>
+          <td><button class="action-btn edit"><i data-lucide="pencil"></i></button><button class="action-btn delete"><i data-lucide="trash-2"></i></button></td>
+        </tr>
+        <tr>
+          <td><strong>Ana Torres</strong></td><td>977 555 666</td><td>-</td>
+          <td style="max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Viene los viernes, pide descuento</td>
+          <td><button class="action-btn edit"><i data-lucide="pencil"></i></button><button class="action-btn delete"><i data-lucide="trash-2"></i></button></td>
+        </tr>
+        <tr>
+          <td><strong>Luis Vargas</strong></td><td>966 777 888</td><td>luis@hotmail.com</td><td>-</td>
+          <td><button class="action-btn edit"><i data-lucide="pencil"></i></button><button class="action-btn delete"><i data-lucide="trash-2"></i></button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="vista-note">Vista tabla — igual a la actual. En móvil puede quedar apretada.</p>
+</div>
+
+<!-- B: TARJETAS -->
+<div class="vista" id="v-B">
+  <p class="vista-label">B — Tarjetas <span class="badge-prop">PROPUESTA</span></p>
+  <div class="section-toolbar">
+    <input type="text" class="search-input" placeholder="Buscar cliente...">
+    <button class="btn-primary">+ Agregar</button>
+  </div>
+  <div class="cards-grid">
+    <div class="c-card">
+      <div class="c-card-top"><div class="av">M</div><div><div class="c-card-name">María García</div><div class="c-card-tel">999 111 222</div></div></div>
+      <span class="tag tag-vip">⭐ VIP</span>
+      <div class="c-card-actions"><button class="c-btn edit">✏️ Editar</button><button class="c-btn del">🗑️</button></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-top"><div class="av" style="background:#D1FAE5;color:#065F46">C</div><div><div class="c-card-name">Carlos López</div><div class="c-card-tel">988 333 444</div></div></div>
+      <span class="tag tag-ok">✅ Regular</span>
+      <div class="c-card-actions"><button class="c-btn edit">✏️ Editar</button><button class="c-btn del">🗑️</button></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-top"><div class="av" style="background:#FEF3C7;color:#92400E">A</div><div><div class="c-card-name">Ana Torres</div><div class="c-card-tel">977 555 666</div></div></div>
+      <span class="tag tag-ok">✅ Regular</span>
+      <div class="c-card-actions"><button class="c-btn edit">✏️ Editar</button><button class="c-btn del">🗑️</button></div>
+    </div>
+    <div class="c-card">
+      <div class="c-card-top"><div class="av" style="background:#DBEAFE;color:#1D4ED8">L</div><div><div class="c-card-name">Luis Vargas</div><div class="c-card-tel">966 777 888</div></div></div>
+      <span class="tag tag-new">🆕 Nuevo</span>
+      <div class="c-card-actions"><button class="c-btn edit">✏️ Editar</button><button class="c-btn del">🗑️</button></div>
+    </div>
+  </div>
+  <p class="vista-note">Grid 2 columnas — avatar, nombre, teléfono y etiqueta. Más visual en móvil.</p>
+</div>
+
+<!-- C: LISTA -->
+<div class="vista" id="v-C">
+  <p class="vista-label">C — Lista compacta <span class="badge-prop">PROPUESTA</span></p>
+  <div class="section-toolbar">
+    <input type="text" class="search-input" placeholder="Buscar cliente...">
+    <button class="btn-primary">+ Agregar</button>
+  </div>
+  <div class="card" style="padding:8px 16px">
+    <div class="lista">
+      <div class="lista-row"><div class="av">M</div><div class="lista-info"><div class="lista-nombre">María García</div><div class="lista-sub">999 111 222 · maria@email.com</div></div><span class="tag tag-vip">⭐ VIP</span><div class="lista-chevron">›</div></div>
+      <div class="lista-row"><div class="av" style="background:#D1FAE5;color:#065F46">C</div><div class="lista-info"><div class="lista-nombre">Carlos López</div><div class="lista-sub">988 333 444 · carlos@gmail.com</div></div><span class="tag tag-ok">✅ Regular</span><div class="lista-chevron">›</div></div>
+      <div class="lista-row"><div class="av" style="background:#FEF3C7;color:#92400E">A</div><div class="lista-info"><div class="lista-nombre">Ana Torres</div><div class="lista-sub">977 555 666 · sin email</div></div><span class="tag tag-ok">✅ Regular</span><div class="lista-chevron">›</div></div>
+      <div class="lista-row"><div class="av" style="background:#DBEAFE;color:#1D4ED8">L</div><div class="lista-info"><div class="lista-nombre">Luis Vargas</div><div class="lista-sub">966 777 888 · luis@hotmail.com</div></div><span class="tag tag-new">🆕 Nuevo</span><div class="lista-chevron">›</div></div>
+    </div>
+  </div>
+  <p class="vista-note">Lista tipo contactos — ideal para listas largas, toca para ver detalle.</p>
+</div>
+
+<!-- D: ACORDEÓN -->
+<div class="vista" id="v-D">
+  <p class="vista-label">D — Acordeón <span class="badge-prop">PROPUESTA</span></p>
+  <div class="section-toolbar">
+    <input type="text" class="search-input" placeholder="Buscar cliente...">
+    <button class="btn-primary">+ Agregar</button>
+  </div>
+  <div class="acords">
+    <div class="acord">
+      <div class="acord-head" onclick="toggleAcord(this)">
+        <div class="av">M</div>
+        <div class="acord-info"><div class="acord-nombre">María García</div><div class="acord-tel">999 111 222</div></div>
+        <span class="acord-arrow open">▼</span>
+      </div>
+      <div class="acord-body open">
+        <div class="acord-row"><span class="acord-lbl">Email</span><span class="acord-val">maria@email.com</span></div>
+        <div class="acord-row"><span class="acord-lbl">Etiqueta</span><span class="acord-val">⭐ VIP</span></div>
+        <div class="acord-row"><span class="acord-lbl">Notas</span><span class="acord-val" style="max-width:160px;text-align:right;font-size:12px">Cliente frecuente, le gusta el producto X</span></div>
+        <div class="acord-acts"><button class="acord-btn wa">📱 WhatsApp</button><button class="acord-btn edit">✏️ Editar</button><button class="acord-btn del">🗑️</button></div>
+      </div>
+    </div>
+    <div class="acord">
+      <div class="acord-head" onclick="toggleAcord(this)">
+        <div class="av" style="background:#D1FAE5;color:#065F46">C</div>
+        <div class="acord-info"><div class="acord-nombre">Carlos López</div><div class="acord-tel">988 333 444</div></div>
+        <span class="acord-arrow">▼</span>
+      </div>
+      <div class="acord-body">
+        <div class="acord-row"><span class="acord-lbl">Email</span><span class="acord-val">carlos@gmail.com</span></div>
+        <div class="acord-row"><span class="acord-lbl">Etiqueta</span><span class="acord-val">✅ Regular</span></div>
+        <div class="acord-row"><span class="acord-lbl">Notas</span><span class="acord-val">—</span></div>
+        <div class="acord-acts"><button class="acord-btn wa">📱 WhatsApp</button><button class="acord-btn edit">✏️ Editar</button><button class="acord-btn del">🗑️</button></div>
+      </div>
+    </div>
+    <div class="acord">
+      <div class="acord-head" onclick="toggleAcord(this)">
+        <div class="av" style="background:#FEF3C7;color:#92400E">A</div>
+        <div class="acord-info"><div class="acord-nombre">Ana Torres</div><div class="acord-tel">977 555 666</div></div>
+        <span class="acord-arrow">▼</span>
+      </div>
+      <div class="acord-body">
+        <div class="acord-row"><span class="acord-lbl">Email</span><span class="acord-val">—</span></div>
+        <div class="acord-row"><span class="acord-lbl">Etiqueta</span><span class="acord-val">✅ Regular</span></div>
+        <div class="acord-row"><span class="acord-lbl">Notas</span><span class="acord-val" style="max-width:160px;text-align:right;font-size:12px">Viene los viernes, pide descuento</span></div>
+        <div class="acord-acts"><button class="acord-btn wa">📱 WhatsApp</button><button class="acord-btn edit">✏️ Editar</button><button class="acord-btn del">🗑️</button></div>
+      </div>
+    </div>
+    <div class="acord">
+      <div class="acord-head" onclick="toggleAcord(this)">
+        <div class="av" style="background:#DBEAFE;color:#1D4ED8">L</div>
+        <div class="acord-info"><div class="acord-nombre">Luis Vargas</div><div class="acord-tel">966 777 888</div></div>
+        <span class="acord-arrow">▼</span>
+      </div>
+      <div class="acord-body">
+        <div class="acord-row"><span class="acord-lbl">Email</span><span class="acord-val">luis@hotmail.com</span></div>
+        <div class="acord-row"><span class="acord-lbl">Etiqueta</span><span class="acord-val">🆕 Nuevo</span></div>
+        <div class="acord-row"><span class="acord-lbl">Notas</span><span class="acord-val">—</span></div>
+        <div class="acord-acts"><button class="acord-btn wa">📱 WhatsApp</button><button class="acord-btn edit">✏️ Editar</button><button class="acord-btn del">🗑️</button></div>
+      </div>
+    </div>
+  </div>
+  <p class="vista-note">Acordeón — toca para expandir perfil completo con WhatsApp, editar y borrar.</p>
+</div>
+
+<!-- E: KANBAN -->
+<div class="vista" id="v-E">
+  <p class="vista-label">E — Kanban por etiqueta <span class="badge-prop">PROPUESTA</span></p>
+  <div class="section-toolbar">
+    <input type="text" class="search-input" placeholder="Buscar cliente...">
+    <button class="btn-primary">+ Agregar</button>
+  </div>
+  <div class="kanban">
+    <div class="k-col k-vip">
+      <div class="k-head">⭐ VIP (1)</div>
+      <div class="k-card"><div class="k-dot"></div><div class="k-name">María García</div><div class="k-tel">999 111 222</div></div>
+    </div>
+    <div class="k-col k-reg">
+      <div class="k-head">✅ Regular (2)</div>
+      <div class="k-card"><div class="k-dot"></div><div class="k-name">Carlos López</div><div class="k-tel">988 333 444</div></div>
+      <div class="k-card"><div class="k-dot"></div><div class="k-name">Ana Torres</div><div class="k-tel">977 555 666</div></div>
+    </div>
+    <div class="k-col k-new">
+      <div class="k-head">🆕 Nuevo (1)</div>
+      <div class="k-card"><div class="k-dot"></div><div class="k-name">Luis Vargas</div><div class="k-tel">966 777 888</div></div>
+    </div>
+    <div class="k-col k-none">
+      <div class="k-head">💤 Sin etiqueta (0)</div>
+    </div>
+  </div>
+  <p class="vista-note">Kanban — columnas por etiqueta. Desliza horizontal. De un vistazo quiénes son VIP vs nuevos.</p>
+</div>
+
+<!-- F: MOSAICO -->
+<div class="vista" id="v-F">
+  <p class="vista-label">F — Mosaico <span class="badge-prop">PROPUESTA</span></p>
+  <div class="section-toolbar">
+    <input type="text" class="search-input" placeholder="Buscar cliente...">
+    <button class="btn-primary">+ Agregar</button>
+  </div>
+  <div class="card">
+    <div class="mosaic-stats">
+      <div class="m-stat"><div class="m-stat-val">4</div><div class="m-stat-lbl">Total</div></div>
+      <div class="m-stat"><div class="m-stat-val" style="color:var(--warning)">1</div><div class="m-stat-lbl">VIP</div></div>
+      <div class="m-stat"><div class="m-stat-val" style="color:var(--success)">2</div><div class="m-stat-lbl">Regular</div></div>
+      <div class="m-stat"><div class="m-stat-val" style="color:var(--primary)">1</div><div class="m-stat-lbl">Nuevo</div></div>
+    </div>
+    <div class="mosaic-grid">
+      <div class="m-item"><div class="m-av">M</div><div class="m-name">María García</div><span class="tag tag-vip" style="font-size:9px">⭐ VIP</span></div>
+      <div class="m-item"><div class="m-av" style="background:#D1FAE5;color:#065F46">C</div><div class="m-name">Carlos López</div><span class="tag tag-ok" style="font-size:9px">✅ Regular</span></div>
+      <div class="m-item"><div class="m-av" style="background:#FEF3C7;color:#92400E">A</div><div class="m-name">Ana Torres</div><span class="tag tag-ok" style="font-size:9px">✅ Regular</span></div>
+      <div class="m-item"><div class="m-av" style="background:#DBEAFE;color:#1D4ED8">L</div><div class="m-name">Luis Vargas</div><span class="tag tag-new" style="font-size:9px">🆕 Nuevo</span></div>
+      <div class="m-item" style="border:2px dashed var(--gray-200);background:none;cursor:pointer"><div style="font-size:22px;color:var(--gray-200)">＋</div><div class="m-name" style="color:var(--gray-400)">Agregar</div></div>
+    </div>
+  </div>
+  <p class="vista-note">Mosaico — stats arriba + grid de avatares. Muy visual para pocos clientes.</p>
+</div>
+
+<!-- G: HISTORIAL -->
+<div class="vista" id="v-G">
+  <p class="vista-label">G — Historial de compras <span class="badge-prop">PROPUESTA</span></p>
+  <div class="section-toolbar">
+    <input type="text" class="search-input" placeholder="Buscar cliente...">
+    <button class="btn-primary">+ Agregar</button>
+  </div>
+  <div class="hist-lista">
+    <div class="hist-item"><div class="av">M</div><div class="hist-info"><div class="hist-nombre">María García</div><div class="hist-sub">⭐ VIP · Última compra: hace 2 días</div></div><div class="hist-monto"><div class="hist-monto-val">S/ 245</div><div class="hist-monto-lbl">acumulado</div></div></div>
+    <div class="hist-item"><div class="av" style="background:#D1FAE5;color:#065F46">C</div><div class="hist-info"><div class="hist-nombre">Carlos López</div><div class="hist-sub">✅ Regular · Última compra: hace 1 semana</div></div><div class="hist-monto"><div class="hist-monto-val">S/ 180</div><div class="hist-monto-lbl">acumulado</div></div></div>
+    <div class="hist-item"><div class="av" style="background:#FEF3C7;color:#92400E">A</div><div class="hist-info"><div class="hist-nombre">Ana Torres</div><div class="hist-sub">✅ Regular · Última compra: hace 3 días</div></div><div class="hist-monto"><div class="hist-monto-val">S/ 95</div><div class="hist-monto-lbl">acumulado</div></div></div>
+    <div class="hist-item"><div class="av" style="background:#DBEAFE;color:#1D4ED8">L</div><div class="hist-info"><div class="hist-nombre">Luis Vargas</div><div class="hist-sub">🆕 Nuevo · Primera visita hoy</div></div><div class="hist-monto"><div class="hist-monto-val">S/ 35</div><div class="hist-monto-lbl">acumulado</div></div></div>
+  </div>
+  <p class="vista-note">Historial — última compra y monto acumulado. Útil para fidelización.</p>
+</div>
+
+<script>
+  function mostrar(id) {
+    document.querySelectorAll('.vista').forEach(el => el.classList.remove('visible'));
+    document.querySelectorAll('.vista-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('v-' + id).classList.add('visible');
+    const map = { A:0, B:1, C:2, D:3, E:4, F:5, G:6 };
+    document.querySelectorAll('.vista-btn')[map[id]].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function toggleAcord(head) {
+    const body = head.nextElementSibling;
+    const arrow = head.querySelector('.acord-arrow');
+    const isOpen = body.classList.contains('open');
+    document.querySelectorAll('.acord-body').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.acord-arrow').forEach(a => a.classList.remove('open'));
+    if (!isOpen) { body.classList.add('open'); arrow.classList.add('open'); }
+  }
+  document.addEventListener('DOMContentLoaded', () => { if (window.lucide) lucide.createIcons(); });
+</script>

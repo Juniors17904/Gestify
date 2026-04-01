@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Ejemplos — Control de Negocios</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { background: var(--gray-100); padding: 16px; }
+
+    /* Nav selector de vista */
+    .vista-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--gray-100); padding-bottom: 12px; margin-bottom: 4px;
+    }
+    .vista-scroll {
+      display: flex; gap: 6px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 4px 2px;
+    }
+    .vista-scroll::-webkit-scrollbar { display: none; }
+    .nav-mod { display:inline-flex;align-items:center;padding:7px 12px;border:none;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;background:var(--white);color:var(--gray-600);box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+    .nav-mod.active { background:var(--primary);color:white; }
+
+    #contenido { min-height: 300px; }
+  </style>
+</head>
+<body>
+
+  <!-- Selector de módulo -->
+  <div class="vista-nav">
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+      <a href="../dashboard.html" style="display:inline-flex;align-items:center;padding:7px 12px;background:var(--white);border-radius:20px;font-size:12px;font-weight:600;color:var(--gray-500);text-decoration:none;box-shadow:0 1px 3px rgba(0,0,0,0.08)">← Volver</a>
+      <button onclick="cargarPagina('dashboard')"   id="btnDashboard"   class="nav-mod">📊 Dashboard</button>
+      <button onclick="cargarPagina('ventas')"      id="btnVentas"      class="nav-mod">💰 Ventas</button>
+      <button onclick="cargarPagina('inventario')"  id="btnInventario"  class="nav-mod">📦 Inventario</button>
+      <button onclick="cargarPagina('caja')"        id="btnCaja"        class="nav-mod">💵 Caja</button>
+      <button onclick="cargarPagina('clientes')"    id="btnClientes"    class="nav-mod">👥 Clientes</button>
+      <button onclick="cargarPagina('agenda')"      id="btnAgenda"      class="nav-mod">📅 Agenda</button>
+      <button onclick="cargarPagina('empleados')"   id="btnEmpleados"   class="nav-mod">👷 Empleados</button>
+      <button onclick="cargarPagina('selecciones')" id="btnSelecciones" class="nav-mod">🗂️ Ajustes tabs</button>
+      <button onclick="cargarPagina('nuevacita')"   id="btnNuevaCita"   class="nav-mod">➕ Nueva cita</button>
+      <button onclick="cargarPagina('vistascitas')" id="btnVistasCitas" class="nav-mod">📋 Vistas citas</button>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--gray-200);margin:0 0 12px">
+  </div>
+
+  <div id="contenido"></div>
+
+  <script>
+    const MAPA = {
+      'dashboard':   'dashboard/index.html',
+      'ventas':      'ventas/index.html',
+      'inventario':  'inventario/index.html',
+      'caja':        'caja/index.html',
+      'clientes':    'clientes/index.html',
+      'agenda':      'agenda/index.html',
+      'empleados':   'empleados/index.html',
+      'selecciones': 'ajustes/index.html',
+      'nuevacita':   'nueva-cita/index.html',
+      'vistascitas': 'lista-citas/index.html',
+    };
+
+    const BTN_IDS = {
+      'dashboard':   'btnDashboard',
+      'ventas':      'btnVentas',
+      'inventario':  'btnInventario',
+      'caja':        'btnCaja',
+      'clientes':    'btnClientes',
+      'agenda':      'btnAgenda',
+      'empleados':   'btnEmpleados',
+      'selecciones': 'btnSelecciones',
+      'nuevacita':   'btnNuevaCita',
+      'vistascitas': 'btnVistasCitas',
+    };
+
+    function cargarPagina(nombre) {
+      const url = MAPA[nombre];
+      if (!url) return;
+
+      // Marcar botón activo
+      Object.values(BTN_IDS).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+      });
+      const btnActivo = document.getElementById(BTN_IDS[nombre]);
+      if (btnActivo) btnActivo.classList.add('active');
+
+      fetch(url)
+        .then(r => r.text())
+        .then(html => {
+          document.getElementById('contenido').innerHTML = html;
+          // Re-ejecutar scripts inyectados
+          document.getElementById('contenido').querySelectorAll('script').forEach(oldScript => {
+            const newScript = document.createElement('script');
+            newScript.textContent = oldScript.textContent;
+            oldScript.replaceWith(newScript);
+          });
+          lucide.createIcons();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        })
+        .catch(err => {
+          document.getElementById('contenido').innerHTML =
+            `<div style="padding:24px;color:var(--danger);font-weight:600">Error cargando ${url}: ${err.message}</div>`;
+        });
+    }
+
+    // Cargar dashboard por defecto
+    cargarPagina('dashboard');
+  </script>
+</body>
+</html>

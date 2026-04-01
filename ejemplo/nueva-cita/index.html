@@ -1,0 +1,510 @@
+<!-- CSS compartido -->
+<link rel="stylesheet" href="../../css/style.css">
+<link rel="stylesheet" href="../../css/dashboard.css">
+
+<!-- CSS específico -->
+<style>
+  .hora-chip { padding:5px 10px;border:1.5px solid var(--gray-200);border-radius:8px;background:var(--white);font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer; }
+  .hora-chip.active { border-color:var(--primary);background:var(--primary-light);color:var(--primary); }
+  .drum-arrow { width:28px;height:22px;border:none;background:transparent;cursor:pointer;font-size:16px;color:var(--gray-400);display:flex;align-items:center;justify-content:center;border-radius:6px;transition:color .15s,background .15s; }
+  .drum-arrow:hover { color:var(--primary);background:var(--primary-light); }
+  #drum-horas::-webkit-scrollbar, #drum-mins::-webkit-scrollbar { display:none; }
+  .ej-section-label { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gray-400);margin:0 0 10px;padding:0 2px; }
+  .ej-divider { height:1px;background:var(--gray-200);margin:24px 0; }
+</style>
+
+<!-- HTML de la página -->
+<div style="padding:16px;max-width:440px;margin:0 auto">
+  <div class="modal-content" style="position:static;max-height:none;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
+    <div class="modal-header">
+      <h3>Nueva Cita</h3>
+    </div>
+
+    <!-- Acordeón paso 1: Cliente -->
+    <div style="border:1.5px solid var(--gray-200);border-radius:12px;margin-bottom:10px;overflow:hidden">
+      <div onclick="ncAcord('cliente')" style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;background:var(--white)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <span style="font-size:11px;font-weight:800;color:white">1</span>
+          </div>
+          <span style="font-size:13px;font-weight:700;color:var(--gray-800)">Cliente</span>
+          <span id="nc-cliente-resumen" style="font-size:12px;color:var(--primary);font-weight:600"></span>
+        </div>
+        <svg id="nc-chevron-cliente" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .2s;transform:rotate(180deg)"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div id="nc-body-cliente" style="padding:0 16px 16px;border-top:1px solid var(--gray-100)">
+        <div style="height:12px"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <button type="button" id="btnOpcionExistente" onclick="citaMostrarOpcion('existente')"
+            style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;border:2px solid var(--primary);border-radius:14px;background:var(--primary-light);cursor:pointer">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><circle cx="18.5" cy="18.5" r="3.5"/><path d="m21 21-1.5-1.5"/></svg>
+            <span id="badgeExistente" style="font-size:10px;padding:2px 8px;border-radius:20px;background:var(--primary);color:white;font-weight:700">Seleccionar</span>
+          </button>
+          <button type="button" id="btnOpcionNuevo" onclick="citaMostrarOpcion('nuevo')"
+            style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;border:2px solid var(--gray-200);border-radius:14px;background:var(--white);cursor:pointer">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            <span id="badgeNuevo" style="font-size:10px;padding:2px 8px;border-radius:20px;background:var(--gray-100);color:var(--gray-500);font-weight:700">+ Agregar</span>
+          </button>
+        </div>
+        <div id="selectClienteExistente">
+          <input type="text" id="citaBuscarCliente" placeholder="Buscar cliente..."
+            style="width:100%;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:10px;font-size:14px;outline:none;background:var(--white);color:var(--gray-800);box-sizing:border-box;margin-bottom:8px">
+          <div id="citaClientesLista" style="max-height:160px;overflow-y:auto;border:1.5px solid var(--gray-200);border-radius:10px;background:var(--white)"></div>
+        </div>
+        <div id="nuevoClienteInline" style="display:none;flex-direction:column;gap:8px;background:var(--gray-50);border-radius:10px;padding:12px">
+          <input type="text" id="inlineClienteNombre" placeholder="Nombre *" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;outline:none;background:var(--white);color:var(--gray-800)">
+          <input type="tel" id="inlineClienteTelefono" placeholder="Teléfono (opcional)" style="padding:8px 10px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;outline:none;background:var(--white);color:var(--gray-800)">
+          <button type="button" class="btn-primary" style="padding:8px;font-size:13px">+ Agregar y seleccionar</button>
+        </div>
+        <input type="hidden" id="citaClienteId">
+      </div>
+    </div>
+
+    <!-- Acordeón paso 2: Detalles -->
+    <div style="border:1.5px solid var(--gray-200);border-radius:12px;margin-bottom:10px;overflow:hidden">
+      <div onclick="ncAcord('detalles')" style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;background:var(--white)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--gray-300);display:flex;align-items:center;justify-content:center;flex-shrink:0" id="nc-num-detalles">
+            <span style="font-size:11px;font-weight:800;color:white">2</span>
+          </div>
+          <span style="font-size:13px;font-weight:700;color:var(--gray-800)">Detalles de la cita</span>
+        </div>
+        <svg id="nc-chevron-detalles" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div id="nc-body-detalles" style="display:none;padding:0 16px 16px;border-top:1px solid var(--gray-100)">
+        <form style="margin-top:12px">
+          <div class="form-group">
+            <label>Fecha</label>
+            <input type="date" id="citaFecha">
+          </div>
+          <div class="form-group">
+            <label>Hora</label>
+            <input type="time" id="citaHora" onchange="ejSyncHoraBlocks(this.value)">
+          </div>
+          <div class="form-group">
+            <label>Duración</label>
+            <select id="citaDuracion">
+              <option value="30">30 min</option>
+              <option value="45">45 min</option>
+              <option value="60" selected>1 hora</option>
+              <option value="90">1h 30min</option>
+              <option value="120">2 horas</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Servicio / Motivo</label>
+            <input type="text" id="citaServicio" placeholder="Ej: Consulta, Terapia, Control...">
+          </div>
+          <div class="form-group">
+            <label>Estado</label>
+            <select id="citaEstado">
+              <option value="pendiente">Pendiente</option>
+              <option value="confirmada">Confirmada</option>
+              <option value="completada">Completada</option>
+              <option value="cancelada">Cancelada</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Notas</label>
+            <textarea id="citaNotas" placeholder="Observaciones adicionales..." rows="2" style="resize:vertical"></textarea>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary">Cancelar</button>
+            <button type="submit" class="btn-primary">Guardar Cita</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 5 estilos de selector de hora -->
+  <div style="margin-top:20px">
+    <p class="ej-section-label">Estilos de selector de hora</p>
+    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+      <button onclick="ejHoraOpt('oa')" id="hbtn-oa" style="padding:6px 14px;border-radius:20px;border:none;font-size:12px;font-weight:700;cursor:pointer;background:var(--primary);color:white">OA</button>
+      <button onclick="ejHoraOpt('ob')" id="hbtn-ob" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--gray-200);font-size:12px;font-weight:700;cursor:pointer;background:var(--white);color:var(--gray-600)">OB</button>
+      <button onclick="ejHoraOpt('oc')" id="hbtn-oc" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--gray-200);font-size:12px;font-weight:700;cursor:pointer;background:var(--white);color:var(--gray-600)">OC</button>
+      <button onclick="ejHoraOpt('od')" id="hbtn-od" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--gray-200);font-size:12px;font-weight:700;cursor:pointer;background:var(--white);color:var(--gray-600)">OD</button>
+      <button onclick="ejHoraOpt('oe')" id="hbtn-oe" style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--gray-200);font-size:12px;font-weight:700;cursor:pointer;background:var(--white);color:var(--gray-600)">OE</button>
+    </div>
+  <div>
+
+    <!-- OA: Drum 12h + AM/PM + minutos 00-59 -->
+    <div id="hora-oa">
+      <div style="background:var(--gray-50);border-radius:12px;padding:10px 12px">
+        <div id="drum-oa-display" style="text-align:center;font-size:18px;font-weight:800;color:var(--primary);margin-bottom:8px;letter-spacing:1px">9:00 AM</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:4px">
+          <!-- Horas 1-12 -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:1px">
+            <button onclick="ejDrumStep('drum-oa-h',-1,28)" class="drum-arrow">&#8963;</button>
+            <div style="position:relative;height:28px;width:40px;overflow:hidden;border-radius:7px">
+              <div style="position:absolute;top:0;left:0;right:0;height:28px;background:var(--primary-light);border-radius:7px;border:1.5px solid var(--primary);z-index:1"></div>
+              <div id="drum-oa-h" onscroll="ejDrumOaLive()" style="overflow-y:scroll;height:28px;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:relative;z-index:3">
+                <div style="height:28px"></div>
+                <div style="scroll-snap-align:center;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--gray-800)" data-h="1">1</div>
+                <div style="scroll-snap-align:center;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--gray-800)" data-h="2">2</div>
+                <div style="scroll-snap-align:center;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--gray-800)" data-h="3">3</div>
+                <div style="scroll-snap-align:center;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--gray-800)" data-h="4">4</div>
+                <div style="scroll-snap-align:center;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--gray-800)" data-h="5">5</div>
+                <div style="scroll-snap-align:center;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--gray-800)" data-h="6">6</div>
+                <div style="scroll-snap-align:center;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--gray-800)" data-h="7">7</div>
+                <div style="scroll-snap-align:center;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--gray-800)" data-h="8">8</div>
+                <div style="scroll-snap-align:center;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--gray-800)" data-h="9">9</div>
+                <div style="scroll-snap-align:center;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--gray-800)" data-h="10">10</div>
+                <div style="scroll-snap-align:center;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--gray-800)" data-h="11">11</div>
+                <div style="scroll-snap-align:center;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--gray-800)" data-h="12">12</div>
+                <div style="height:28px"></div>
+              </div>
+            </div>
+            <button onclick="ejDrumStep('drum-oa-h',1,28)" class="drum-arrow">&#8964;</button>
+          </div>
+          <div style="font-size:16px;font-weight:800;color:var(--gray-400)">:</div>
+          <!-- Minutos 00-59 -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:1px">
+            <button onclick="ejDrumStep('drum-oa-m',-1,28)" class="drum-arrow">&#8963;</button>
+            <div style="position:relative;height:28px;width:40px;overflow:hidden;border-radius:7px">
+              <div style="position:absolute;top:0;left:0;right:0;height:28px;background:var(--primary-light);border-radius:7px;border:1.5px solid var(--primary);z-index:1"></div>
+              <div id="drum-oa-m" onscroll="ejDrumOaLive()" style="overflow-y:scroll;height:28px;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:relative;z-index:3" data-mins-full="1">
+                <div style="height:28px"></div>
+                <div style="height:28px"></div>
+              </div>
+            </div>
+            <button onclick="ejDrumStep('drum-oa-m',1,28)" class="drum-arrow">&#8964;</button>
+          </div>
+          <!-- AM / PM -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:1px;margin-left:2px">
+            <button onclick="ejDrumStep('drum-oa-ampm',-1,28)" class="drum-arrow">&#8963;</button>
+            <div style="position:relative;height:28px;width:42px;overflow:hidden;border-radius:7px">
+              <div style="position:absolute;top:0;left:0;right:0;height:28px;background:#EFF6FF;border-radius:7px;border:1.5px solid #93C5FD;z-index:1"></div>
+              <div id="drum-oa-ampm" onscroll="ejDrumOaLive()" style="overflow-y:scroll;height:28px;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:relative;z-index:3">
+                <div style="height:28px"></div>
+                <div style="scroll-snap-align:center;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--gray-800)" data-ampm="AM">AM</div>
+                <div style="scroll-snap-align:center;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--gray-800)" data-ampm="PM">PM</div>
+                <div style="height:28px"></div>
+              </div>
+            </div>
+            <button onclick="ejDrumStep('drum-oa-ampm',1,28)" class="drum-arrow">&#8964;</button>
+          </div>
+        </div>
+        <button onclick="ejDrumOaConfirm()" style="width:100%;margin-top:8px;padding:7px;border:none;border-radius:8px;background:var(--primary);color:white;font-size:13px;font-weight:700;cursor:pointer">Confirmar</button>
+      </div>
+    </div>
+
+    <!-- OB: Ruleta / Drum picker -->
+    <div id="hora-ob" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;background:var(--gray-50);border-radius:16px;padding:16px">
+        <div style="position:relative;height:120px;width:64px;overflow:hidden;border-radius:10px">
+          <div style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:2;background:linear-gradient(to bottom,var(--gray-50) 0%,transparent 35%,transparent 65%,var(--gray-50) 100%)"></div>
+          <div style="position:absolute;top:50%;left:0;right:0;height:36px;transform:translateY(-50%);background:var(--primary-light);border-radius:8px;border:1.5px solid var(--primary);z-index:1"></div>
+          <div id="drum-horas" style="overflow-y:scroll;height:120px;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:relative;z-index:3">
+            <div style="height:42px"></div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="07">07</div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="08">08</div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="09">09</div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="10">10</div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="11">11</div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="12">12</div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="13">13</div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="14">14</div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="15">15</div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="16">16</div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="17">17</div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="18">18</div>
+            <div style="height:42px"></div>
+          </div>
+        </div>
+        <div style="font-size:24px;font-weight:700;color:var(--gray-400)">:</div>
+        <div style="position:relative;height:120px;width:64px;overflow:hidden;border-radius:10px">
+          <div style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:2;background:linear-gradient(to bottom,var(--gray-50) 0%,transparent 35%,transparent 65%,var(--gray-50) 100%)"></div>
+          <div style="position:absolute;top:50%;left:0;right:0;height:36px;transform:translateY(-50%);background:var(--primary-light);border-radius:8px;border:1.5px solid var(--primary);z-index:1"></div>
+          <div id="drum-mins" style="overflow-y:scroll;height:120px;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:relative;z-index:3">
+            <div style="height:42px"></div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-m="00">00</div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-m="15">15</div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-m="30">30</div>
+            <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-m="45">45</div>
+            <div style="height:42px"></div>
+          </div>
+        </div>
+      </div>
+      <button onclick="ejDrumConfirm()" style="width:100%;margin-top:10px;padding:10px;border:none;border-radius:10px;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Confirmar</button>
+    </div>
+
+    <!-- OC: Drum 3 columnas HH : MM : Periodo -->
+    <div id="hora-oc" style="display:none">
+      <div style="background:var(--gray-50);border-radius:16px;padding:16px">
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px">
+          <div style="position:relative;height:120px;width:60px;overflow:hidden;border-radius:10px">
+            <div style="position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(to bottom,var(--gray-50) 0%,transparent 35%,transparent 65%,var(--gray-50) 100%)"></div>
+            <div style="position:absolute;top:50%;left:0;right:0;height:36px;transform:translateY(-50%);background:var(--primary-light);border-radius:8px;border:1.5px solid var(--primary);z-index:1"></div>
+            <div id="drum-oc-h" style="overflow-y:scroll;height:120px;scroll-snap-type:y mandatory;scrollbar-width:none;position:relative;z-index:3">
+              <div style="height:42px"></div>
+              <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="07">07</div>
+              <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="08">08</div>
+              <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="09">09</div>
+              <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="10">10</div>
+              <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="11">11</div>
+              <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-h="12">12</div>
+              <div style="height:42px"></div>
+            </div>
+          </div>
+          <div style="font-size:22px;font-weight:700;color:var(--gray-400)">:</div>
+          <div style="position:relative;height:120px;width:60px;overflow:hidden;border-radius:10px">
+            <div style="position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(to bottom,var(--gray-50) 0%,transparent 35%,transparent 65%,var(--gray-50) 100%)"></div>
+            <div style="position:absolute;top:50%;left:0;right:0;height:36px;transform:translateY(-50%);background:var(--primary-light);border-radius:8px;border:1.5px solid var(--primary);z-index:1"></div>
+            <div id="drum-oc-m" style="overflow-y:scroll;height:120px;scroll-snap-type:y mandatory;scrollbar-width:none;position:relative;z-index:3">
+              <div style="height:42px"></div>
+              <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-m="00">00</div>
+              <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-m="15">15</div>
+              <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-m="30">30</div>
+              <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gray-800)" data-m="45">45</div>
+              <div style="height:42px"></div>
+            </div>
+          </div>
+          <div style="position:relative;height:120px;width:76px;overflow:hidden;border-radius:10px;margin-left:4px">
+            <div style="position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(to bottom,var(--gray-50) 0%,transparent 35%,transparent 65%,var(--gray-50) 100%)"></div>
+            <div style="position:absolute;top:50%;left:0;right:0;height:36px;transform:translateY(-50%);background:#F3F4F6;border-radius:8px;border:1.5px solid var(--gray-300);z-index:1"></div>
+            <div id="drum-oc-p" style="overflow-y:scroll;height:120px;scroll-snap-type:y mandatory;scrollbar-width:none;position:relative;z-index:3">
+              <div style="height:42px"></div>
+              <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gray-700)" data-p="mañana">Mañana</div>
+              <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gray-700)" data-p="tarde">Tarde</div>
+              <div style="scroll-snap-align:center;height:36px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gray-700)" data-p="noche">Noche</div>
+              <div style="height:42px"></div>
+            </div>
+          </div>
+        </div>
+        <button onclick="ejDrumOcConfirm()" style="width:100%;margin-top:12px;padding:10px;border:none;border-radius:10px;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Confirmar</button>
+      </div>
+    </div>
+
+    <!-- OD: Drum oscuro / dark style -->
+    <div id="hora-od" style="display:none">
+      <div style="background:#1E1E2E;border-radius:16px;padding:16px">
+        <div id="drum-od-display" style="text-align:center;font-size:38px;font-weight:800;color:#A78BFA;margin-bottom:12px;letter-spacing:3px;font-family:monospace">09:00</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px">
+          <div style="position:relative;height:130px;width:72px;overflow:hidden;border-radius:10px">
+            <div style="position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(to bottom,#1E1E2E 0%,transparent 35%,transparent 65%,#1E1E2E 100%)"></div>
+            <div style="position:absolute;top:50%;left:0;right:0;height:40px;transform:translateY(-50%);background:rgba(167,139,250,0.15);border-radius:8px;border:1.5px solid #A78BFA;z-index:1"></div>
+            <div id="drum-od-h" onscroll="ejDrumOdLive()" style="overflow-y:scroll;height:130px;scroll-snap-type:y mandatory;scrollbar-width:none;position:relative;z-index:3">
+              <div style="height:45px"></div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-h="07">07</div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-h="08">08</div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-h="09">09</div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-h="10">10</div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-h="11">11</div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-h="12">12</div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-h="13">13</div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-h="14">14</div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-h="15">15</div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-h="16">16</div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-h="17">17</div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-h="18">18</div>
+              <div style="height:45px"></div>
+            </div>
+          </div>
+          <div style="font-size:28px;font-weight:800;color:#A78BFA;font-family:monospace">:</div>
+          <div style="position:relative;height:130px;width:72px;overflow:hidden;border-radius:10px">
+            <div style="position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(to bottom,#1E1E2E 0%,transparent 35%,transparent 65%,#1E1E2E 100%)"></div>
+            <div style="position:absolute;top:50%;left:0;right:0;height:40px;transform:translateY(-50%);background:rgba(167,139,250,0.15);border-radius:8px;border:1.5px solid #A78BFA;z-index:1"></div>
+            <div id="drum-od-m" onscroll="ejDrumOdLive()" style="overflow-y:scroll;height:130px;scroll-snap-type:y mandatory;scrollbar-width:none;position:relative;z-index:3">
+              <div style="height:45px"></div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-m="00">00</div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-m="15">15</div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-m="30">30</div>
+              <div style="scroll-snap-align:center;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#E2E8F0;font-family:monospace" data-m="45">45</div>
+              <div style="height:45px"></div>
+            </div>
+          </div>
+        </div>
+        <button onclick="ejDrumOdConfirm()" style="width:100%;margin-top:14px;padding:10px;border:none;border-radius:10px;background:#A78BFA;color:white;font-size:14px;font-weight:700;cursor:pointer">Confirmar</button>
+      </div>
+    </div>
+
+    <!-- OE: Carrusel horizontal de slots completos -->
+    <div id="hora-oe" style="display:none">
+      <div style="background:var(--gray-50);border-radius:16px;padding:16px">
+        <div id="drum-oe-display" style="text-align:center;font-size:32px;font-weight:800;color:var(--primary);margin-bottom:12px">09:00</div>
+        <div style="position:relative;height:64px;overflow:hidden;border-radius:10px">
+          <div style="position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(to right,var(--gray-50) 0%,transparent 25%,transparent 75%,var(--gray-50) 100%)"></div>
+          <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:72px;height:100%;background:var(--primary-light);border-radius:8px;border:1.5px solid var(--primary);z-index:1"></div>
+          <div id="drum-oe-scroll" onscroll="ejDrumOeLive()" style="overflow-x:scroll;height:64px;scroll-snap-type:x mandatory;display:flex;align-items:center;scrollbar-width:none;position:relative;z-index:3;-webkit-overflow-scrolling:touch">
+            <div style="flex-shrink:0;width:calc(50% - 36px)"></div>
+            <div style="scroll-snap-align:center;flex-shrink:0;width:72px;height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gray-800)" data-t="08:00">8:00</div>
+            <div style="scroll-snap-align:center;flex-shrink:0;width:72px;height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gray-800)" data-t="08:30">8:30</div>
+            <div style="scroll-snap-align:center;flex-shrink:0;width:72px;height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gray-800)" data-t="09:00">9:00</div>
+            <div style="scroll-snap-align:center;flex-shrink:0;width:72px;height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gray-800)" data-t="09:30">9:30</div>
+            <div style="scroll-snap-align:center;flex-shrink:0;width:72px;height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gray-800)" data-t="10:00">10:00</div>
+            <div style="scroll-snap-align:center;flex-shrink:0;width:72px;height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gray-800)" data-t="10:30">10:30</div>
+            <div style="scroll-snap-align:center;flex-shrink:0;width:72px;height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gray-800)" data-t="11:00">11:00</div>
+            <div style="scroll-snap-align:center;flex-shrink:0;width:72px;height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gray-800)" data-t="11:30">11:30</div>
+            <div style="scroll-snap-align:center;flex-shrink:0;width:72px;height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gray-800)" data-t="12:00">12:00</div>
+            <div style="scroll-snap-align:center;flex-shrink:0;width:72px;height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gray-800)" data-t="13:00">13:00</div>
+            <div style="scroll-snap-align:center;flex-shrink:0;width:72px;height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gray-800)" data-t="14:00">14:00</div>
+            <div style="scroll-snap-align:center;flex-shrink:0;width:72px;height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gray-800)" data-t="15:00">15:00</div>
+            <div style="scroll-snap-align:center;flex-shrink:0;width:72px;height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gray-800)" data-t="16:00">16:00</div>
+            <div style="scroll-snap-align:center;flex-shrink:0;width:72px;height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gray-800)" data-t="17:00">17:00</div>
+            <div style="scroll-snap-align:center;flex-shrink:0;width:72px;height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--gray-800)" data-t="18:00">18:00</div>
+            <div style="flex-shrink:0;width:calc(50% - 36px)"></div>
+          </div>
+        </div>
+        <button onclick="ejDrumOeConfirm()" style="width:100%;margin-top:12px;padding:10px;border:none;border-radius:10px;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Confirmar</button>
+      </div>
+    </div>
+
+  </div><!-- /tabs ocultos -->
+</div>
+
+<script>
+  function ejSetHora(val) {
+    document.getElementById('citaHora').value = val;
+    document.querySelectorAll('.hora-bloque').forEach(b => {
+      const t = b.textContent.trim();
+      const [bh,bm] = t.split(':');
+      const bv = bh.padStart(2,'0') + ':' + (bm||'00').padStart(2,'0');
+      b.classList.toggle('active', bv === val);
+    });
+  }
+  function ejSyncHoraBlocks(val) {
+    document.querySelectorAll('.hora-bloque').forEach(b => {
+      const t = b.textContent.trim();
+      const [bh,bm] = t.split(':');
+      const bv = bh.padStart(2,'0') + ':' + (bm||'00').padStart(2,'0');
+      b.classList.toggle('active', bv === val);
+    });
+  }
+  function ejHoraOpt(opt) {
+    ['oa','ob','oc','od','oe'].forEach(o => {
+      document.getElementById('hora-' + o).style.display = o === opt ? '' : 'none';
+      const btn = document.getElementById('hbtn-' + o);
+      btn.style.background   = o === opt ? 'var(--primary)' : 'var(--white)';
+      btn.style.color        = o === opt ? 'white' : 'var(--gray-600)';
+      btn.style.border       = o === opt ? 'none' : '1.5px solid var(--gray-200)';
+    });
+  }
+  function ejDrumStep(id, dir, size) {
+    const el = document.getElementById(id);
+    if (el) el.scrollBy({ top: dir * size, behavior: 'smooth' });
+  }
+  function ejDrumGet(drumEl, attr) {
+    if (!drumEl) return null;
+    const p = drumEl.getBoundingClientRect();
+    const cy = p.top + p.height / 2;
+    const found = [...drumEl.querySelectorAll('[' + attr + ']')].find(el => {
+      const r = el.getBoundingClientRect();
+      return r.top <= cy && r.bottom > cy;
+    });
+    if (!found) return null;
+    const key = attr.replace('data-','');
+    return found.dataset[key] ?? null;
+  }
+
+  // OA: generar minutos 00-59
+  (function() {
+    const drum = document.getElementById('drum-oa-m');
+    if (!drum) return;
+    drum.innerHTML = '<div style="height:28px"></div>';
+    for (let i = 0; i < 60; i++) {
+      const mm = String(i).padStart(2,'0');
+      const d = document.createElement('div');
+      d.setAttribute('data-m', mm);
+      d.style.cssText = 'scroll-snap-align:center;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--gray-800)';
+      d.textContent = mm;
+      drum.appendChild(d);
+    }
+    const end = document.createElement('div'); end.style.height = '28px'; drum.appendChild(end);
+    drum.scrollTop = 0;
+  })();
+
+  function ejDrumOaLive() {
+    const h    = ejDrumGet(document.getElementById('drum-oa-h'),    'data-h')    || '9';
+    const m    = ejDrumGet(document.getElementById('drum-oa-m'),    'data-m')    || '00';
+    const ampm = ejDrumGet(document.getElementById('drum-oa-ampm'),'data-ampm') || 'AM';
+    document.getElementById('drum-oa-display').textContent = h + ':' + m + ' ' + ampm;
+  }
+  function ejDrumOaConfirm() {
+    const h12  = parseInt(ejDrumGet(document.getElementById('drum-oa-h'),    'data-h')    || '9');
+    const m    = ejDrumGet(document.getElementById('drum-oa-m'),    'data-m')    || '00';
+    const ampm = ejDrumGet(document.getElementById('drum-oa-ampm'),'data-ampm') || 'AM';
+    let h24 = h12;
+    if (ampm === 'AM' && h12 === 12) h24 = 0;
+    else if (ampm === 'PM' && h12 !== 12) h24 = h12 + 12;
+    ejSetHora(String(h24).padStart(2,'0') + ':' + m);
+  }
+  function ejDrumConfirm() {
+    const h = ejDrumGet(document.getElementById('drum-horas'), 'data-h') || '09';
+    const m = ejDrumGet(document.getElementById('drum-mins'),  'data-m') || '00';
+    ejSetHora(h + ':' + m);
+  }
+  function ejDrumOcConfirm() {
+    const h = ejDrumGet(document.getElementById('drum-oc-h'), 'data-h') || '09';
+    const m = ejDrumGet(document.getElementById('drum-oc-m'), 'data-m') || '00';
+    ejSetHora(h + ':' + m);
+  }
+  function ejDrumOdLive() {
+    const h = ejDrumGet(document.getElementById('drum-od-h'), 'data-h') || '09';
+    const m = ejDrumGet(document.getElementById('drum-od-m'), 'data-m') || '00';
+    document.getElementById('drum-od-display').textContent = h + ':' + m;
+  }
+  function ejDrumOdConfirm() {
+    const h = ejDrumGet(document.getElementById('drum-od-h'), 'data-h') || '09';
+    const m = ejDrumGet(document.getElementById('drum-od-m'), 'data-m') || '00';
+    ejSetHora(h + ':' + m);
+  }
+  function ejDrumOeLive() {
+    const sc = document.getElementById('drum-oe-scroll');
+    const p  = sc.getBoundingClientRect();
+    const cx = p.left + p.width / 2;
+    const found = [...sc.querySelectorAll('[data-t]')].find(el => {
+      const r = el.getBoundingClientRect();
+      return r.left <= cx && r.right > cx;
+    });
+    if (found) document.getElementById('drum-oe-display').textContent = found.dataset.t;
+  }
+  function ejDrumOeConfirm() {
+    const sc = document.getElementById('drum-oe-scroll');
+    const p  = sc.getBoundingClientRect();
+    const cx = p.left + p.width / 2;
+    const found = [...sc.querySelectorAll('[data-t]')].find(el => {
+      const r = el.getBoundingClientRect();
+      return r.left <= cx && r.right > cx;
+    });
+    if (found) ejSetHora(found.dataset.t);
+  }
+  function ncAcord(seccion) {
+    const secciones = ['cliente', 'detalles'];
+    secciones.forEach(s => {
+      const body    = document.getElementById('nc-body-' + s);
+      const chevron = document.getElementById('nc-chevron-' + s);
+      const numEl   = document.getElementById('nc-num-' + s);
+      const abierto = s === seccion;
+      body.style.display        = abierto ? 'block' : 'none';
+      chevron.style.transform   = abierto ? 'rotate(180deg)' : '';
+      if (numEl) numEl.style.background = abierto ? 'var(--primary)' : 'var(--gray-300)';
+    });
+  }
+  function citaMostrarOpcion(op) {
+    const esNuevo = op === 'nuevo';
+    document.getElementById('selectClienteExistente').style.display = esNuevo ? 'none' : 'block';
+    document.getElementById('nuevoClienteInline').style.display = esNuevo ? 'flex' : 'none';
+    const btnE = document.getElementById('btnOpcionExistente');
+    const btnN = document.getElementById('btnOpcionNuevo');
+    btnE.style.borderColor = !esNuevo ? 'var(--primary)' : 'var(--gray-200)';
+    btnE.style.background  = !esNuevo ? 'var(--primary-light)' : 'var(--white)';
+    btnE.querySelector('svg').setAttribute('stroke', !esNuevo ? 'var(--primary)' : 'var(--gray-400)');
+    btnN.style.borderColor = esNuevo ? 'var(--primary)' : 'var(--gray-200)';
+    btnN.style.background  = esNuevo ? 'var(--primary-light)' : 'var(--white)';
+    btnN.querySelector('svg').setAttribute('stroke', esNuevo ? 'var(--primary)' : 'var(--gray-400)');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (window.lucide) lucide.createIcons();
+    // Fecha y hora por defecto
+    const ahora = new Date();
+    const fecha = ahora.toISOString().slice(0, 10);
+    const hh = String(ahora.getHours()).padStart(2,'0');
+    const mm = String(ahora.getMinutes()).padStart(2,'0');
+    document.getElementById('citaFecha').value = fecha;
+    document.getElementById('citaHora').value = hh + ':' + mm;
+  });
+</script>
