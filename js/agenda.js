@@ -420,3 +420,257 @@ const ncTimePicker = (() => {
     }
   };
 })();
+
+// ── VISTAS: Día / Semana / Mes ──────────────────────────────
+
+function agendaVista(v) {
+  ['dia','semana','mes'].forEach(id => {
+    const el = document.getElementById('agenda-vista-' + id);
+    if (el) el.style.display = v === id ? 'block' : 'none';
+    const btn = document.getElementById('agenda-btn-' + id);
+    if (btn) {
+      btn.style.background = v === id ? 'var(--white)' : 'transparent';
+      btn.style.color      = v === id ? 'var(--primary)' : 'var(--gray-500)';
+      btn.style.fontWeight = v === id ? '700' : '600';
+      btn.style.boxShadow  = v === id ? '0 1px 3px rgba(0,0,0,0.1)' : 'none';
+    }
+  });
+  if (v === 'semana') agendaCargarSemana();
+  if (v === 'mes')    agendaCargarMes();
+}
+
+// ── SEMANA ──────────────────────────────────────────────────
+
+const _mesesCortoAgenda = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
+let agendaSemanaRef = (() => {
+  const hoy = new Date();
+  const diff = hoy.getDay() === 0 ? -6 : 1 - hoy.getDay();
+  const lunes = new Date(hoy);
+  lunes.setDate(hoy.getDate() + diff);
+  lunes.setHours(0,0,0,0);
+  return lunes;
+})();
+
+function agendaSemanaActualizarLabel() {
+  const fin = new Date(agendaSemanaRef); fin.setDate(agendaSemanaRef.getDate() + 6);
+  const mismoMes = agendaSemanaRef.getMonth() === fin.getMonth();
+  const label = mismoMes
+    ? agendaSemanaRef.getDate() + ' — ' + fin.getDate() + ' ' + _mesesCortoAgenda[fin.getMonth()] + '.'
+    : agendaSemanaRef.getDate() + ' ' + _mesesCortoAgenda[agendaSemanaRef.getMonth()] + '. — ' + fin.getDate() + ' ' + _mesesCortoAgenda[fin.getMonth()] + '.';
+  const el = document.getElementById('agenda-semana-label');
+  if (el) el.textContent = label;
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  const diff = hoy.getDay() === 0 ? -6 : 1 - hoy.getDay();
+  const lunesHoy = new Date(hoy); lunesHoy.setDate(hoy.getDate() + diff);
+  const lunesRef = new Date(agendaSemanaRef); lunesRef.setHours(0,0,0,0);
+  const btnHoy = document.getElementById('agenda-semana-hoy');
+  if (btnHoy) btnHoy.style.display = lunesRef.getTime() === lunesHoy.getTime() ? 'none' : '';
+}
+
+function agendaSemanaCambiar(delta) {
+  agendaSemanaRef = new Date(agendaSemanaRef);
+  agendaSemanaRef.setDate(agendaSemanaRef.getDate() + delta * 7);
+  agendaCargarSemana();
+}
+
+function agendaSemanaIrHoy() {
+  const hoy = new Date();
+  const diff = hoy.getDay() === 0 ? -6 : 1 - hoy.getDay();
+  agendaSemanaRef = new Date(hoy);
+  agendaSemanaRef.setDate(hoy.getDate() + diff);
+  agendaSemanaRef.setHours(0,0,0,0);
+  agendaCargarSemana();
+}
+
+async function agendaCargarSemana() {
+  agendaSemanaActualizarLabel();
+  const inicio = agendaSemanaRef.toISOString().split('T')[0];
+  const fin    = new Date(agendaSemanaRef); fin.setDate(agendaSemanaRef.getDate() + 6);
+  const finStr = fin.toISOString().split('T')[0];
+
+  const { data, error } = await db
+    .from('citas')
+    .select('*, clientes(nombre)')
+    .eq('negocio_id', currentBusiness?.id)
+    .gte('fecha', inicio)
+    .lte('fecha', finStr)
+    .order('fecha').order('hora');
+
+  const el = document.getElementById('agenda-lista-semana');
+  if (!el) return;
+  if (error) { el.innerHTML = '<div class="list-empty"><p>Error al cargar</p></div>'; return; }
+
+  const estadoInfo = { pendiente:{dot:'#F59E0B'}, confirmada:{dot:'#3B82F6'}, completada:{dot:'#10B981'}, cancelada:{dot:'#EF4444'} };
+  const diasNombresCorto = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const citasPorDia = {};
+  (data || []).forEach(c => { (citasPorDia[c.fecha] = citasPorDia[c.fecha] || []).push(c); });
+
+  let html = '';
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(agendaSemanaRef); d.setDate(agendaSemanaRef.getDate() + i);
+    const fechaStr = d.toISOString().split('T')[0];
+    const hoy = new Date(); hoy.setHours(0,0,0,0);
+    const esHoy = d.getTime() === hoy.getTime();
+    const label = diasNombresCorto[d.getDay()] + ' ' + d.getDate();
+    const citasDia = citasPorDia[fechaStr] || [];
+    const bordeHoy = esHoy ? ';border:2px solid var(--primary)' : '';
+
+    if (!citasDia.length) {
+      html += `<div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06)${bordeHoy}">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:13px;font-weight:700;color:${esHoy?'var(--primary)':'var(--gray-600)'}">${label}</span>
+            ${esHoy?'<span style="font-size:10px;padding:1px 7px;border-radius:20px;background:var(--primary);color:white;font-weight:700">Hoy</span>':''}
+          </div>
+          <span style="font-size:12px;color:var(--gray-300)">Sin citas</span>
+        </div>
+      </div>`;
+    } else {
+      const citasHTML = citasDia.map((c, idx) => {
+        const hora   = c.hora ? c.hora.slice(0,5) : '--:--';
+        const nombre = c.clientes?.nombre || 'Sin cliente';
+        const est    = estadoInfo[c.estado] || estadoInfo.pendiente;
+        const borde  = idx < citasDia.length - 1 ? 'border-bottom:1px solid var(--gray-100)' : '';
+        return `<div style="display:flex;align-items:center;gap:10px;padding:8px 4px;${borde}">
+          <span style="font-size:12px;font-weight:800;color:${est.dot};width:36px">${hora}</span>
+          <span style="font-size:13px;font-weight:600;color:var(--gray-800);flex:1">${nombre}</span>
+          <span style="width:7px;height:7px;border-radius:50%;background:${est.dot}"></span>
+        </div>`;
+      }).join('');
+      html += `<div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.06)${bordeHoy}">
+        <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.ags-chv').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':''" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--gray-100)">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:13px;font-weight:700;color:${esHoy?'var(--primary)':'var(--gray-700)'}">${label}</span>
+            ${esHoy?'<span style="font-size:10px;padding:1px 7px;border-radius:20px;background:var(--primary);color:white;font-weight:700">Hoy</span>':''}
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:var(--primary-light);color:var(--primary);font-weight:700">${citasDia.length} cita${citasDia.length>1?'s':''}</span>
+            <svg class="ags-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .2s${esHoy?';transform:rotate(180deg)':''}"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div style="display:${esHoy?'block':'none'};padding:8px 12px">${citasHTML}</div>
+      </div>`;
+    }
+  }
+  el.innerHTML = html;
+}
+
+// ── MES ──────────────────────────────────────────────────────
+
+let agendaMesActual      = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+let agendaMesDotsData    = {};
+let agendaDiaSeleccionado = null;
+
+function agendaMesActualizarLabel() {
+  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const el = document.getElementById('agenda-mes-label');
+  if (el) el.textContent = meses[agendaMesActual.getMonth()] + ' ' + agendaMesActual.getFullYear();
+  const hoy = new Date();
+  const esEsteMes = agendaMesActual.getFullYear() === hoy.getFullYear() && agendaMesActual.getMonth() === hoy.getMonth();
+  const btnHoy = document.getElementById('agenda-mes-hoy');
+  if (btnHoy) btnHoy.style.display = esEsteMes ? 'none' : '';
+}
+
+function agendaMesCambiar(delta) {
+  agendaMesActual = new Date(agendaMesActual.getFullYear(), agendaMesActual.getMonth() + delta, 1);
+  agendaCargarMes();
+}
+
+function agendaMesIrHoy() {
+  const hoy = new Date();
+  agendaMesActual = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+  agendaCargarMes();
+}
+
+async function agendaCargarMes() {
+  agendaMesActualizarLabel();
+  const año    = agendaMesActual.getFullYear();
+  const mes    = agendaMesActual.getMonth();
+  const inicio = new Date(año, mes, 1).toISOString().split('T')[0];
+  const fin    = new Date(año, mes + 1, 0).toISOString().split('T')[0];
+
+  const { data } = await db
+    .from('citas')
+    .select('fecha, estado')
+    .eq('negocio_id', currentBusiness?.id)
+    .gte('fecha', inicio)
+    .lte('fecha', fin);
+
+  const estadoInfo = { pendiente:{dot:'#F59E0B'}, confirmada:{dot:'#3B82F6'}, completada:{dot:'#10B981'}, cancelada:{dot:'#EF4444'} };
+  agendaMesDotsData = {};
+  (data || []).forEach(c => {
+    if (!agendaMesDotsData[c.fecha]) agendaMesDotsData[c.fecha] = [];
+    agendaMesDotsData[c.fecha].push((estadoInfo[c.estado] || estadoInfo.pendiente).dot);
+  });
+  agendaRenderMes();
+}
+
+function agendaRenderMes() {
+  const año       = agendaMesActual.getFullYear();
+  const mes       = agendaMesActual.getMonth();
+  const hoy       = new Date(); hoy.setHours(0,0,0,0);
+  const primerDia = new Date(año, mes, 1).getDay();
+  const diasEnMes = new Date(año, mes + 1, 0).getDate();
+  const offset    = primerDia === 0 ? 6 : primerDia - 1;
+
+  const el = document.getElementById('agenda-mes-grid');
+  if (!el) return;
+
+  let html = '';
+  for (let i = 0; i < offset; i++) html += '<div></div>';
+  for (let d = 1; d <= diasEnMes; d++) {
+    const fecha    = new Date(año, mes, d);
+    const fechaStr = fecha.toISOString().split('T')[0];
+    const esHoy       = fecha.getTime() === hoy.getTime();
+    const seleccionado = fechaStr === agendaDiaSeleccionado;
+    const dots         = (agendaMesDotsData[fechaStr] || []).slice(0,3);
+    const dotsHTML     = dots.map(c => `<span style="width:5px;height:5px;border-radius:50%;background:${c};display:inline-block"></span>`).join('');
+    html += `<div onclick="agendaMesSeleccionar('${fechaStr}')" style="display:flex;flex-direction:column;align-items:center;padding:4px 0;border-radius:8px;cursor:pointer;background:${seleccionado?'var(--primary)':esHoy?'var(--primary-light)':'transparent'}">
+      <span style="font-size:13px;font-weight:${esHoy||seleccionado?'800':'500'};color:${seleccionado?'white':esHoy?'var(--primary)':'var(--gray-700)'}">${d}</span>
+      <div style="display:flex;gap:2px;min-height:7px;margin-top:2px">${dotsHTML}</div>
+    </div>`;
+  }
+  el.innerHTML = html;
+  if (agendaDiaSeleccionado) agendaMesRenderDetalle(agendaDiaSeleccionado, null);
+}
+
+async function agendaMesSeleccionar(fechaStr) {
+  agendaDiaSeleccionado = fechaStr;
+  agendaRenderMes();
+  const { data } = await db
+    .from('citas')
+    .select('*, clientes(nombre)')
+    .eq('negocio_id', currentBusiness?.id)
+    .eq('fecha', fechaStr)
+    .order('hora');
+  agendaMesRenderDetalle(fechaStr, data || []);
+}
+
+function agendaMesRenderDetalle(fechaStr, lista) {
+  const el = document.getElementById('agenda-mes-detalle');
+  if (!el) return;
+  if (!lista) { el.innerHTML = ''; return; }
+  if (!lista.length) {
+    el.innerHTML = `<div style="text-align:center;padding:16px;color:var(--gray-400);font-size:13px">Sin citas para este día</div>`;
+    return;
+  }
+  const estadoInfo = {
+    pendiente:  { dot:'#F59E0B', bg:'#FEF3C7', color:'#92400E', label:'Pendiente' },
+    confirmada: { dot:'#3B82F6', bg:'#DBEAFE', color:'#1E40AF', label:'Confirmada' },
+    completada: { dot:'#10B981', bg:'#D1FAE5', color:'#065F46', label:'Completada' },
+    cancelada:  { dot:'#EF4444', bg:'#FEE2E2', color:'#991B1B', label:'Cancelada' },
+  };
+  el.innerHTML = `<div style="background:var(--white);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.07)">` +
+    lista.map((c, i) => {
+      const nombre = c.clientes?.nombre || 'Sin cliente';
+      const hora   = c.hora ? c.hora.slice(0,5) : '--:--';
+      const est    = estadoInfo[c.estado] || estadoInfo.pendiente;
+      const isLast = i === lista.length - 1;
+      return `<div style="display:flex;align-items:center;gap:10px;padding:11px 16px;${isLast?'':'border-bottom:1px solid var(--gray-100)'}">
+        <span style="font-size:13px;font-weight:800;color:${est.dot};width:40px;flex-shrink:0">${hora}</span>
+        <span style="font-size:14px;font-weight:600;color:var(--gray-800);flex:1">${nombre}</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:${est.bg};color:${est.color};font-weight:700">${est.label}</span>
+      </div>`;
+    }).join('') + '</div>';
+}
