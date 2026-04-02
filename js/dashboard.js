@@ -42,16 +42,16 @@ async function loadDashboard() {
   if (modulos.includes('ventas')) {
     dashGrid.innerHTML += `
       <div class="card" style="padding:0;overflow:hidden">
-        <div style="display:flex;gap:0;border-bottom:1px solid var(--gray-100)">
-          <div style="flex:1;padding:12px;text-align:center;border-right:1px solid var(--gray-100)"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">HOY</div><div id="uvStatHoy" style="font-size:18px;font-weight:800;color:var(--primary)">—</div></div>
-          <div style="flex:1;padding:12px;text-align:center;border-right:1px solid var(--gray-100)"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">MES</div><div id="uvStatMes" style="font-size:18px;font-weight:800;color:var(--gray-800)">—</div></div>
-          <div style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">VENTAS</div><div id="uvStatCount" style="font-size:18px;font-weight:800;color:var(--gray-800)">—</div></div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px 8px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px;border-bottom:1px solid var(--gray-100)">
           <h3 style="font-size:14px;font-weight:700;color:var(--gray-800);margin:0">Últimas Ventas</h3>
           <a href="#" onclick="showSection('ventas')" class="ver-mas">Ver todas</a>
         </div>
-        <div id="ultimasVentas" style="padding:0 12px 12px;display:flex;flex-direction:column;gap:6px"><p class="empty-text">No hay ventas hoy</p></div>
+        <div style="display:flex;gap:0;border-bottom:1px solid var(--gray-100)">
+          <div style="flex:1;padding:10px;text-align:center;border-right:1px solid var(--gray-100)"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">HOY</div><div id="uvStatHoy" style="font-size:17px;font-weight:800;color:var(--primary)">—</div></div>
+          <div style="flex:1;padding:10px;text-align:center;border-right:1px solid var(--gray-100)"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">MES</div><div id="uvStatMes" style="font-size:17px;font-weight:800;color:var(--gray-800)">—</div></div>
+          <div style="flex:1;padding:10px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">VENTAS</div><div id="uvStatCount" style="font-size:17px;font-weight:800;color:var(--gray-800)">—</div></div>
+        </div>
+        <div id="ultimasVentas" style="padding:8px 12px 12px;display:flex;flex-direction:column;gap:6px"><p class="empty-text">No hay ventas hoy</p></div>
       </div>`;
   }
 
