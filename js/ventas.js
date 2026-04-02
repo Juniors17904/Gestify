@@ -13,6 +13,31 @@ async function loadVentas() {
   if (!filtro.value) filtro.value = hoy;
 
   await filtrarVentas();
+  cargarStatsVentas();
+}
+
+async function cargarStatsVentas() {
+  const negocioId = currentBusiness?.id;
+  const hoy = new Date().toISOString().split('T')[0];
+  const inicioMes = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
+
+  const [{ data: ventasHoy }, { data: ventasMes }] = await Promise.all([
+    db.from('ventas').select('total').eq('negocio_id', negocioId)
+      .gte('created_at', hoy + 'T00:00:00').lte('created_at', hoy + 'T23:59:59'),
+    db.from('ventas').select('total').eq('negocio_id', negocioId)
+      .gte('created_at', inicioMes + 'T00:00:00'),
+  ]);
+
+  const totalHoy = (ventasHoy || []).reduce((s, v) => s + v.total, 0);
+  const totalMes  = (ventasMes  || []).reduce((s, v) => s + v.total, 0);
+  const countHoy  = (ventasHoy || []).length;
+
+  const elHoy   = document.getElementById('ven-stat-hoy');
+  const elMes   = document.getElementById('ven-stat-mes');
+  const elCount = document.getElementById('ven-stat-count');
+  if (elHoy)   elHoy.textContent   = formatMoney(totalHoy);
+  if (elMes)   elMes.textContent   = formatMoney(totalMes);
+  if (elCount) elCount.textContent = countHoy;
 }
 
 async function filtrarVentas() {
@@ -28,28 +53,53 @@ async function filtrarVentas() {
 
   if (error) { showToast('Error al cargar ventas', 'error'); return; }
 
-  renderTablaVentas(data || []);
+  renderVentasAcordeon(data || []);
 }
 
-function renderTablaVentas(ventas) {
-  const tbody = document.getElementById('tablaVentas');
+function renderVentasAcordeon(ventas) {
+  const el = document.getElementById('ventasLista');
+  if (!el) return;
   if (!ventas.length) {
-    tbody.innerHTML = '<tr><td colspan="4" class="empty-row">Sin ventas para esta fecha</td></tr>';
+    el.innerHTML = '<div class="list-empty"><p>Sin ventas para esta fecha</p></div>';
     return;
   }
 
-  tbody.innerHTML = ventas.map(v => {
-    const item = v.venta_items?.[0];
-    const nombreProducto = item?.productos?.nombre || item?.descripcion || '-';
-    return `
-      <tr>
-        <td>${formatTime(v.created_at)}</td>
-        <td>${nombreProducto}</td>
-        <td>${item?.cantidad || '-'}</td>
-        <td><strong>${formatMoney(v.total)}</strong></td>
-      </tr>
-    `;
+  el.innerHTML = ventas.map((v, idx) => {
+    const hora   = formatTime(v.created_at);
+    const items  = v.venta_items || [];
+    const count  = items.length;
+    const itemsHTML = items.map((it, i) => {
+      const nombre = it.productos?.nombre || it.descripcion || 'Producto';
+      const subtotal = (it.precio_unitario || 0) * (it.cantidad || 1);
+      const borde = i < items.length - 1 ? 'border-bottom:1px solid var(--gray-100)' : '';
+      return `<div style="display:flex;justify-content:space-between;padding:7px 0;font-size:13px;${borde}">
+        <span style="color:var(--gray-600)">${nombre} × ${it.cantidad || 1}</span>
+        <span style="font-weight:700;color:var(--gray-800)">${formatMoney(subtotal)}</span>
+      </div>`;
+    }).join('');
+
+    return `<div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
+      <div onclick="venToggleAcord(this)" style="display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:600;color:var(--gray-800)">Venta #${String(idx + 1).padStart(3,'0')}</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">${hora} · ${count} producto${count !== 1 ? 's' : ''}</div>
+        </div>
+        <span style="font-size:14px;font-weight:700;color:#10B981;flex-shrink:0">${formatMoney(v.total)}</span>
+        <svg class="ven-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="ven-acord-body" style="display:none;padding:0 16px 12px;background:var(--gray-50)">
+        ${itemsHTML}
+      </div>
+    </div>`;
   }).join('');
+}
+
+function venToggleAcord(header) {
+  const body    = header.nextElementSibling;
+  const chevron = header.querySelector('.ven-chv');
+  const abierto = body.style.display !== 'none';
+  body.style.display      = abierto ? 'none' : 'block';
+  chevron.style.transform = abierto ? '' : 'rotate(180deg)';
 }
 
 function actualizarPrecioVenta() {
