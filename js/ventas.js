@@ -88,8 +88,17 @@ function renderVentasAcordeon(ventas) {
     return;
   }
 
+  const hoy    = new Date(); hoy.setHours(0,0,0,0);
+  const ayer   = new Date(hoy); ayer.setDate(hoy.getDate() - 1);
+  const meses  = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
   el.innerHTML = ventas.map((v, idx) => {
     const hora   = formatTime(v.created_at);
+    const fechaV = new Date(v.created_at); fechaV.setHours(0,0,0,0);
+    let etiqueta;
+    if (fechaV.getTime() === hoy.getTime())  etiqueta = 'Hoy';
+    else if (fechaV.getTime() === ayer.getTime()) etiqueta = 'Ayer';
+    else etiqueta = fechaV.getDate() + ' ' + meses[fechaV.getMonth()];
     const items  = v.venta_items || [];
     const count  = items.length;
     const itemsHTML = items.map((it, i) => {
@@ -106,7 +115,7 @@ function renderVentasAcordeon(ventas) {
       <div onclick="venToggleAcord(this)" style="display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer">
         <div style="flex:1;min-width:0">
           <div style="font-size:14px;font-weight:600;color:var(--gray-800)">Venta #${String(idx + 1).padStart(3,'0')}</div>
-          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">${hora} · ${count} producto${count !== 1 ? 's' : ''}</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">${etiqueta} · ${hora} · ${count} producto${count !== 1 ? 's' : ''}</div>
         </div>
         <span style="font-size:14px;font-weight:700;color:#10B981;flex-shrink:0">${formatMoney(v.total)}</span>
         <svg class="ven-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
