@@ -69,24 +69,76 @@
 
   <!-- SA -->
   <div id="inv-SA" class="mvis-inv" style="display:none">
-    <p class="ej-section-label">Sección — Lista de productos <span class="badge-actual">ACTUAL</span></p>
-    <div class="card" style="padding:0;overflow:hidden">
-      <div style="padding:12px 16px;display:flex;gap:8px;border-bottom:1px solid var(--gray-100)">
-        <input type="text" placeholder="Buscar producto..." style="flex:1;border:1.5px solid var(--gray-200);border-radius:8px;padding:8px 12px;font-size:13px;outline:none">
-        <button style="padding:8px 14px;border-radius:8px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">+ Agregar</button>
+    <p class="ej-section-label">Sección — Lista de productos acordeón <span class="badge-prop">PROPUESTA</span></p>
+    <div style="padding:0 0 10px;display:flex;gap:8px">
+      <input type="text" placeholder="Buscar producto..." style="flex:1;border:1.5px solid var(--gray-200);border-radius:10px;padding:9px 12px;font-size:13px;outline:none;background:var(--white)">
+      <button style="padding:9px 14px;border-radius:10px;border:none;background:var(--primary);color:white;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">+ Agregar</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+
+      <!-- Producto 1 -->
+      <div style="border-radius:12px;overflow:hidden;border:1.5px solid var(--gray-200);background:var(--white)">
+        <div onclick="invToggle(this)" style="display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer">
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:700;color:var(--gray-800)">Zapatillas Nike T42</div>
+            <div style="font-size:12px;color:var(--gray-400);margin-top:2px">Calzado</div>
+          </div>
+          <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:#FEE2E2;color:#DC2626;font-weight:700">Sin stock</span>
+          <svg class="inv-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-300)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="inv-body" style="display:none;padding:0 14px 14px;border-top:1px solid var(--gray-100)">
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Precio</span><span style="color:var(--gray-800);font-weight:700">S/ 250</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Stock</span><span style="color:#DC2626;font-weight:700">0 unidades</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Categoría</span><span style="color:var(--gray-800);font-weight:700">Calzado</span></div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button style="flex:1;padding:8px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:12px;font-weight:700;color:var(--gray-600);cursor:pointer">✏️ Editar</button>
+            <button style="flex:1;padding:8px;border-radius:10px;border:none;background:#FEE2E2;font-size:12px;font-weight:700;color:#DC2626;cursor:pointer">🗑️ Eliminar</button>
+          </div>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike T42</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Calzado · S/ 250</div></div>
-        <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:#FEE2E2;color:#DC2626;font-weight:700">0</span>
+
+      <!-- Producto 2 -->
+      <div style="border-radius:12px;overflow:hidden;border:1.5px solid var(--gray-200);background:var(--white)">
+        <div onclick="invToggle(this)" style="display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer">
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:700;color:var(--gray-800)">Polo Adidas M</div>
+            <div style="font-size:12px;color:var(--gray-400);margin-top:2px">Ropa</div>
+          </div>
+          <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">Stock bajo</span>
+          <svg class="inv-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-300)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="inv-body" style="display:none;padding:0 14px 14px;border-top:1px solid var(--gray-100)">
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Precio</span><span style="color:var(--gray-800);font-weight:700">S/ 89</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Stock</span><span style="color:#D97706;font-weight:700">2 unidades</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Categoría</span><span style="color:var(--gray-800);font-weight:700">Ropa</span></div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button style="flex:1;padding:8px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:12px;font-weight:700;color:var(--gray-600);cursor:pointer">✏️ Editar</button>
+            <button style="flex:1;padding:8px;border-radius:10px;border:none;background:#FEE2E2;font-size:12px;font-weight:700;color:#DC2626;cursor:pointer">🗑️ Eliminar</button>
+          </div>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--gray-100)">
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas M</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Ropa · S/ 89</div></div>
-        <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:#FEF3C7;color:#D97706;font-weight:700">2</span>
+
+      <!-- Producto 3 -->
+      <div style="border-radius:12px;overflow:hidden;border:1.5px solid var(--gray-200);background:var(--white)">
+        <div onclick="invToggle(this)" style="display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer">
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:700;color:var(--gray-800)">Casaca Puma L</div>
+            <div style="font-size:12px;color:var(--gray-400);margin-top:2px">Ropa</div>
+          </div>
+          <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">OK · 14</span>
+          <svg class="inv-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-300)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="inv-body" style="display:none;padding:0 14px 14px;border-top:1px solid var(--gray-100)">
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Precio</span><span style="color:var(--gray-800);font-weight:700">S/ 180</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Stock</span><span style="color:#065F46;font-weight:700">14 unidades</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Categoría</span><span style="color:var(--gray-800);font-weight:700">Ropa</span></div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button style="flex:1;padding:8px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:12px;font-weight:700;color:var(--gray-600);cursor:pointer">✏️ Editar</button>
+            <button style="flex:1;padding:8px;border-radius:10px;border:none;background:#FEE2E2;font-size:12px;font-weight:700;color:#DC2626;cursor:pointer">🗑️ Eliminar</button>
+          </div>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px">
-        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma L</div><div style="font-size:11px;color:var(--gray-400);margin-top:1px">Ropa · S/ 180</div></div>
-        <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:#D1FAE5;color:#065F46;font-weight:700">14</span>
-      </div>
+
     </div>
   </div>
 
@@ -120,6 +172,14 @@
 </div>
 
 <script>
+  function invToggle(header) {
+    const body    = header.nextElementSibling;
+    const chevron = header.querySelector('.inv-chv');
+    const abierto = body.style.display !== 'none';
+    body.style.display      = abierto ? 'none' : 'block';
+    chevron.style.transform = abierto ? '' : 'rotate(180deg)';
+  }
+
   function mvista(prefix, id, btn) {
     document.querySelectorAll('.mvis-' + prefix).forEach(el => el.style.display = 'none');
     document.getElementById(prefix + '-' + id).style.display = 'block';
