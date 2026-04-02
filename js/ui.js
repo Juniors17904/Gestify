@@ -184,10 +184,17 @@ function setupDashboardUI(nombre, negocioNombre, rol) {
   if (emptyState) emptyState.classList.toggle('hidden', hasNegocio);
   if (dashContent) dashContent.style.display = hasNegocio ? '' : 'none';
 
-  // Botones demo: mostrar "Agregar" si hay negocio
+  // Botones demo: mostrar según si ya hay datos
   document.getElementById('btnDemoWrap').style.display = hasNegocio ? 'flex' : 'none';
-  document.getElementById('btnAgregarDemo').style.display = hasNegocio ? 'block' : 'none';
-  document.getElementById('btnBorrarDemo').style.display = 'none';
+  if (hasNegocio) {
+    const { count } = await db.from('productos').select('id', { count: 'exact', head: true }).eq('negocio_id', currentBusiness.id);
+    const tieneData = (count || 0) > 0;
+    document.getElementById('btnAgregarDemo').style.display = tieneData ? 'none' : 'block';
+    document.getElementById('btnBorrarDemo').style.display  = tieneData ? 'block' : 'none';
+  } else {
+    document.getElementById('btnAgregarDemo').style.display = 'none';
+    document.getElementById('btnBorrarDemo').style.display  = 'none';
+  }
 
   // Selector de empresa en header
   renderEmpresaSelector();
