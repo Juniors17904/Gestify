@@ -1,0 +1,227 @@
+<link rel="stylesheet" href="../../css/style.css">
+<link rel="stylesheet" href="../../css/dashboard.css">
+
+<style>
+  .vista-btn { flex-shrink:0; padding:8px 16px; border:none; border-radius:20px; font-size:13px; font-weight:600; cursor:pointer; background:var(--white); color:var(--gray-600); box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+  .vista-btn.active { background:var(--primary); color:white; }
+  .ej-label { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gray-400);margin:0 0 8px; }
+  .badge-actual { display:inline-block;font-size:10px;padding:2px 8px;border-radius:6px;font-weight:700;margin-left:6px;background:#FEF3C7;color:#D97706;vertical-align:middle;text-transform:none;letter-spacing:0; }
+  .badge-prop   { display:inline-block;font-size:10px;padding:2px 8px;border-radius:6px;font-weight:700;margin-left:6px;background:var(--primary-light);color:var(--primary);vertical-align:middle;text-transform:none;letter-spacing:0; }
+  .acord-chv { transition:transform .2s; }
+</style>
+
+<div style="padding:16px;max-width:440px;margin:0 auto">
+
+  <!-- Tabs de vista -->
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+    <button class="vista-btn active" onclick="uvVista('A',this)">A · Lista simple</button>
+    <button class="vista-btn" onclick="uvVista('B',this)">B · Con total día</button>
+    <button class="vista-btn" onclick="uvVista('C',this)">C · Acordeón</button>
+    <button class="vista-btn" onclick="uvVista('D',this)">D · Stats + acordeón</button>
+    <button class="vista-btn" onclick="uvVista('E',this)">E · Por fecha</button>
+  </div>
+
+  <!-- A: Lista simple -->
+  <div id="uv-A" class="uv-vista">
+    <p class="ej-label">A — Lista simple <span class="badge-actual">ACTUAL</span></p>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--gray-100)">
+        <h3 style="font-size:14px;font-weight:700;color:var(--gray-800);margin:0">Últimas Ventas</h3>
+        <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer">Ver todas</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--gray-800)">Zapatillas Nike</div><div style="font-size:12px;color:var(--gray-400);margin-top:1px">hace 5 min</div></div>
+        <span style="font-size:14px;font-weight:700;color:#10B981">S/ 250</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--gray-800)">Polo Adidas × 2</div><div style="font-size:12px;color:var(--gray-400);margin-top:1px">hace 23 min</div></div>
+        <span style="font-size:14px;font-weight:700;color:#10B981">S/ 178</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 16px">
+        <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--gray-800)">Casaca Puma</div><div style="font-size:12px;color:var(--gray-400);margin-top:1px">hace 1h</div></div>
+        <span style="font-size:14px;font-weight:700;color:#10B981">S/ 180</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- B: Con total del día en header -->
+  <div id="uv-B" class="uv-vista" style="display:none">
+    <p class="ej-label">B — Con total del día <span class="badge-prop">PROPUESTA</span></p>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--gray-100)">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--gray-800)">Ventas Hoy</div>
+          <div style="font-size:11px;color:var(--gray-400);margin-top:1px">3 transacciones</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:20px;font-weight:800;color:#10B981">S/ 608</div>
+          <div style="font-size:10px;color:var(--gray-400);font-weight:600">total del día</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--gray-800)">Zapatillas Nike</div><div style="font-size:12px;color:var(--gray-400)">15:42</div></div>
+        <span style="font-size:14px;font-weight:700;color:#10B981">S/ 250</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--gray-100)">
+        <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--gray-800)">Polo Adidas × 2</div><div style="font-size:12px;color:var(--gray-400)">15:19</div></div>
+        <span style="font-size:14px;font-weight:700;color:#10B981">S/ 178</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px">
+        <div style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--gray-800)">Casaca Puma</div><div style="font-size:12px;color:var(--gray-400)">14:58</div></div>
+        <span style="font-size:14px;font-weight:700;color:#10B981">S/ 180</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- C: Acordeón con detalle de ítems -->
+  <div id="uv-C" class="uv-vista" style="display:none">
+    <p class="ej-label">C — Acordeón con detalle <span class="badge-prop">PROPUESTA</span></p>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
+        <div onclick="uvToggle(this)" style="display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer">
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:600;color:var(--gray-800)">Venta #003</div>
+            <div style="font-size:12px;color:var(--gray-400);margin-top:1px">15:42 · 2 productos</div>
+          </div>
+          <span style="font-size:14px;font-weight:700;color:#10B981">S/ 339</span>
+          <svg class="acord-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div style="display:none;padding:0 16px 12px;background:var(--gray-50)">
+          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-600)">Zapatillas Nike × 1</span><span style="font-weight:700;color:var(--gray-800)">S/ 250</span></div>
+          <div style="display:flex;justify-content:space-between;padding:7px 0;font-size:13px"><span style="color:var(--gray-600)">Polo Adidas × 1</span><span style="font-weight:700;color:var(--gray-800)">S/ 89</span></div>
+        </div>
+      </div>
+      <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
+        <div onclick="uvToggle(this)" style="display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer">
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:600;color:var(--gray-800)">Venta #002</div>
+            <div style="font-size:12px;color:var(--gray-400);margin-top:1px">14:58 · 1 producto</div>
+          </div>
+          <span style="font-size:14px;font-weight:700;color:#10B981">S/ 180</span>
+          <svg class="acord-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div style="display:none;padding:0 16px 12px;background:var(--gray-50)">
+          <div style="display:flex;justify-content:space-between;padding:7px 0;font-size:13px"><span style="color:var(--gray-600)">Casaca Puma L × 1</span><span style="font-weight:700;color:var(--gray-800)">S/ 180</span></div>
+        </div>
+      </div>
+      <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
+        <div onclick="uvToggle(this)" style="display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer">
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:600;color:var(--gray-800)">Venta #001</div>
+            <div style="font-size:12px;color:var(--gray-400);margin-top:1px">13:10 · 1 producto</div>
+          </div>
+          <span style="font-size:14px;font-weight:700;color:#10B981">S/ 89</span>
+          <svg class="acord-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div style="display:none;padding:0 16px 12px;background:var(--gray-50)">
+          <div style="display:flex;justify-content:space-between;padding:7px 0;font-size:13px"><span style="color:var(--gray-600)">Polo Adidas × 1</span><span style="font-weight:700;color:var(--gray-800)">S/ 89</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- D: Stats + acordeón -->
+  <div id="uv-D" class="uv-vista" style="display:none">
+    <p class="ej-label">D — Stats + acordeón <span class="badge-prop">PROPUESTA</span></p>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">HOY</div><div style="font-size:20px;font-weight:800;color:var(--primary)">S/ 608</div></div>
+      <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">MES</div><div style="font-size:20px;font-weight:800;color:var(--gray-800)">S/ 8,240</div></div>
+      <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">VENTAS</div><div style="font-size:20px;font-weight:800;color:var(--gray-800)">47</div></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <span style="font-size:13px;font-weight:700;color:var(--gray-800)">Historial</span>
+      <button style="padding:6px 14px;border-radius:8px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:600;cursor:pointer">+ Nueva venta</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
+        <div onclick="uvToggle(this)" style="display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer">
+          <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--gray-800)">Venta #003</div><div style="font-size:12px;color:var(--gray-400);margin-top:1px">15:42 · 2 productos</div></div>
+          <span style="font-size:14px;font-weight:700;color:#10B981">S/ 339</span>
+          <svg class="acord-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div style="display:none;padding:0 16px 12px;background:var(--gray-50)">
+          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-600)">Zapatillas Nike × 1</span><span style="font-weight:700;color:var(--gray-800)">S/ 250</span></div>
+          <div style="display:flex;justify-content:space-between;padding:7px 0;font-size:13px"><span style="color:var(--gray-600)">Polo Adidas × 1</span><span style="font-weight:700;color:var(--gray-800)">S/ 89</span></div>
+        </div>
+      </div>
+      <div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
+        <div onclick="uvToggle(this)" style="display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer">
+          <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--gray-800)">Venta #002</div><div style="font-size:12px;color:var(--gray-400);margin-top:1px">14:58 · 1 producto</div></div>
+          <span style="font-size:14px;font-weight:700;color:#10B981">S/ 180</span>
+          <svg class="acord-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div style="display:none;padding:0 16px 12px;background:var(--gray-50)">
+          <div style="display:flex;justify-content:space-between;padding:7px 0;font-size:13px"><span style="color:var(--gray-600)">Casaca Puma L × 1</span><span style="font-weight:700;color:var(--gray-800)">S/ 180</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- E: Agrupado por fecha -->
+  <div id="uv-E" class="uv-vista" style="display:none">
+    <p class="ej-label">E — Agrupado por fecha <span class="badge-prop">PROPUESTA</span></p>
+    <div style="display:flex;flex-direction:column;gap:10px">
+
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:12px;font-weight:700;color:var(--gray-500)">Hoy · 30 mar</span>
+          <span style="font-size:12px;font-weight:800;color:#10B981">S/ 608</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="background:var(--white);border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+            <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Zapatillas Nike</div><div style="font-size:11px;color:var(--gray-400)">15:42</div></div>
+            <span style="font-size:13px;font-weight:700;color:#10B981">S/ 250</span>
+          </div>
+          <div style="background:var(--white);border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+            <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Polo Adidas × 2</div><div style="font-size:11px;color:var(--gray-400)">15:19</div></div>
+            <span style="font-size:13px;font-weight:700;color:#10B981">S/ 178</span>
+          </div>
+          <div style="background:var(--white);border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+            <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Casaca Puma</div><div style="font-size:11px;color:var(--gray-400)">14:58</div></div>
+            <span style="font-size:13px;font-weight:700;color:#10B981">S/ 180</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:12px;font-weight:700;color:var(--gray-500)">Ayer · 29 mar</span>
+          <span style="font-size:12px;font-weight:800;color:#10B981">S/ 420</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="background:var(--white);border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+            <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Jean slim fit × 2</div><div style="font-size:11px;color:var(--gray-400)">17:05</div></div>
+            <span style="font-size:13px;font-weight:700;color:#10B981">S/ 240</span>
+          </div>
+          <div style="background:var(--white);border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+            <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--gray-800)">Blusa estampada</div><div style="font-size:11px;color:var(--gray-400)">11:30</div></div>
+            <span style="font-size:13px;font-weight:700;color:#10B981">S/ 180</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="height:80px"></div>
+</div>
+
+<script>
+  function uvVista(id, btn) {
+    document.querySelectorAll('.uv-vista').forEach(el => el.style.display = 'none');
+    document.getElementById('uv-' + id).style.display = 'block';
+    btn.closest('div').querySelectorAll('.vista-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  function uvToggle(header) {
+    const body    = header.nextElementSibling;
+    const chevron = header.querySelector('.acord-chv');
+    const abierto = body.style.display !== 'none';
+    body.style.display      = abierto ? 'none' : 'block';
+    if (chevron) chevron.style.transform = abierto ? '' : 'rotate(180deg)';
+  }
+  document.addEventListener('DOMContentLoaded', () => { if (window.lucide) lucide.createIcons(); });
+</script>

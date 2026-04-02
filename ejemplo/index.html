@@ -41,7 +41,8 @@
       <button onclick="cargarPagina('empleados')"   id="btnEmpleados"   class="nav-mod">👷 Empleados</button>
       <button onclick="cargarPagina('selecciones')" id="btnSelecciones" class="nav-mod">🗂️ Ajustes tabs</button>
       <button onclick="cargarPagina('nuevacita')"   id="btnNuevaCita"   class="nav-mod">➕ Nueva cita</button>
-      <button onclick="cargarPagina('vistascitas')" id="btnVistasCitas" class="nav-mod">📋 Vistas citas</button>
+      <button onclick="cargarPagina('vistascitas')"   id="btnVistasCitas"   class="nav-mod">📋 Vistas citas</button>
+      <button onclick="cargarPagina('ultimasventas')" id="btnUltimasVentas" class="nav-mod">🛒 Últimas ventas</button>
     </div>
     <hr style="border:none;border-top:1px solid var(--gray-200);margin:0 0 12px">
   </div>
@@ -59,7 +60,8 @@
       'empleados':   'empleados/index.html',
       'selecciones': 'ajustes/index.html',
       'nuevacita':   'nueva-cita/index.html',
-      'vistascitas': 'lista-citas/index.html',
+      'vistascitas':   'lista-citas/index.html',
+      'ultimasventas': 'ultimas-ventas/index.html',
     };
 
     const BTN_IDS = {
@@ -72,7 +74,8 @@
       'empleados':   'btnEmpleados',
       'selecciones': 'btnSelecciones',
       'nuevacita':   'btnNuevaCita',
-      'vistascitas': 'btnVistasCitas',
+      'vistascitas':   'btnVistasCitas',
+      'ultimasventas': 'btnUltimasVentas',
     };
 
     function cargarPagina(nombre) {
