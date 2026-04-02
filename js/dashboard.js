@@ -41,12 +41,17 @@ async function loadDashboard() {
 
   if (modulos.includes('ventas')) {
     dashGrid.innerHTML += `
-      <div class="card">
-        <div class="card-header">
-          <h3>Últimas Ventas</h3>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="display:flex;gap:0;border-bottom:1px solid var(--gray-100)">
+          <div style="flex:1;padding:12px;text-align:center;border-right:1px solid var(--gray-100)"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">HOY</div><div id="uvStatHoy" style="font-size:18px;font-weight:800;color:var(--primary)">—</div></div>
+          <div style="flex:1;padding:12px;text-align:center;border-right:1px solid var(--gray-100)"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">MES</div><div id="uvStatMes" style="font-size:18px;font-weight:800;color:var(--gray-800)">—</div></div>
+          <div style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">VENTAS</div><div id="uvStatCount" style="font-size:18px;font-weight:800;color:var(--gray-800)">—</div></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px 8px">
+          <h3 style="font-size:14px;font-weight:700;color:var(--gray-800);margin:0">Últimas Ventas</h3>
           <a href="#" onclick="showSection('ventas')" class="ver-mas">Ver todas</a>
         </div>
-        <div id="ultimasVentas" class="list-empty"><p>No hay ventas hoy</p></div>
+        <div id="ultimasVentas" style="padding:0 12px 12px;display:flex;flex-direction:column;gap:6px"><p class="empty-text">No hay ventas hoy</p></div>
       </div>`;
   }
 
@@ -91,6 +96,14 @@ async function loadDashboard() {
       .eq('negocio_id', negocioId).gte('created_at', hoy + 'T00:00:00');
     const total = (ventasHoy || []).reduce((s, v) => s + v.total, 0);
     document.getElementById('statVentasHoy')?.textContent && (document.getElementById('statVentasHoy').textContent = formatMoney(total));
+
+    const inicioMes = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
+    const { data: ventasMes } = await db.from('ventas').select('total')
+      .eq('negocio_id', negocioId).gte('created_at', inicioMes + 'T00:00:00');
+    const totalMes = (ventasMes || []).reduce((s, v) => s + v.total, 0);
+    document.getElementById('uvStatHoy')   && (document.getElementById('uvStatHoy').textContent   = formatMoney(total));
+    document.getElementById('uvStatMes')   && (document.getElementById('uvStatMes').textContent   = formatMoney(totalMes));
+    document.getElementById('uvStatCount') && (document.getElementById('uvStatCount').textContent = (ventasHoy || []).length);
 
     const { data: ultimas } = await db.from('ventas')
       .select('id, total, created_at, venta_items(cantidad, precio_unitario, productos(nombre))')
@@ -148,18 +161,31 @@ function renderUltimasVentas(ventas) {
     return;
   }
 
-  el.innerHTML = ventas.map(v => {
-    const item = v.venta_items?.[0];
-    const nombreProducto = item?.productos?.nombre || 'Venta';
-    return `
-      <div class="movimiento-item">
-        <div class="movimiento-info">
-          <span class="movimiento-desc">${nombreProducto}</span>
-          <span class="movimiento-hora">${formatTime(v.created_at)}</span>
+  el.innerHTML = ventas.map((v, idx) => {
+    const items    = v.venta_items || [];
+    const hora     = formatTime(v.created_at);
+    const count    = items.length;
+    const itemsHTML = items.map((it, i) => {
+      const nombre   = it.productos?.nombre || 'Producto';
+      const subtotal = (it.precio_unitario || 0) * (it.cantidad || 1);
+      const borde    = i < items.length - 1 ? 'border-bottom:1px solid var(--gray-100)' : '';
+      return `<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:12px;${borde}">
+        <span style="color:var(--gray-500)">${nombre} × ${it.cantidad || 1}</span>
+        <span style="font-weight:700;color:var(--gray-700)">${formatMoney(subtotal)}</span>
+      </div>`;
+    }).join('');
+
+    return `<div style="background:var(--gray-50);border-radius:10px;overflow:hidden">
+      <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.db-chv').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':''" style="display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta #${String(idx + 1).padStart(3,'0')}</div>
+          <div style="font-size:11px;color:var(--gray-400);margin-top:1px">${hora} · ${count} prod.</div>
         </div>
-        <span class="movimiento-monto ingreso">${formatMoney(v.total)}</span>
+        <span style="font-size:13px;font-weight:700;color:#10B981;flex-shrink:0">${formatMoney(v.total)}</span>
+        <svg class="db-chv" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-    `;
+      <div style="display:none;padding:0 12px 10px;background:var(--white)">${itemsHTML}</div>
+    </div>`;
   }).join('');
 }
 
