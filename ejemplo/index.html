@@ -93,9 +93,11 @@
           document.getElementById('contenido').innerHTML = html;
           // Re-ejecutar scripts inyectados
           document.getElementById('contenido').querySelectorAll('script').forEach(oldScript => {
-            const newScript = document.createElement('script');
-            newScript.textContent = oldScript.textContent;
-            oldScript.replaceWith(newScript);
+            try {
+              const newScript = document.createElement('script');
+              newScript.textContent = oldScript.textContent;
+              oldScript.replaceWith(newScript);
+            } catch(e) {}
           });
           lucide.createIcons();
           window.scrollTo({ top: 0, behavior: 'smooth' });
