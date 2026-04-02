@@ -161,9 +161,17 @@ function renderUltimasVentas(ventas) {
     return;
   }
 
+  const hoy  = new Date(); hoy.setHours(0,0,0,0);
+  const ayer = new Date(hoy); ayer.setDate(hoy.getDate() - 1);
+  const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
   el.innerHTML = ventas.map((v) => {
     const items    = v.venta_items || [];
     const hora     = formatTime(v.created_at);
+    const fechaV   = new Date(v.created_at); fechaV.setHours(0,0,0,0);
+    const etiqueta = fechaV.getTime() === hoy.getTime()  ? 'Hoy'
+                   : fechaV.getTime() === ayer.getTime() ? 'Ayer'
+                   : fechaV.getDate() + ' ' + meses[fechaV.getMonth()];
     const primero  = items[0]?.productos?.nombre || items[0]?.descripcion || 'Venta';
     const extra    = items.length > 1 ? ` <span style="font-size:11px;font-weight:500;color:var(--gray-400)">+${items.length - 1} más</span>` : '';
     const itemsHTML = items.map((it, i) => {
@@ -180,7 +188,7 @@ function renderUltimasVentas(ventas) {
       <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.db-chv').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':''" style="display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer">
         <div style="flex:1;min-width:0">
           <div style="font-size:13px;font-weight:600;color:var(--gray-800)">${primero}${extra}</div>
-          <div style="font-size:11px;color:var(--gray-400);margin-top:1px">${hora}</div>
+          <div style="font-size:11px;color:var(--gray-400);margin-top:1px">${etiqueta} · ${hora}</div>
         </div>
         <span style="font-size:13px;font-weight:700;color:#10B981;flex-shrink:0">${formatMoney(v.total)}</span>
         <svg class="db-chv" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>

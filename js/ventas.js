@@ -92,36 +92,38 @@ function renderVentasAcordeon(ventas) {
   const ayer   = new Date(hoy); ayer.setDate(hoy.getDate() - 1);
   const meses  = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 
-  el.innerHTML = ventas.map((v, idx) => {
+  el.innerHTML = ventas.map((v) => {
     const hora   = formatTime(v.created_at);
     const fechaV = new Date(v.created_at); fechaV.setHours(0,0,0,0);
     let etiqueta;
     if (fechaV.getTime() === hoy.getTime())  etiqueta = 'Hoy';
     else if (fechaV.getTime() === ayer.getTime()) etiqueta = 'Ayer';
     else etiqueta = fechaV.getDate() + ' ' + meses[fechaV.getMonth()];
-    const items  = v.venta_items || [];
-    const count  = items.length;
+    const items   = v.venta_items || [];
+    const primero = items[0]?.productos?.nombre || items[0]?.descripcion || 'Venta';
+    const extra   = items.length > 1 ? ` <span style="font-size:11px;font-weight:500;color:var(--gray-400)">+${items.length - 1} más</span>` : '';
     const itemsHTML = items.map((it, i) => {
-      const nombre = it.productos?.nombre || it.descripcion || 'Producto';
+      const nombre   = it.productos?.nombre || it.descripcion || 'Producto';
       const subtotal = (it.precio_unitario || 0) * (it.cantidad || 1);
-      const borde = i < items.length - 1 ? 'border-bottom:1px solid var(--gray-100)' : '';
+      const borde    = i < items.length - 1 ? 'border-bottom:1px solid var(--gray-100)' : 'border-bottom:1px solid var(--gray-200)';
       return `<div style="display:flex;justify-content:space-between;padding:7px 0;font-size:13px;${borde}">
-        <span style="color:var(--gray-600)">${nombre} × ${it.cantidad || 1}</span>
-        <span style="font-weight:700;color:var(--gray-800)">${formatMoney(subtotal)}</span>
+        <span style="color:var(--gray-500)">${nombre} × ${it.cantidad || 1}</span>
+        <span style="font-weight:600;color:var(--gray-700)">${formatMoney(subtotal)}</span>
       </div>`;
     }).join('');
 
     return `<div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
       <div onclick="venToggleAcord(this)" style="display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer">
         <div style="flex:1;min-width:0">
-          <div style="font-size:14px;font-weight:600;color:var(--gray-800)">Venta #${String(idx + 1).padStart(3,'0')}</div>
-          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">${etiqueta} · ${hora} · ${count} producto${count !== 1 ? 's' : ''}</div>
+          <div style="font-size:14px;font-weight:600;color:var(--gray-800)">${primero}${extra}</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">${etiqueta} · ${hora}</div>
         </div>
         <span style="font-size:14px;font-weight:700;color:#10B981;flex-shrink:0">${formatMoney(v.total)}</span>
         <svg class="ven-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="ven-acord-body" style="display:none;padding:0 16px 12px;background:var(--gray-50)">
         ${itemsHTML}
+        <div style="display:flex;justify-content:space-between;padding:8px 0 0"><span style="font-size:12px;font-weight:700;color:var(--gray-600)">Total</span><span style="font-size:15px;font-weight:800;color:#10B981">${formatMoney(v.total)}</span></div>
       </div>
     </div>`;
   }).join('');
