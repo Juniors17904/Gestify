@@ -8,12 +8,31 @@ async function loadVentas() {
 
   if (tieneInventario) actualizarSelectProductos();
 
-  const hoy = new Date().toISOString().split('T')[0];
-  const filtro = document.getElementById('filtroFechaVenta');
-  if (!filtro.value) filtro.value = hoy;
-
-  await filtrarVentas();
+  await ventasPeriodo('hoy');
   cargarStatsVentas();
+}
+
+function ventasPeriodo(periodo) {
+  const hoy = new Date();
+  hoy.setHours(0,0,0,0);
+  let desde;
+  if (periodo === 'hoy')   { desde = new Date(hoy); }
+  if (periodo === 'semana'){ desde = new Date(hoy); desde.setDate(hoy.getDate() - 6); }
+  if (periodo === '2sem')  { desde = new Date(hoy); desde.setDate(hoy.getDate() - 13); }
+  if (periodo === 'mes')   { desde = new Date(hoy.getFullYear(), hoy.getMonth(), 1); }
+
+  // Marcar botón activo
+  ['hoy','semana','2sem','mes'].forEach(p => {
+    const btn = document.getElementById('vp-' + p);
+    if (!btn) return;
+    const activo = p === periodo;
+    btn.style.background = activo ? 'var(--white)' : 'transparent';
+    btn.style.color      = activo ? 'var(--primary)' : 'var(--gray-500)';
+    btn.style.fontWeight = activo ? '700' : '600';
+    btn.style.boxShadow  = activo ? '0 1px 3px rgba(0,0,0,0.1)' : 'none';
+  });
+
+  filtrarVentasPorRango(desde.toISOString().split('T')[0]);
 }
 
 async function cargarStatsVentas() {
@@ -41,14 +60,19 @@ async function cargarStatsVentas() {
 }
 
 async function filtrarVentas() {
-  const fecha = document.getElementById('filtroFechaVenta').value;
+  const hoy = new Date().toISOString().split('T')[0];
+  await filtrarVentasPorRango(hoy);
+}
+
+async function filtrarVentasPorRango(desde) {
+  const hasta = new Date().toISOString().split('T')[0];
 
   const { data, error } = await db
     .from('ventas')
     .select('id, total, created_at, venta_items(cantidad, precio_unitario, productos(nombre))')
     .eq('negocio_id', currentBusiness?.id)
-    .gte('created_at', fecha + 'T00:00:00')
-    .lte('created_at', fecha + 'T23:59:59')
+    .gte('created_at', desde + 'T00:00:00')
+    .lte('created_at', hasta + 'T23:59:59')
     .order('created_at', { ascending: false });
 
   if (error) { showToast('Error al cargar ventas', 'error'); return; }
