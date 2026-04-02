@@ -161,30 +161,34 @@ function renderUltimasVentas(ventas) {
     return;
   }
 
-  el.innerHTML = ventas.map((v, idx) => {
+  el.innerHTML = ventas.map((v) => {
     const items    = v.venta_items || [];
     const hora     = formatTime(v.created_at);
-    const count    = items.length;
+    const primero  = items[0]?.productos?.nombre || items[0]?.descripcion || 'Venta';
+    const extra    = items.length > 1 ? ` <span style="font-size:11px;font-weight:500;color:var(--gray-400)">+${items.length - 1} más</span>` : '';
     const itemsHTML = items.map((it, i) => {
-      const nombre   = it.productos?.nombre || 'Producto';
+      const nombre   = it.productos?.nombre || it.descripcion || 'Producto';
       const subtotal = (it.precio_unitario || 0) * (it.cantidad || 1);
-      const borde    = i < items.length - 1 ? 'border-bottom:1px solid var(--gray-100)' : '';
+      const borde    = i < items.length - 1 ? 'border-bottom:1px solid var(--gray-100)' : 'border-bottom:1px solid var(--gray-200)';
       return `<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:12px;${borde}">
         <span style="color:var(--gray-500)">${nombre} × ${it.cantidad || 1}</span>
-        <span style="font-weight:700;color:var(--gray-700)">${formatMoney(subtotal)}</span>
+        <span style="font-weight:600;color:var(--gray-700)">${formatMoney(subtotal)}</span>
       </div>`;
     }).join('');
 
     return `<div style="background:var(--gray-50);border-radius:10px;overflow:hidden">
       <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.db-chv').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':''" style="display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer">
         <div style="flex:1;min-width:0">
-          <div style="font-size:13px;font-weight:600;color:var(--gray-800)">Venta #${String(idx + 1).padStart(3,'0')}</div>
-          <div style="font-size:11px;color:var(--gray-400);margin-top:1px">${hora} · ${count} prod.</div>
+          <div style="font-size:13px;font-weight:600;color:var(--gray-800)">${primero}${extra}</div>
+          <div style="font-size:11px;color:var(--gray-400);margin-top:1px">${hora}</div>
         </div>
         <span style="font-size:13px;font-weight:700;color:#10B981;flex-shrink:0">${formatMoney(v.total)}</span>
         <svg class="db-chv" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <div style="display:none;padding:0 12px 10px;background:var(--white)">${itemsHTML}</div>
+      <div style="display:none;padding:0 12px 12px;background:var(--white)">
+        ${itemsHTML}
+        <div style="display:flex;justify-content:space-between;padding:8px 0 0"><span style="font-size:12px;font-weight:700;color:var(--gray-600)">Total</span><span style="font-size:15px;font-weight:800;color:#10B981">${formatMoney(v.total)}</span></div>
+      </div>
     </div>`;
   }).join('');
 }
