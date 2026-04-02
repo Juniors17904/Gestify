@@ -94,13 +94,12 @@
         .then(r => r.text())
         .then(html => {
           document.getElementById('contenido').innerHTML = html;
-          // Re-ejecutar scripts inyectados
-          document.getElementById('contenido').querySelectorAll('script').forEach(oldScript => {
-            try {
-              const newScript = document.createElement('script');
-              newScript.textContent = oldScript.textContent;
-              oldScript.replaceWith(newScript);
-            } catch(e) {}
+          // Re-ejecutar scripts inyectados (append a head para evitar errores de replaceWith en Chrome PC)
+          document.getElementById('contenido').querySelectorAll('script').forEach(s => {
+            if (!s.textContent.trim()) return;
+            const ns = document.createElement('script');
+            ns.textContent = s.textContent;
+            document.head.appendChild(ns);
           });
           lucide.createIcons();
           window.scrollTo({ top: 0, behavior: 'smooth' });
