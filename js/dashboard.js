@@ -94,23 +94,27 @@ async function loadDashboard() {
 
   // Cargar datos según módulos activos
   if (modulos.includes('ventas')) {
-    const { data: ventasHoy } = await db.from('ventas').select('total')
+    const { data: ventasHoy, error: e1 } = await db.from('ventas').select('total')
       .eq('negocio_id', negocioId).gte('created_at', hoy + 'T00:00:00');
-    const total = (ventasHoy || []).reduce((s, v) => s + v.total, 0);
-    document.getElementById('statVentasHoy')?.textContent && (document.getElementById('statVentasHoy').textContent = formatMoney(total));
+    if (!e1) {
+      const total = (ventasHoy || []).reduce((s, v) => s + v.total, 0);
+      document.getElementById('statVentasHoy') && (document.getElementById('statVentasHoy').textContent = formatMoney(total));
+      document.getElementById('uvStatHoy')     && (document.getElementById('uvStatHoy').textContent     = formatMoney(total));
+      document.getElementById('uvStatCount')   && (document.getElementById('uvStatCount').textContent   = (ventasHoy || []).length);
+    }
 
     const inicioMes = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
-    const { data: ventasMes } = await db.from('ventas').select('total')
+    const { data: ventasMes, error: e2 } = await db.from('ventas').select('total')
       .eq('negocio_id', negocioId).gte('created_at', inicioMes + 'T00:00:00');
-    const totalMes = (ventasMes || []).reduce((s, v) => s + v.total, 0);
-    document.getElementById('uvStatHoy')   && (document.getElementById('uvStatHoy').textContent   = formatMoney(total));
-    document.getElementById('uvStatMes')   && (document.getElementById('uvStatMes').textContent   = formatMoney(totalMes));
-    document.getElementById('uvStatCount') && (document.getElementById('uvStatCount').textContent = (ventasHoy || []).length);
+    if (!e2) {
+      const totalMes = (ventasMes || []).reduce((s, v) => s + v.total, 0);
+      document.getElementById('uvStatMes') && (document.getElementById('uvStatMes').textContent = formatMoney(totalMes));
+    }
 
-    const { data: ultimas } = await db.from('ventas')
+    const { data: ultimas, error: e3 } = await db.from('ventas')
       .select('id, total, created_at, venta_items(cantidad, precio_unitario, productos(nombre))')
       .eq('negocio_id', negocioId).order('created_at', { ascending: false }).limit(5);
-    renderUltimasVentas(ultimas || []);
+    renderUltimasVentas(e3 ? [] : (ultimas || []));
   }
 
   if (modulos.includes('inventario')) {
@@ -118,17 +122,21 @@ async function loadDashboard() {
       .select('*', { count: 'exact', head: true }).eq('negocio_id', negocioId);
     document.getElementById('statProductos') && (document.getElementById('statProductos').textContent = totalProductos || 0);
 
-    const { data: stockBajo } = await db.from('productos')
+    const { data: stockBajo, error: e4 } = await db.from('productos')
       .select('nombre, stock, stock_minimo').eq('negocio_id', negocioId).lte('stock', 5);
-    document.getElementById('statStockBajo') && (document.getElementById('statStockBajo').textContent = stockBajo?.length || 0);
-    renderStockBajo(stockBajo || []);
+    if (!e4) {
+      document.getElementById('statStockBajo') && (document.getElementById('statStockBajo').textContent = stockBajo?.length || 0);
+      renderStockBajo(stockBajo || []);
+    }
   }
 
   if (modulos.includes('caja')) {
-    const { data: ingresos } = await db.from('caja').select('monto').eq('negocio_id', negocioId).eq('tipo', 'ingreso');
-    const { data: egresos }  = await db.from('caja').select('monto').eq('negocio_id', negocioId).eq('tipo', 'egreso');
-    const saldo = (ingresos || []).reduce((s, r) => s + r.monto, 0) - (egresos || []).reduce((s, r) => s + r.monto, 0);
-    document.getElementById('statCaja') && (document.getElementById('statCaja').textContent = formatMoney(saldo));
+    const { data: ingresos, error: e5 } = await db.from('caja').select('monto').eq('negocio_id', negocioId).eq('tipo', 'ingreso');
+    const { data: egresos,  error: e6 } = await db.from('caja').select('monto').eq('negocio_id', negocioId).eq('tipo', 'egreso');
+    if (!e5 && !e6) {
+      const saldo = (ingresos || []).reduce((s, r) => s + r.monto, 0) - (egresos || []).reduce((s, r) => s + r.monto, 0);
+      document.getElementById('statCaja') && (document.getElementById('statCaja').textContent = formatMoney(saldo));
+    }
   }
 
   if (modulos.includes('empleados')) {
@@ -140,17 +148,17 @@ async function loadDashboard() {
     const { count } = await db.from('clientes').select('*', { count: 'exact', head: true }).eq('negocio_id', negocioId);
     document.getElementById('statClientes') && (document.getElementById('statClientes').textContent = count || 0);
 
-    const { data: ultimos } = await db.from('clientes')
+    const { data: ultimos, error: e7 } = await db.from('clientes')
       .select('id, nombre, telefono').eq('negocio_id', negocioId)
       .order('created_at', { ascending: false }).limit(3);
-    renderUltimosClientes(ultimos || []);
+    renderUltimosClientes(e7 ? [] : (ultimos || []));
   }
 
   if (modulos.includes('agenda')) {
-    const { data: citasHoy } = await db.from('citas')
+    const { data: citasHoy, error: e8 } = await db.from('citas')
       .select('id, hora, duracion, servicio, estado, clientes(nombre)')
       .eq('negocio_id', negocioId).eq('fecha', hoy).order('hora');
-    const lista = citasHoy || [];
+    const lista = e8 ? [] : (citasHoy || []);
     document.getElementById('statAgenda') && (document.getElementById('statAgenda').textContent = lista.length);
     renderCitasHoy(lista);
   }

@@ -37,6 +37,7 @@ function ventasPeriodo(periodo) {
 
 async function cargarStatsVentas() {
   const negocioId = currentBusiness?.id;
+  if (!negocioId) return;
   const hoy = new Date().toISOString().split('T')[0];
   const inicioMes = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
 
@@ -65,12 +66,14 @@ async function filtrarVentas() {
 }
 
 async function filtrarVentasPorRango(desde) {
+  const negocioId = currentBusiness?.id;
+  if (!negocioId) return;
   const hasta = new Date().toISOString().split('T')[0];
 
   const { data, error } = await db
     .from('ventas')
     .select('id, total, created_at, venta_items(cantidad, precio_unitario, productos(nombre))')
-    .eq('negocio_id', currentBusiness?.id)
+    .eq('negocio_id', negocioId)
     .gte('created_at', desde + 'T00:00:00')
     .lte('created_at', hasta + 'T23:59:59')
     .order('created_at', { ascending: false });

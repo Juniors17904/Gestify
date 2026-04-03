@@ -140,6 +140,7 @@ function setupDashboardUI(nombre, negocioNombre, rol) {
     const a = document.createElement('a');
     a.href = '#';
     a.className = 'nav-item nav-modulo';
+    a.dataset.section = m.id;
     a.setAttribute('onclick', `showSection('${m.id}')`);
     a.innerHTML = `<span class="nav-icon"><i data-lucide="${m.icon}"></i></span> ${m.label}`;
     sidebarNav.appendChild(a);
@@ -153,6 +154,7 @@ function setupDashboardUI(nombre, negocioNombre, rol) {
     const a = document.createElement('a');
     a.className = 'bottom-nav-item bottom-modulo';
     a.href = '#';
+    a.dataset.section = m.id;
     a.setAttribute('onclick', `showSection('${m.id}')`);
     a.innerHTML = `<i data-lucide="${m.icon}"></i><span>${m.label}</span>`;
     bottomNav.appendChild(a);
@@ -230,12 +232,12 @@ function showSection(name) {
     section.classList.add('active');
   }
 
-  const navItem = document.querySelector(`.nav-item[onclick="showSection('${name}')"]`);
+  const navItem = document.querySelector(`.nav-item[data-section="${name}"]`);
   if (navItem) navItem.classList.add('active');
 
   // Bottom nav activo
   document.querySelectorAll('.bottom-nav-item').forEach(n => n.classList.remove('active'));
-  const bottomItem = document.querySelector(`.bottom-nav-item[onclick="showSection('${name}')"]`);
+  const bottomItem = document.querySelector(`.bottom-nav-item[data-section="${name}"]`);
   if (bottomItem) bottomItem.classList.add('active');
 
   const titles = {
