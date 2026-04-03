@@ -263,16 +263,16 @@ function showSection(name) {
   if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
-function loadSection(name) {
+async function loadSection(name) {
   switch (name) {
-    case 'dashboard': loadDashboard(); break;
-    case 'inventario': loadInventario(); break;
-    case 'ventas': loadVentas(); break;
-    case 'caja': loadCaja(); break;
-    case 'clientes': loadClientes(); break;
-    case 'agenda': loadAgenda(); break;
-    case 'empleados': loadEmpleados(); break;
-    case 'reportes': cargarReporte(); break;
+    case 'dashboard':   await loadDashboard();   break;
+    case 'inventario':  await loadInventario();  break;
+    case 'ventas':      await loadVentas();      break;
+    case 'caja':        await loadCaja();        break;
+    case 'clientes':    await loadClientes();    break;
+    case 'agenda':      await loadAgenda();      break;
+    case 'empleados':   await loadEmpleados();   break;
+    case 'reportes':    await cargarReporte();   break;
   }
 }
 

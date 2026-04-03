@@ -17,7 +17,7 @@ async function cargarReporte() {
   const totalVentas = (ventas || []).reduce((s, v) => s + v.total, 0);
   const totalTransacciones = ventas?.length || 0;
   const totalProductosVendidos = (ventas || []).reduce((s, v) =>
-    s + (v.venta_items?.[0]?.cantidad || 0), 0);
+    s + (v.venta_items || []).reduce((acc, it) => acc + (it.cantidad || 0), 0), 0);
 
   document.getElementById('reporteTotalVentas').textContent = formatMoney(totalVentas);
   document.getElementById('reporteTransacciones').textContent = totalTransacciones;
@@ -35,11 +35,12 @@ function renderTopProductos(ventas) {
 
   const agrupado = {};
   ventas.forEach(v => {
-    const item = v.venta_items?.[0];
-    const nombre = item?.productos?.nombre || 'Producto';
-    if (!agrupado[nombre]) agrupado[nombre] = { cantidad: 0, total: 0 };
-    agrupado[nombre].cantidad += item?.cantidad || 0;
-    agrupado[nombre].total += v.total;
+    (v.venta_items || []).forEach(item => {
+      const nombre = item?.productos?.nombre || 'Producto';
+      if (!agrupado[nombre]) agrupado[nombre] = { cantidad: 0, total: 0 };
+      agrupado[nombre].cantidad += item?.cantidad || 0;
+      agrupado[nombre].total += (item.precio_unitario || 0) * (item.cantidad || 0);
+    });
   });
 
   const top = Object.entries(agrupado)
@@ -99,18 +100,17 @@ async function exportarReporte() {
 
   if (!ventas?.length) { showToast('Sin datos para exportar', 'error'); return; }
 
-  const headers = 'Fecha,Hora,Producto,Cantidad,Precio Unit.,Total';
-  const rows = ventas.map(v => {
-    const item = v.venta_items?.[0];
-    return [
+  const headers = 'Fecha,Hora,Producto,Cantidad,Precio Unit.,Subtotal';
+  const rows = ventas.flatMap(v =>
+    (v.venta_items || []).map(item => [
       formatDate(v.created_at),
       formatTime(v.created_at),
       item?.productos?.nombre || '',
       item?.cantidad || '',
       item?.precio_unitario || '',
-      v.total
-    ].join(',');
-  });
+      (item?.precio_unitario || 0) * (item?.cantidad || 0)
+    ].join(','))
+  );
 
   const csv = [headers, ...rows].join('\n');
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
