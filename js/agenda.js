@@ -5,6 +5,7 @@ let editandoCitaId = null;
 let agendaFechaActual = new Date();
 
 async function loadAgenda() {
+  if (!currentBusiness?.id) return;
   agendaFechaActual = agendaFechaActual || new Date();
   await cargarCitasDelDia();
 }
@@ -229,7 +230,7 @@ function abrirModalCita(fechaStr) {
   const hh = now.getHours().toString().padStart(2, '0');
   const mm = now.getMinutes().toString().padStart(2, '0');
   document.getElementById('citaHora').value = hh + ':' + mm;
-  if (typeof ncTimePicker !== 'undefined') ncTimePicker.init(hh + ':' + mm);
+  try { if (typeof ncTimePicker !== 'undefined') ncTimePicker.init(hh + ':' + mm); } catch(e) {}
   document.getElementById('citaDuracion').value = '60';
   document.getElementById('citaServicio').value = '';
   document.getElementById('citaEstado').value = 'pendiente';

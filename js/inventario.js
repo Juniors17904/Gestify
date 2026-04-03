@@ -4,10 +4,11 @@ let productos = [];
 let editandoProductoId = null;
 
 async function loadInventario() {
+  if (!currentBusiness?.id) return;
   const { data, error } = await db
     .from('productos')
     .select('*')
-    .eq('negocio_id', currentBusiness?.id)
+    .eq('negocio_id', currentBusiness.id)
     .order('nombre');
 
   if (error) { showToast('Error al cargar inventario', 'error'); return; }

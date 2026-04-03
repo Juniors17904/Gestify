@@ -1,10 +1,12 @@
 // ===== EMPLEADOS =====
 
 async function loadEmpleados() {
+  const negocioId = currentBusiness?.id;
+  if (!negocioId) return;
   const { data, error } = await db
     .from('empleados')
     .select('*')
-    .eq('negocio_id', currentBusiness?.id || currentUser.id)
+    .eq('negocio_id', negocioId)
     .order('nombre');
 
   if (error) { showToast('Error al cargar empleados', 'error'); return; }
