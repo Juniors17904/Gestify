@@ -5,7 +5,7 @@ async function loadDashboard() {
   if (!negocioId) return;
 
   const modulos = currentBusiness?.modulos || [];
-  const hoy = new Date().toISOString().split('T')[0];
+  const hoy = fechaLocal(new Date());
 
   // Renderizar stats según módulos activos
   const statsGrid = document.getElementById('statsGrid');
@@ -103,7 +103,7 @@ async function loadDashboard() {
       document.getElementById('uvStatCount')   && (document.getElementById('uvStatCount').textContent   = (ventasHoy || []).length);
     }
 
-    const inicioMes = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
+    const inicioMes = fechaLocal(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
     const { data: ventasMes, error: e2 } = await db.from('ventas').select('total')
       .eq('negocio_id', negocioId).gte('created_at', inicioMes + 'T00:00:00');
     if (!e2) {

@@ -8,11 +8,10 @@ async function loadVentas() {
 
   if (tieneInventario) actualizarSelectProductos();
 
-  await ventasPeriodo('hoy');
-  cargarStatsVentas();
+  await Promise.all([ventasPeriodo('hoy'), cargarStatsVentas()]);
 }
 
-function ventasPeriodo(periodo) {
+async function ventasPeriodo(periodo) {
   const hoy = new Date();
   hoy.setHours(0,0,0,0);
   let desde;
@@ -32,14 +31,14 @@ function ventasPeriodo(periodo) {
     btn.style.boxShadow  = activo ? '0 1px 3px rgba(0,0,0,0.1)' : 'none';
   });
 
-  filtrarVentasPorRango(desde.toISOString().split('T')[0]);
+  await filtrarVentasPorRango(fechaLocal(desde));
 }
 
 async function cargarStatsVentas() {
   const negocioId = currentBusiness?.id;
   if (!negocioId) return;
-  const hoy = new Date().toISOString().split('T')[0];
-  const inicioMes = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
+  const hoy = fechaLocal(new Date());
+  const inicioMes = fechaLocal(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
 
   const [{ data: ventasHoy }, { data: ventasMes }] = await Promise.all([
     db.from('ventas').select('total').eq('negocio_id', negocioId)
@@ -61,14 +60,13 @@ async function cargarStatsVentas() {
 }
 
 async function filtrarVentas() {
-  const hoy = new Date().toISOString().split('T')[0];
-  await filtrarVentasPorRango(hoy);
+  await filtrarVentasPorRango(fechaLocal(new Date()));
 }
 
 async function filtrarVentasPorRango(desde) {
   const negocioId = currentBusiness?.id;
   if (!negocioId) return;
-  const hasta = new Date().toISOString().split('T')[0];
+  const hasta = fechaLocal(new Date());
 
   const { data, error } = await db
     .from('ventas')

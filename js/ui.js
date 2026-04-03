@@ -340,6 +340,13 @@ function showToast(msg, type = '') {
 }
 
 // Formatear
+function fechaLocal(d) {
+  const yyyy = d.getFullYear();
+  const mm   = String(d.getMonth() + 1).padStart(2, '0');
+  const dd   = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
 function formatRol(rol) {
   const roles = { admin: 'Admin', empleado: 'Empleado', readonly: 'Solo Lectura' };
   return roles[rol] || rol;
