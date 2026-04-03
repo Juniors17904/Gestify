@@ -1,0 +1,150 @@
+<!-- Tabs de ajustes -->
+<div class="ajustes-tabs">
+  <button class="ajuste-tab active" onclick="showAjusteTab('negocio')">
+    <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    Negocio
+  </button>
+  <button class="ajuste-tab" onclick="showAjusteTab('misnegocios')">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    Negocios
+  </button>
+  <button class="ajuste-tab" onclick="showAjusteTab('cuenta')">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Cuenta
+  </button>
+  <button class="ajuste-tab" onclick="showAjusteTab('apariencia')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    Tema
+  </button>
+  <button class="ajuste-tab" onclick="showAjusteTab('plan')">
+    <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    Plan
+  </button>
+</div>
+
+<!-- TAB: Negocio -->
+<div id="ajuste-negocio" class="ajuste-panel card ajustes-card">
+  <h3>Información del Negocio</h3>
+  <div class="form-group">
+    <label>Nombre del negocio</label>
+    <input type="text" id="ajusteNombreNegocio" placeholder="Nombre de tu negocio">
+  </div>
+  <button class="acordeon-btn" id="btnVerMas" onclick="toggleAcordeon()" type="button">
+    <span id="acordeonLabel">Más información</span>
+    <svg id="acordeonIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;transition:transform 0.2s"><polyline points="6 9 12 15 18 9"/></svg>
+  </button>
+  <div id="acordeonExtra" style="display:none;overflow:hidden">
+    <div class="form-group" style="margin-top:12px">
+      <label>RUC / DNI</label>
+      <input type="text" id="ajusteRuc" placeholder="Ej: 20123456789">
+    </div>
+    <div class="form-group">
+      <label>Teléfono</label>
+      <input type="tel" id="ajusteTelefono" placeholder="Ej: 999 888 777">
+    </div>
+    <div class="form-group">
+      <label>Dirección</label>
+      <input type="text" id="ajusteDireccion" placeholder="Av. Principal 123">
+    </div>
+    <div class="form-group">
+      <label>Tipo de negocio</label>
+      <input type="text" id="ajusteTipo" placeholder="Describe tu actividad" maxlength="60">
+    </div>
+    <div class="form-group">
+      <label>Moneda</label>
+      <select id="ajusteMoneda">
+        <option value="S/">Soles (S/)</option>
+        <option value="$">Dólares ($)</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group" style="margin-top:12px">
+    <label>Módulos activos</label>
+    <div id="ajusteModulos" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">
+      <label class="modulo-card"><input type="checkbox" value="inventario"><div class="mcheck"></div><div class="mnombre">Inventario</div></label>
+      <label class="modulo-card"><input type="checkbox" value="ventas"><div class="mcheck"></div><div class="mnombre">Ventas</div></label>
+      <label class="modulo-card"><input type="checkbox" value="caja"><div class="mcheck"></div><div class="mnombre">Caja</div></label>
+      <label class="modulo-card"><input type="checkbox" value="clientes"><div class="mcheck"></div><div class="mnombre">Clientes</div></label>
+      <label class="modulo-card"><input type="checkbox" value="agenda"><div class="mcheck"></div><div class="mnombre">Agenda</div></label>
+      <label class="modulo-card"><input type="checkbox" value="empleados"><div class="mcheck"></div><div class="mnombre">Accesos</div></label>
+      <label class="modulo-card"><input type="checkbox" value="reportes"><div class="mcheck"></div><div class="mnombre">Reportes</div></label>
+    </div>
+  </div>
+  <button class="btn-primary" onclick="guardarAjustes()" style="margin-top:16px">Guardar cambios</button>
+</div>
+
+<!-- TAB: Mi Cuenta -->
+<div id="ajuste-cuenta" class="ajuste-panel card ajustes-card" style="display:none">
+  <h3>Mi Cuenta</h3>
+  <div class="cuenta-avatar-section">
+    <div class="cuenta-avatar" id="cuentaAvatar">U</div>
+    <div>
+      <p id="cuentaNombreDisplay" style="font-weight:700;font-size:15px;margin:0 0 4px"></p>
+      <p id="cuentaEmailDisplay" style="font-size:13px;color:#94A3B8;margin:0"></p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Nombre visible</label>
+    <input type="text" id="ajusteNombreUsuario" placeholder="Tu nombre">
+  </div>
+  <button class="btn-primary" onclick="guardarCuenta()" style="margin-bottom:16px">Guardar nombre</button>
+  <hr style="border:none;border-top:1px solid #F0F2F5;margin:8px 0 20px">
+  <h3>Cambiar contraseña</h3>
+  <div class="form-group">
+    <label>Nueva contraseña</label>
+    <input type="password" id="nuevaPassword" placeholder="Mínimo 6 caracteres" minlength="6">
+  </div>
+  <button class="btn-primary" onclick="cambiarPassword()">Actualizar contraseña</button>
+</div>
+
+<!-- TAB: Apariencia -->
+<div id="ajuste-apariencia" class="ajuste-panel card ajustes-card" style="display:none">
+  <h3>Apariencia</h3>
+  <div class="form-group">
+    <label>Tema</label>
+    <div class="tema-options">
+      <div class="tema-option active" id="temaClaro" onclick="setTema('claro')">
+        <div class="tema-preview claro"></div>
+        <span>Claro</span>
+      </div>
+      <div class="tema-option" id="temaOscuro" onclick="setTema('oscuro')">
+        <div class="tema-preview oscuro"></div>
+        <span>Oscuro</span>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Color principal</label>
+    <div class="color-options">
+      <div class="color-dot active" style="background:#6C63FF" onclick="setColor('#6C63FF', this)"></div>
+      <div class="color-dot" style="background:#3B82F6" onclick="setColor('#3B82F6', this)"></div>
+      <div class="color-dot" style="background:#22C55E" onclick="setColor('#22C55E', this)"></div>
+      <div class="color-dot" style="background:#F59E0B" onclick="setColor('#F59E0B', this)"></div>
+      <div class="color-dot" style="background:#EF4444" onclick="setColor('#EF4444', this)"></div>
+      <div class="color-dot" style="background:#EC4899" onclick="setColor('#EC4899', this)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: Mis Negocios -->
+<div id="ajuste-misnegocios" class="ajuste-panel card ajustes-card" style="display:none">
+  <h3 style="margin-bottom:1rem">Mis Negocios</h3>
+  <div id="misNegociosList" style="display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.25rem"></div>
+  <button class="btn-primary" onclick="mostrarSetup()" style="width:100%">+ Agregar negocio</button>
+</div>
+
+<!-- TAB: Plan -->
+<div id="ajuste-plan" class="ajuste-panel card ajustes-card" style="display:none">
+  <h3>Tu Plan</h3>
+  <div class="plan-actual">
+    <div class="plan-badge-grande" id="planBadge">Gratis</div>
+    <p id="planDesc" style="color:#64748B;font-size:13px;margin-top:8px">Plan gratuito activo</p>
+  </div>
+  <div class="plan-limites">
+    <div class="limite-item"><span>Productos</span><strong>Hasta 50</strong></div>
+    <div class="limite-item"><span>Empleados</span><strong>Hasta 2</strong></div>
+    <div class="limite-item"><span>Reportes</span><strong>Básicos</strong></div>
+    <div class="limite-item"><span>Soporte</span><strong>Comunidad</strong></div>
+  </div>
+  <button class="btn-pro" onclick="mostrarPro()">⚡ Mejorar a Pro</button>
+</div>

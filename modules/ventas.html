@@ -1,0 +1,23 @@
+<!-- Stats -->
+<div style="display:flex;gap:8px;margin-bottom:14px">
+  <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">HOY</div><div id="ven-stat-hoy" style="font-size:18px;font-weight:800;color:var(--primary)">—</div></div>
+  <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">MES</div><div id="ven-stat-mes" style="font-size:18px;font-weight:800;color:var(--gray-800)">—</div></div>
+  <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">VENTAS</div><div id="ven-stat-count" style="font-size:18px;font-weight:800;color:var(--gray-800)">—</div></div>
+</div>
+
+<!-- Filtro período + botón -->
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px">
+  <div style="display:flex;background:var(--gray-100);border-radius:10px;padding:3px;gap:2px">
+    <button id="vp-hoy"    onclick="ventasPeriodo('hoy')"    style="padding:6px 12px;border-radius:7px;border:none;background:var(--white);font-size:12px;font-weight:700;color:var(--primary);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Hoy</button>
+    <button id="vp-semana" onclick="ventasPeriodo('semana')" style="padding:6px 12px;border-radius:7px;border:none;background:transparent;font-size:12px;font-weight:600;color:var(--gray-500);cursor:pointer">Semana</button>
+    <button id="vp-2sem"   onclick="ventasPeriodo('2sem')"   style="padding:6px 12px;border-radius:7px;border:none;background:transparent;font-size:12px;font-weight:600;color:var(--gray-500);cursor:pointer">2 sem.</button>
+    <button id="vp-mes"    onclick="ventasPeriodo('mes')"    style="padding:6px 12px;border-radius:7px;border:none;background:transparent;font-size:12px;font-weight:600;color:var(--gray-500);cursor:pointer">Mes</button>
+  </div>
+  <button class="btn-primary" onclick="showModal('modalVenta')">+ Nueva</button>
+</div>
+<input type="hidden" id="filtroFechaVenta">
+
+<!-- Acordeón -->
+<div id="ventasLista" style="display:flex;flex-direction:column;gap:6px">
+  <div class="list-empty"><p>Sin ventas para esta fecha</p></div>
+</div>

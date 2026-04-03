@@ -1,0 +1,67 @@
+<!-- Toggle Día / Semana / Mes -->
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+  <h2 style="font-size:1.2rem;font-weight:700;color:var(--gray-800);margin:0">Citas</h2>
+  <div style="display:flex;background:var(--gray-100);border-radius:10px;padding:4px">
+    <button id="agenda-btn-dia"    onclick="agendaVista('dia')"    style="padding:7px 16px;border-radius:8px;border:none;background:var(--white);font-size:14px;font-weight:700;color:var(--primary);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Día</button>
+    <button id="agenda-btn-semana" onclick="agendaVista('semana')" style="padding:7px 16px;border-radius:8px;border:none;background:transparent;font-size:14px;font-weight:600;color:var(--gray-500);cursor:pointer">Semana</button>
+    <button id="agenda-btn-mes"    onclick="agendaVista('mes')"    style="padding:7px 16px;border-radius:8px;border:none;background:transparent;font-size:14px;font-weight:600;color:var(--gray-500);cursor:pointer">Mes</button>
+  </div>
+</div>
+
+<!-- Vista DÍA -->
+<div id="agenda-vista-dia" style="display:block">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <button onclick="agendaCambiarDia(-1)" style="width:40px;height:40px;border-radius:12px;border:1.5px solid var(--gray-200);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.08);flex-shrink:0"><i data-lucide="chevron-left" style="width:18px;height:18px;stroke:var(--gray-600);stroke-width:2.5"></i></button>
+    <div style="text-align:center">
+      <div id="agendaDiaRelativo" style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:1px;visibility:hidden">Hoy</div>
+      <div id="agendaDiaNombre" style="font-size:17px;font-weight:700;color:var(--gray-800)">—</div>
+      <div id="agendaFechaLabel" style="font-size:14px;color:var(--gray-400);margin-top:2px">—</div>
+    </div>
+    <button onclick="agendaCambiarDia(1)" style="width:40px;height:40px;border-radius:12px;border:1.5px solid var(--gray-200);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.08);flex-shrink:0"><i data-lucide="chevron-right" style="width:18px;height:18px;stroke:var(--gray-600);stroke-width:2.5"></i></button>
+  </div>
+  <div class="card agenda-card">
+    <div id="agendaLista" class="agenda-lista">
+      <div class="list-empty"><p>No hay citas este día</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- Vista SEMANA -->
+<div id="agenda-vista-semana" style="display:none">
+  <div class="agenda-nav" style="margin-bottom:12px">
+    <button class="btn-icon" onclick="agendaSemanaCambiar(-1)"><i data-lucide="chevron-left"></i></button>
+    <span id="agenda-semana-label" class="agenda-fecha-label">—</span>
+    <button class="btn-icon" onclick="agendaSemanaCambiar(1)"><i data-lucide="chevron-right"></i></button>
+    <button id="agenda-semana-hoy" class="btn-secondary btn-sm" onclick="agendaSemanaIrHoy()" style="display:none">Hoy</button>
+  </div>
+  <div id="agenda-lista-semana" style="display:flex;flex-direction:column;gap:8px">
+    <div class="list-empty"><p>Cargando...</p></div>
+  </div>
+</div>
+
+<!-- Vista MES -->
+<div id="agenda-vista-mes" style="display:none">
+  <div class="agenda-nav" style="margin-bottom:12px">
+    <button class="btn-icon" onclick="agendaMesCambiar(-1)"><i data-lucide="chevron-left"></i></button>
+    <span id="agenda-mes-label" class="agenda-fecha-label">—</span>
+    <button class="btn-icon" onclick="agendaMesCambiar(1)"><i data-lucide="chevron-right"></i></button>
+    <button id="agenda-mes-hoy" class="btn-secondary btn-sm" onclick="agendaMesIrHoy()" style="display:none">Hoy</button>
+  </div>
+  <div class="card" style="padding:12px">
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:6px">
+      <span style="text-align:center;font-size:11px;font-weight:700;color:var(--gray-400)">L</span>
+      <span style="text-align:center;font-size:11px;font-weight:700;color:var(--gray-400)">M</span>
+      <span style="text-align:center;font-size:11px;font-weight:700;color:var(--gray-400)">X</span>
+      <span style="text-align:center;font-size:11px;font-weight:700;color:var(--gray-400)">J</span>
+      <span style="text-align:center;font-size:11px;font-weight:700;color:var(--gray-400)">V</span>
+      <span style="text-align:center;font-size:11px;font-weight:700;color:var(--primary)">S</span>
+      <span style="text-align:center;font-size:11px;font-weight:700;color:var(--primary)">D</span>
+    </div>
+    <div id="agenda-mes-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px"></div>
+  </div>
+  <div id="agenda-mes-detalle" style="margin-top:10px"></div>
+</div>
+
+<button class="fab-nueva-cita" onclick="abrirModalCita()" title="Nueva Cita">
+  <i data-lucide="plus"></i>
+</button>

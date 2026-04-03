@@ -1,0 +1,17 @@
+<!-- Stats -->
+<div style="display:flex;gap:8px;margin-bottom:14px">
+  <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">PRODUCTOS</div><div id="inv-stat-total" style="font-size:22px;font-weight:800;color:var(--primary)">—</div></div>
+  <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">STOCK BAJO</div><div id="inv-stat-bajo" style="font-size:22px;font-weight:800;color:#F59E0B">—</div></div>
+  <div class="card" style="flex:1;padding:12px;text-align:center"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">SIN STOCK</div><div id="inv-stat-cero" style="font-size:22px;font-weight:800;color:#EF4444">—</div></div>
+</div>
+
+<!-- Buscador -->
+<div style="display:flex;gap:8px;margin-bottom:12px">
+  <input type="text" class="search-input" placeholder="Buscar producto..." oninput="buscarProducto(this.value)" style="flex:1">
+  <button class="btn-primary" onclick="showModal('modalProducto')">+ Agregar</button>
+</div>
+
+<!-- Acordeón -->
+<div id="invLista" style="display:flex;flex-direction:column;gap:6px">
+  <div class="list-empty"><p>Sin productos aún</p></div>
+</div>

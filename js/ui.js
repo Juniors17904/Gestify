@@ -7,8 +7,22 @@ let userEmpresas = [];
 let currentRol = 'admin';
 let currentNombre = '';
 
+// Cargar HTML de módulos desde /modules/ en paralelo
+async function loadModules() {
+  const mods = ['dashboard','inventario','ventas','caja','empleados','reportes','clientes','agenda','ajustes'];
+  await Promise.all(mods.map(m =>
+    fetch('modules/' + m + '.html')
+      .then(r => r.text())
+      .then(html => { document.getElementById('section-' + m).innerHTML = html; })
+      .catch(() => {}) // si falla un módulo no bloquea el resto
+  ));
+  lucide.createIcons();
+}
+
 // Inicializar dashboard
 async function initDashboard() {
+  // Cargar módulos y auth en paralelo — los módulos son archivos locales (<50ms)
+  const modulesReady = loadModules();
   // Verificar si es sesión de empleado (login por PIN)
   const empSessionRaw = localStorage.getItem('empleadoSession');
   if (empSessionRaw) {
@@ -21,6 +35,7 @@ async function initDashboard() {
     const rol = emp.rol || 'empleado';
     const nombre = emp.nombre;
     const negocioNombre = currentBusiness?.nombre || 'Mi Negocio';
+    await modulesReady;
     setupDashboardUI(nombre, negocioNombre, rol);
     return;
   }
@@ -34,10 +49,13 @@ async function initDashboard() {
   currentUser = freshUser || session.user;
   const nombre = currentUser.user_metadata?.name || currentUser.user_metadata?.full_name || currentUser.email;
 
-  // Cargar todas las empresas del usuario (propias + como empleado)
-  const [{ data: propias }, { data: comoEmpleado }] = await Promise.all([
-    db.from('negocios').select('*').eq('owner_id', currentUser.id),
-    db.from('empleados').select('*, negocios(*)').eq('user_id', currentUser.id)
+  // Cargar todas las empresas del usuario (propias + como empleado) — en paralelo con módulos
+  const [[{ data: propias }, { data: comoEmpleado }]] = await Promise.all([
+    Promise.all([
+      db.from('negocios').select('*').eq('owner_id', currentUser.id),
+      db.from('empleados').select('*, negocios(*)').eq('user_id', currentUser.id),
+    ]),
+    modulesReady,
   ]);
 
   // Armar lista de empresas (sin duplicados)

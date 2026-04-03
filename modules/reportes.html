@@ -1,0 +1,35 @@
+<div class="reportes-toolbar">
+  <select id="reportePeriodo" onchange="cargarReporte()">
+    <option value="hoy">Hoy</option>
+    <option value="semana">Esta semana</option>
+    <option value="mes" selected>Este mes</option>
+  </select>
+  <button class="btn-secondary" onclick="exportarReporte()">📥 Exportar</button>
+</div>
+<div class="stats-grid">
+  <div class="stat-card purple">
+    <div class="stat-icon">💰</div>
+    <div class="stat-info">
+      <span class="stat-label">Total Ventas</span>
+      <span class="stat-value" id="reporteTotalVentas">S/ 0.00</span>
+    </div>
+  </div>
+  <div class="stat-card blue">
+    <div class="stat-icon">🧾</div>
+    <div class="stat-info">
+      <span class="stat-label">N° Transacciones</span>
+      <span class="stat-value" id="reporteTransacciones">0</span>
+    </div>
+  </div>
+  <div class="stat-card green">
+    <div class="stat-icon">📦</div>
+    <div class="stat-info">
+      <span class="stat-label">Productos Vendidos</span>
+      <span class="stat-value" id="reporteProductosVendidos">0</span>
+    </div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><h3>Top Productos</h3></div>
+  <div id="topProductos" class="list-empty"><p>Sin datos</p></div>
+</div>

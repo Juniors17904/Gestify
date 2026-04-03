@@ -1,0 +1,21 @@
+<div class="caja-grid">
+  <div class="card caja-resumen">
+    <h3>Estado de Caja</h3>
+    <div class="caja-monto">
+      <span>Saldo actual</span>
+      <strong id="cajaSaldo">S/ 0.00</strong>
+    </div>
+    <div class="caja-actions">
+      <button class="btn-success" onclick="showModal('modalIngreso')">+ Ingreso</button>
+      <button class="btn-danger" onclick="showModal('modalEgreso')">- Egreso</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <h3>Movimientos</h3>
+    </div>
+    <div id="movimientosCaja" class="list-empty">
+      <p>Sin movimientos hoy</p>
+    </div>
+  </div>
+</div>

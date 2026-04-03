@@ -138,6 +138,18 @@
       body.style.display      = abierto ? 'none' : 'block';
       if (chevron) chevron.style.transform = abierto ? '' : 'rotate(180deg)';
     }
+    function dbUvTab(tab, btn) {
+      document.getElementById('db-uv-v-lista').style.display    = tab === 'lista'    ? 'block' : 'none';
+      document.getElementById('db-uv-v-acordeon').style.display = tab === 'acordeon' ? 'flex'  : 'none';
+      ['lista','acordeon'].forEach(t => {
+        const b = document.getElementById('db-uv-' + t);
+        if (!b) return;
+        b.style.background = t === tab ? 'var(--white)' : 'transparent';
+        b.style.color      = t === tab ? 'var(--primary)' : 'var(--gray-500)';
+        b.style.fontWeight = t === tab ? '700' : '600';
+        b.style.boxShadow  = t === tab ? '0 1px 3px rgba(0,0,0,0.1)' : 'none';
+      });
+    }
     function uvVista(id, btn) {
       document.querySelectorAll('.uv-vista').forEach(el => el.style.display = 'none');
       document.getElementById('uv-' + id).style.display = 'block';
