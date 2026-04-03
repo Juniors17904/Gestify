@@ -14,24 +14,53 @@ async function loadVentas() {
 async function ventasPeriodo(periodo) {
   const hoy = new Date();
   hoy.setHours(0,0,0,0);
-  let desde;
-  if (periodo === 'hoy')   { desde = new Date(hoy); }
-  if (periodo === 'semana'){ desde = new Date(hoy); desde.setDate(hoy.getDate() - 6); }
-  if (periodo === '2sem')  { desde = new Date(hoy); desde.setDate(hoy.getDate() - 13); }
-  if (periodo === 'mes')   { desde = new Date(hoy.getFullYear(), hoy.getMonth(), 1); }
 
-  // Marcar botón activo
-  ['hoy','semana','2sem','mes'].forEach(p => {
-    const btn = document.getElementById('vp-' + p);
-    if (!btn) return;
-    const activo = p === periodo;
-    btn.style.background = activo ? 'var(--white)' : 'transparent';
-    btn.style.color      = activo ? 'var(--primary)' : 'var(--gray-500)';
-    btn.style.fontWeight = activo ? '700' : '600';
-    btn.style.boxShadow  = activo ? '0 1px 3px rgba(0,0,0,0.1)' : 'none';
-  });
+  // Ocultar date picker
+  const wrap = document.getElementById('filtroFechaWrap');
+  if (wrap) wrap.style.display = 'none';
 
-  await filtrarVentasPorRango(fechaLocal(desde));
+  // Marcar botón Hoy activo
+  const btnHoy = document.getElementById('vp-hoy');
+  if (btnHoy) {
+    btnHoy.style.background = 'var(--white)';
+    btnHoy.style.color      = 'var(--primary)';
+    btnHoy.style.fontWeight = '700';
+    btnHoy.style.boxShadow  = '0 1px 3px rgba(0,0,0,0.1)';
+  }
+  const btnF = document.getElementById('vp-fecha');
+  if (btnF) { btnF.style.background = 'transparent'; btnF.style.boxShadow = 'none'; }
+
+  await filtrarVentasPorRango(fechaLocal(new Date(hoy)), fechaLocal(new Date()));
+}
+
+function abrirFiltroFecha() {
+  const wrap = document.getElementById('filtroFechaWrap');
+  if (!wrap) return;
+  const visible = wrap.style.display === 'flex' || wrap.style.display === 'block';
+  wrap.style.display = visible ? 'none' : 'block';
+
+  // Marcar botón 📅 activo
+  const btnHoy = document.getElementById('vp-hoy');
+  if (btnHoy) { btnHoy.style.background = 'transparent'; btnHoy.style.color = 'var(--gray-500)'; btnHoy.style.fontWeight = '600'; btnHoy.style.boxShadow = 'none'; }
+  const btnF = document.getElementById('vp-fecha');
+  if (btnF) { btnF.style.background = visible ? 'transparent' : 'var(--white)'; btnF.style.boxShadow = visible ? 'none' : '0 1px 3px rgba(0,0,0,0.1)'; }
+
+  // Prellenar con hoy
+  if (!visible) {
+    const hoy = fechaLocal(new Date());
+    const d = document.getElementById('filtroDesde');
+    const h = document.getElementById('filtroHasta');
+    if (d && !d.value) d.value = hoy;
+    if (h && !h.value) h.value = hoy;
+  }
+}
+
+async function aplicarFiltroFecha() {
+  const desde = document.getElementById('filtroDesde')?.value;
+  const hasta = document.getElementById('filtroHasta')?.value;
+  if (!desde || !hasta) { showToast('Selecciona ambas fechas', 'error'); return; }
+  if (desde > hasta) { showToast('La fecha inicial no puede ser mayor a la final', 'error'); return; }
+  await filtrarVentasPorRango(desde, hasta);
 }
 
 async function cargarStatsVentas() {
@@ -63,10 +92,10 @@ async function filtrarVentas() {
   await filtrarVentasPorRango(fechaLocal(new Date()));
 }
 
-async function filtrarVentasPorRango(desde) {
+async function filtrarVentasPorRango(desde, hasta) {
   const negocioId = currentBusiness?.id;
   if (!negocioId) return;
-  const hasta = fechaLocal(new Date());
+  if (!hasta) hasta = fechaLocal(new Date());
 
   const { data, error } = await db
     .from('ventas')

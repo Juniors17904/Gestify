@@ -8,14 +8,26 @@
 <!-- Filtro período + botón -->
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px">
   <div style="display:flex;background:var(--gray-100);border-radius:10px;padding:3px;gap:2px">
-    <button id="vp-hoy"    onclick="ventasPeriodo('hoy')"    style="padding:6px 12px;border-radius:7px;border:none;background:var(--white);font-size:12px;font-weight:700;color:var(--primary);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Hoy</button>
-    <button id="vp-semana" onclick="ventasPeriodo('semana')" style="padding:6px 12px;border-radius:7px;border:none;background:transparent;font-size:12px;font-weight:600;color:var(--gray-500);cursor:pointer">Semana</button>
-    <button id="vp-2sem"   onclick="ventasPeriodo('2sem')"   style="padding:6px 12px;border-radius:7px;border:none;background:transparent;font-size:12px;font-weight:600;color:var(--gray-500);cursor:pointer">2 sem.</button>
-    <button id="vp-mes"    onclick="ventasPeriodo('mes')"    style="padding:6px 12px;border-radius:7px;border:none;background:transparent;font-size:12px;font-weight:600;color:var(--gray-500);cursor:pointer">Mes</button>
+    <button id="vp-hoy"   onclick="ventasPeriodo('hoy')"  style="padding:6px 12px;border-radius:7px;border:none;background:var(--white);font-size:12px;font-weight:700;color:var(--primary);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Hoy</button>
+    <button id="vp-fecha" onclick="abrirFiltroFecha()"    style="padding:6px 12px;border-radius:7px;border:none;background:transparent;font-size:14px;cursor:pointer" title="Elegir rango de fechas">📅</button>
   </div>
   <button class="btn-primary" onclick="showModal('modalVenta')">+ Nueva</button>
 </div>
-<input type="hidden" id="filtroFechaVenta">
+
+<!-- Date picker oculto -->
+<div id="filtroFechaWrap" style="display:none;margin-bottom:12px;background:var(--white);border:1px solid var(--gray-200);border-radius:12px;padding:12px">
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:120px">
+      <label style="font-size:11px;font-weight:700;color:var(--gray-400)">DESDE</label>
+      <input type="date" id="filtroDesde" style="border:1px solid var(--gray-200);border-radius:8px;padding:7px 10px;font-size:13px;color:var(--gray-800);background:var(--gray-50)">
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:120px">
+      <label style="font-size:11px;font-weight:700;color:var(--gray-400)">HASTA</label>
+      <input type="date" id="filtroHasta" style="border:1px solid var(--gray-200);border-radius:8px;padding:7px 10px;font-size:13px;color:var(--gray-800);background:var(--gray-50)">
+    </div>
+    <button onclick="aplicarFiltroFecha()" style="padding:8px 14px;background:var(--primary);color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;margin-top:14px">Buscar</button>
+  </div>
+</div>
 
 <!-- Acordeón -->
 <div id="ventasLista" style="display:flex;flex-direction:column;gap:6px">
