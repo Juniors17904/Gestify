@@ -26,6 +26,8 @@ async function loadDashboard() {
     if (statsGrid.querySelector('#' + s.id)) return;
     const div = document.createElement('div');
     div.className = `stat-card ${s.color}`;
+    div.style.cssText = 'cursor:pointer';
+    div.onclick = () => showSection(s.modulo);
     div.innerHTML = `
       <div class="stat-icon"><i data-lucide="${s.icon}"></i></div>
       <div class="stat-info">
@@ -42,9 +44,9 @@ async function loadDashboard() {
   if (modulos.includes('ventas')) {
     dashGrid.innerHTML += `
       <div class="card" style="padding:0;overflow:hidden">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px;border-bottom:1px solid var(--gray-100)">
+        <div onclick="showSection('ventas')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px;border-bottom:1px solid var(--gray-100);cursor:pointer">
           <h3 style="font-size:14px;font-weight:700;color:var(--gray-800);margin:0">Últimas Ventas</h3>
-          <a href="#" onclick="showSection('ventas')" class="ver-mas">Ver todas</a>
+          <span style="font-size:12px;color:var(--primary);font-weight:600;display:flex;align-items:center;gap:3px">Ver todas <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
         </div>
         <div style="display:flex;gap:0;border-bottom:1px solid var(--gray-100)">
           <div style="flex:1;padding:10px;text-align:center;border-right:1px solid var(--gray-100)"><div style="font-size:10px;color:var(--gray-400);font-weight:700;margin-bottom:2px">HOY</div><div id="uvStatHoy" style="font-size:17px;font-weight:800;color:var(--primary)">—</div></div>
@@ -58,9 +60,9 @@ async function loadDashboard() {
   if (modulos.includes('inventario')) {
     dashGrid.innerHTML += `
       <div class="card">
-        <div class="card-header">
+        <div class="card-header" onclick="showSection('inventario')" style="cursor:pointer">
           <h3>Stock Bajo</h3>
-          <a href="#" onclick="showSection('inventario')" class="ver-mas">Ver todos</a>
+          <span style="font-size:12px;color:var(--primary);font-weight:600;display:flex;align-items:center;gap:3px">Ver todos <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
         </div>
         <div id="stockBajoList" class="list-empty"><p>Todo en orden</p></div>
       </div>`;
@@ -69,9 +71,9 @@ async function loadDashboard() {
   if (modulos.includes('clientes')) {
     dashGrid.innerHTML += `
       <div class="card">
-        <div class="card-header">
+        <div class="card-header" onclick="showSection('clientes')" style="cursor:pointer">
           <h3>Últimos Clientes</h3>
-          <a href="#" onclick="showSection('clientes')" class="ver-mas">Ver todos</a>
+          <span style="font-size:12px;color:var(--primary);font-weight:600;display:flex;align-items:center;gap:3px">Ver todos <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
         </div>
         <div id="ultimosClientes" class="list-empty"><p>No hay clientes aún</p></div>
       </div>`;
@@ -80,9 +82,9 @@ async function loadDashboard() {
   if (modulos.includes('agenda')) {
     dashGrid.innerHTML += `
       <div class="card">
-        <div class="card-header">
+        <div class="card-header" onclick="showSection('agenda')" style="cursor:pointer">
           <h3>Citas de Hoy</h3>
-          <a href="#" onclick="showSection('agenda')" class="ver-mas">Ver todas</a>
+          <span style="font-size:12px;color:var(--primary);font-weight:600;display:flex;align-items:center;gap:3px">Ver todas <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
         </div>
         <div id="citasHoy" class="list-empty"><p>No hay citas hoy</p></div>
       </div>`;
@@ -215,7 +217,7 @@ function renderUltimosClientes(lista) {
     const idx = c.nombre.charCodeAt(0) % colores.length;
     const [bg, color] = colores[idx].split(',');
     return `
-    <div style="display:flex;align-items:center;gap:12px;padding:6px 12px;border-bottom:1px solid var(--gray-100);margin-bottom:0">
+    <div onclick="showSection('clientes')" style="display:flex;align-items:center;gap:12px;padding:6px 12px;border-bottom:1px solid var(--gray-100);margin-bottom:0;cursor:pointer">
       <div style="width:38px;height:38px;border-radius:50%;background:${bg};color:${color};font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${inicial}</div>
       <div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start">
         <div style="font-weight:600;font-size:14px;color:var(--gray-800)">${c.nombre}</div>
@@ -243,7 +245,7 @@ function renderCitasHoy(lista) {
     const nombre = c.clientes?.nombre || 'Sin cliente asignado';
     const badge = estadoBadge[c.estado] || estadoBadge.pendiente;
     return `
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-100)">
+      <div onclick="showSection('agenda')" style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-100);cursor:pointer">
         <div style="width:36px;height:36px;border-radius:10px;background:${badge.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0">
           <i data-lucide="calendar" style="width:16px;height:16px;stroke:${badge.color}"></i>
         </div>
@@ -269,7 +271,7 @@ function renderStockBajo(productos) {
   }
 
   el.innerHTML = productos.map(p => `
-    <div class="movimiento-item">
+    <div class="movimiento-item" onclick="showSection('inventario')" style="cursor:pointer">
       <span class="movimiento-desc">${p.nombre}</span>
       <span class="badge-stock ${p.stock === 0 ? 'out' : 'low'}">
         ${p.stock === 0 ? 'Sin stock' : `${p.stock} unidades`}
