@@ -168,11 +168,11 @@ function setupDashboardUI(nombre, negocioNombre, rol) {
   // Configurar ajustes - negocio
   if (document.getElementById('ajusteNombreNegocio')) {
     document.getElementById('ajusteNombreNegocio').value = negocioNombre;
-    if (currentBusiness?.tipo) document.getElementById('ajusteTipo').value = currentBusiness.tipo;
-    if (currentBusiness?.moneda) document.getElementById('ajusteMoneda').value = currentBusiness.moneda;
-    if (currentBusiness?.ruc) document.getElementById('ajusteRuc').value = currentBusiness.ruc;
-    if (currentBusiness?.telefono) document.getElementById('ajusteTelefono').value = currentBusiness.telefono;
-    if (currentBusiness?.direccion) document.getElementById('ajusteDireccion').value = currentBusiness.direccion;
+    if (currentBusiness?.tipo && document.getElementById('ajusteTipo')) document.getElementById('ajusteTipo').value = currentBusiness.tipo;
+    if (currentBusiness?.moneda && document.getElementById('ajusteMoneda')) document.getElementById('ajusteMoneda').value = currentBusiness.moneda;
+    if (currentBusiness?.ruc && document.getElementById('ajusteRuc')) document.getElementById('ajusteRuc').value = currentBusiness.ruc;
+    if (currentBusiness?.telefono && document.getElementById('ajusteTelefono')) document.getElementById('ajusteTelefono').value = currentBusiness.telefono;
+    if (currentBusiness?.direccion && document.getElementById('ajusteDireccion')) document.getElementById('ajusteDireccion').value = currentBusiness.direccion;
   }
 
   // Configurar ajustes - cuenta
@@ -483,7 +483,8 @@ async function cambiarPassword() {
 // Tema
 function setTema(tema, sincronizar = true) {
   document.querySelectorAll('.tema-option').forEach(o => o.classList.remove('active'));
-  document.getElementById('tema' + tema.charAt(0).toUpperCase() + tema.slice(1)).classList.add('active');
+  const temaEl = document.getElementById('tema' + tema.charAt(0).toUpperCase() + tema.slice(1));
+  if (temaEl) temaEl.classList.add('active');
   document.documentElement.setAttribute('data-tema', tema);
   localStorage.setItem('tema', tema);
   if (sincronizar && currentUser) {
