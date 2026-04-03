@@ -1,6 +1,6 @@
 // ===== SERVICE WORKER (PWA) =====
 
-const CACHE_NAME = 'ctrl-negocio-v6';
+const CACHE_NAME = 'ctrl-negocio-v7';
 const ASSETS = [
   '/',
   '/index.html',
@@ -19,7 +19,16 @@ const ASSETS = [
   '/js/agenda.js',
   '/js/demo.js',
   '/js/pwa.js',
-  '/manifest.json'
+  '/manifest.json',
+  '/modules/dashboard.html',
+  '/modules/inventario.html',
+  '/modules/ventas.html',
+  '/modules/caja.html',
+  '/modules/empleados.html',
+  '/modules/reportes.html',
+  '/modules/clientes.html',
+  '/modules/agenda.html',
+  '/modules/ajustes.html'
 ];
 
 // Instalar y cachear archivos

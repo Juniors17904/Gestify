@@ -381,10 +381,13 @@ function toggleAcordeon() {
 
 // Tabs de ajustes
 function showAjusteTab(tab) {
+  const panel = document.getElementById('ajuste-' + tab);
+  if (!panel) return;
   document.querySelectorAll('.ajuste-tab').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.ajuste-panel').forEach(p => p.style.display = 'none');
-  document.querySelector(`.ajuste-tab[onclick="showAjusteTab('${tab}')"]`).classList.add('active');
-  document.getElementById('ajuste-' + tab).style.display = 'block';
+  const btn = document.querySelector(`.ajuste-tab[onclick="showAjusteTab('${tab}')"]`);
+  if (btn) btn.classList.add('active');
+  panel.style.display = 'block';
   if (tab === 'misnegocios') renderMisNegocios();
 }
 
