@@ -56,15 +56,15 @@ function formatFechaLarga(d) {
   return d.toLocaleDateString('es-PE', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
 }
 
-function agendaCambiarDia(delta) {
+async function agendaCambiarDia(delta) {
   agendaFechaActual = new Date(agendaFechaActual);
   agendaFechaActual.setDate(agendaFechaActual.getDate() + delta);
-  cargarCitasDelDia();
+  await cargarCitasDelDia();
 }
 
-function agendaIrHoy() {
+async function agendaIrHoy() {
   agendaFechaActual = new Date();
-  cargarCitasDelDia();
+  await cargarCitasDelDia();
 }
 
 function renderAgendaLista(lista) {
@@ -280,7 +280,7 @@ async function guardarCita(e) {
   showToast(editandoCitaId ? 'Cita actualizada' : 'Cita agendada', 'success');
   editandoCitaId = null;
   closeModal('modalCita');
-  cargarCitasDelDia();
+  await cargarCitasDelDia();
 }
 
 async function editarCita(id) {
@@ -307,7 +307,7 @@ async function eliminarCita(id) {
   const { error } = await db.from('citas').delete().eq('id', id);
   if (error) { showToast('Error al eliminar', 'error'); return; }
   showToast('Cita eliminada', 'success');
-  cargarCitasDelDia();
+  await cargarCitasDelDia();
 }
 
 // ── Custom Time Picker ──────────────────────────────────────
