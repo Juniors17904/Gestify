@@ -149,12 +149,15 @@ function renderClientesLista(lista) {
   }
   el.style.marginTop = '8px';
   el.innerHTML = lista.map(c => `
-    <div onclick="seleccionarClienteCita('${c.id}', '${c.nombre.replace(/'/g, "\\'")}')"
+    <div data-cid="${c.id}" data-cnombre="${c.nombre.replace(/"/g, '&quot;')}"
       style="padding:10px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid var(--gray-100);color:var(--gray-800);transition:background 0.15s"
       onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background=''">
       ${c.nombre}
     </div>
   `).join('');
+  el.querySelectorAll('[data-cid]').forEach(div => {
+    div.addEventListener('click', () => seleccionarClienteCita(div.dataset.cid, div.dataset.cnombre));
+  });
 }
 
 function filtrarClientesLista() {

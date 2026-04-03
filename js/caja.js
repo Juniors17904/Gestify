@@ -1,7 +1,8 @@
 // ===== CAJA =====
 
 async function loadCaja() {
-  const negocioId = currentBusiness?.id || currentUser.id;
+  const negocioId = currentBusiness?.id;
+  if (!negocioId) return;
   const hoy = new Date().toISOString().split('T')[0];
 
   // Calcular saldo total

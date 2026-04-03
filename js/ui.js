@@ -98,7 +98,7 @@ function setupDashboardUI(nombre, negocioNombre, rol) {
   currentNombre = nombre;
   // Actualizar UI
   document.getElementById('businessName').textContent = negocioNombre;
-  document.getElementById('businessAvatar').textContent = negocioNombre[0].toUpperCase();
+  document.getElementById('businessAvatar').textContent = (negocioNombre?.[0] || 'N').toUpperCase();
   renderAvatar(document.getElementById('headerAvatar'), nombre);
   document.getElementById('userRole').textContent = formatRol(rol);
 
