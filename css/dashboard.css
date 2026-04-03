@@ -879,10 +879,22 @@
   font-size: 10px;
   font-weight: 600;
   transition: color 0.15s;
+  position: relative;
 }
 
 .bottom-nav-item.active {
   color: var(--primary);
+}
+
+.bottom-nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 3px;
+  background: var(--primary);
+  border-radius: 0 0 3px 3px;
 }
 
 .bottom-nav-item span:first-child {
