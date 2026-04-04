@@ -43,6 +43,7 @@
       <button onclick="cargarPagina('nuevacita')"   id="btnNuevaCita"   class="nav-mod">➕ Nueva cita</button>
       <button onclick="cargarPagina('vistascitas')"   id="btnVistasCitas"   class="nav-mod">📋 Vistas citas</button>
       <button onclick="cargarPagina('ultimasventas')" id="btnUltimasVentas" class="nav-mod">🛒 Últimas ventas</button>
+      <button onclick="cargarPagina('pruebas')"       id="btnPruebas"       class="nav-mod">🧪 Pruebas</button>
     </div>
     <hr style="border:none;border-top:1px solid var(--gray-200);margin:0 0 12px">
   </div>
@@ -62,6 +63,7 @@
       'nuevacita':   'nueva-cita/index.html',
       'vistascitas':   'lista-citas/index.html',
       'ultimasventas': 'ultimas-ventas/index.html',
+      'pruebas':       'pruebas/index.html',
     };
 
     const BTN_IDS = {
@@ -76,6 +78,7 @@
       'nuevacita':   'btnNuevaCita',
       'vistascitas':   'btnVistasCitas',
       'ultimasventas': 'btnUltimasVentas',
+      'pruebas':       'btnPruebas',
     };
 
     function cargarPagina(nombre) {
@@ -164,8 +167,8 @@
       if (chevron) chevron.style.transform = abierto ? '' : 'rotate(180deg)';
     }
 
-    // Cargar dashboard por defecto
-    cargarPagina('dashboard');
+    // Cargar pruebas por defecto
+    cargarPagina('pruebas');
   </script>
 </body>
 </html>

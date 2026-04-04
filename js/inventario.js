@@ -97,12 +97,16 @@ async function guardarProducto(e) {
   e.preventDefault();
 
   const producto = {
-    nombre: document.getElementById('prodNombre').value,
-    precio: parseFloat(document.getElementById('prodPrecio').value),
-    stock: parseInt(document.getElementById('prodStock').value),
+    nombre:       document.getElementById('prodNombre').value,
+    sku:          document.getElementById('prodSku').value || null,
+    categoria:    document.getElementById('prodCategoria').value || null,
+    proveedor:    document.getElementById('prodProveedor').value || null,
+    precio:       parseFloat(document.getElementById('prodPrecio').value),
+    precio_costo: parseFloat(document.getElementById('prodCosto').value) || null,
+    stock:        parseInt(document.getElementById('prodStock').value),
     stock_minimo: parseInt(document.getElementById('prodStockMinimo').value) || 5,
-    categoria: document.getElementById('prodCategoria').value || null,
-    negocio_id: currentBusiness?.id
+    unidad:       document.getElementById('prodUnidad').value || null,
+    negocio_id:   currentBusiness?.id
   };
 
   let error;
@@ -127,11 +131,15 @@ function editarProducto(id) {
 
   editandoProductoId = id;
   document.getElementById('modalProductoTitle').textContent = 'Editar Producto';
-  document.getElementById('prodNombre').value = p.nombre;
-  document.getElementById('prodPrecio').value = p.precio;
-  document.getElementById('prodStock').value = p.stock;
-  document.getElementById('prodStockMinimo').value = p.stock_minimo || 5;
-  document.getElementById('prodCategoria').value = p.categoria || '';
+  document.getElementById('prodNombre').value       = p.nombre;
+  document.getElementById('prodSku').value          = p.sku || '';
+  document.getElementById('prodCategoria').value    = p.categoria || '';
+  document.getElementById('prodProveedor').value    = p.proveedor || '';
+  document.getElementById('prodPrecio').value       = p.precio;
+  document.getElementById('prodCosto').value        = p.precio_costo || '';
+  document.getElementById('prodStock').value        = p.stock;
+  document.getElementById('prodStockMinimo').value  = p.stock_minimo || 5;
+  document.getElementById('prodUnidad').value       = p.unidad || '';
   showModal('modalProducto');
 }
 

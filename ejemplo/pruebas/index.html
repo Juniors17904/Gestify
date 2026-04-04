@@ -1,0 +1,89 @@
+<link rel="stylesheet" href="../../css/style.css">
+<link rel="stylesheet" href="../../css/dashboard.css">
+
+<div style="padding:16px;max-width:440px;margin:0 auto">
+
+  <!-- Card Inventario -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--gray-100)">
+      <h3 style="font-size:15px;font-weight:700;margin:0">Inventario</h3>
+      <button onclick="abrirModalPrueba()"
+        style="padding:7px 14px;border-radius:10px;border:none;background:var(--primary);color:white;font-size:13px;font-weight:600;cursor:pointer">
+        + Agregar producto
+      </button>
+    </div>
+    <div style="padding:16px;color:var(--gray-400);font-size:13px;text-align:center">
+      Sin productos aún.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function abrirModalPrueba() {
+    let modal = document.getElementById('modalPruebaProd');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'modalPruebaProd';
+      modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.45);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
+      modal.onclick = function(e) { if (e.target === modal) cerrarModalPrueba(); };
+      modal.innerHTML = `
+        <div style="background:white;border-radius:20px;padding:24px 20px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+            <h3 style="font-size:17px;font-weight:700;margin:0">Agregar Producto</h3>
+            <button onclick="cerrarModalPrueba()" style="width:32px;height:32px;border-radius:50%;border:none;background:#F1F5F9;font-size:16px;cursor:pointer;color:#64748B">✕</button>
+          </div>
+
+          <p style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#94A3B8;margin:0 0 10px">INFORMACIÓN</p>
+          <div class="form-group">
+            <input type="text" id="prodNombre" placeholder="Nombre *">
+          </div>
+          <div class="form-group">
+            <input type="text" id="prodSku" placeholder="Código / SKU (opcional)">
+          </div>
+          <div class="form-group">
+            <input type="text" id="prodCategoria" placeholder="Categoría (opcional)">
+          </div>
+          <div class="form-group">
+            <input type="text" id="prodProveedor" placeholder="Proveedor (opcional)">
+          </div>
+
+          <p style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#94A3B8;margin:16px 0 10px">PRECIOS</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="form-group">
+              <input type="number" id="prodPrecio" placeholder="Precio venta (S/) *" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <input type="number" id="prodCosto" placeholder="Precio costo (S/)" min="0" step="0.01">
+            </div>
+          </div>
+
+          <p style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#94A3B8;margin:16px 0 10px">STOCK</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="form-group">
+              <input type="number" id="prodStock" placeholder="Stock inicial *" min="0">
+            </div>
+            <div class="form-group">
+              <input type="number" id="prodStockMinimo" placeholder="Stock mínimo" min="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <input type="text" id="prodUnidad" placeholder="Unidad (unidad, kg, metro, litro...)">
+          </div>
+
+          <div style="display:flex;gap:10px;margin-top:16px">
+            <button onclick="cerrarModalPrueba()" style="flex:1;padding:12px;border-radius:12px;border:1px solid #E2E8F0;background:white;font-size:14px;font-weight:600;color:#64748B;cursor:pointer">Cancelar</button>
+            <button style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Guardar</button>
+          </div>
+        </div>`;
+      document.body.appendChild(modal);
+    } else {
+      modal.style.display = 'flex';
+    }
+  }
+
+  function cerrarModalPrueba() {
+    const modal = document.getElementById('modalPruebaProd');
+    if (modal) modal.style.display = 'none';
+  }
+</script>
