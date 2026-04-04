@@ -16,10 +16,26 @@ async function loadCategorias() {
 function renderCatLista(lista) {
   const el = document.getElementById('catLista');
   if (!el) return;
+  const query = (document.getElementById('catBuscar')?.value || '').trim();
+  const btn = document.getElementById('catCrearBtn');
+
   if (!lista.length) {
-    el.innerHTML = '<p style="font-size:12px;color:#94A3B8;text-align:center;padding:10px 0">Sin categorías aún</p>';
+    if (query) {
+      // Mostrar opción de crear con ese nombre
+      if (btn) { btn.style.display = 'flex'; btn.textContent = '+ Crear'; }
+      el.innerHTML = `<div onclick="confirmarNuevaCat()"
+        style="padding:9px 10px;border-radius:8px;font-size:13px;cursor:pointer;color:var(--primary);font-weight:600"
+        onmouseover="this.style.background='#F0F9FF'" onmouseout="this.style.background='none'">
+        Crear "<b>${query}</b>"
+      </div>`;
+    } else {
+      if (btn) btn.style.display = 'none';
+      el.innerHTML = '<p style="font-size:12px;color:#94A3B8;text-align:center;padding:10px 0">Sin categorías aún</p>';
+    }
     return;
   }
+
+  if (btn) btn.style.display = query ? 'flex' : 'none';
   el.innerHTML = lista.map(c => `
     <div onclick="seleccionarCategoria('${c.id}','${c.nombre}')"
       style="padding:9px 10px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;color:#1E293B"
@@ -48,15 +64,8 @@ function seleccionarCategoria(id, nombre) {
   renderCatLista(categorias);
 }
 
-function mostrarInputNuevaCat() {
-  document.getElementById('catNuevaSection').style.display = 'none';
-  const sec = document.getElementById('catNuevaInputSection');
-  sec.style.display = 'flex';
-  document.getElementById('catNuevaInput').focus();
-}
-
 async function confirmarNuevaCat() {
-  const nombre = document.getElementById('catNuevaInput').value.trim();
+  const nombre = document.getElementById('catBuscar').value.trim();
   if (!nombre) return;
   const { data } = await db.from('categorias')
     .insert({ nombre, negocio_id: currentBusiness?.id })
@@ -66,9 +75,6 @@ async function confirmarNuevaCat() {
     categorias.sort((a, b) => a.nombre.localeCompare(b.nombre));
     seleccionarCategoria(data.id, data.nombre);
   }
-  document.getElementById('catNuevaInput').value = '';
-  document.getElementById('catNuevaSection').style.display = 'block';
-  document.getElementById('catNuevaInputSection').style.display = 'none';
 }
 
 // Cerrar dropdown al click fuera
