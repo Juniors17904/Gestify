@@ -26,7 +26,7 @@ function renderCatLista(lista) {
       el.innerHTML = `<div onclick="confirmarNuevaCat()"
         style="padding:9px 10px;border-radius:8px;font-size:13px;cursor:pointer;color:var(--primary);font-weight:600"
         onmouseover="this.style.background='#F0F9FF'" onmouseout="this.style.background='none'">
-        Crear "<b>${query}</b>"
+        Nueva categoría "<b>${query}</b>"
       </div>`;
     } else {
       if (btn) btn.style.display = 'none';
