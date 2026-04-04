@@ -106,6 +106,10 @@ async function loadInventario() {
   actualizarSelectProductos();
 }
 
+function fila(label, valor) {
+  return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">${label}</span><span style="color:var(--gray-800);font-weight:700">${valor}</span></div>`;
+}
+
 function renderInventarioAcordeon(lista) {
   // Stats
   const min = p => p.stock_minimo || 5;
@@ -140,18 +144,29 @@ function renderInventarioAcordeon(lista) {
       <div onclick="invToggleAcord(this)" style="display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer">
         <div style="flex:1;min-width:0">
           <div style="font-size:14px;font-weight:700;color:var(--gray-800);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.nombre}</div>
-          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">${p.categorias?.nombre || p.categoria || '—'}</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">${(p.categorias?.nombre || p.categoria) ? `Categoría: ${(p.categorias?.nombre || p.categoria).replace(/\b\w/g, c => c.toUpperCase())}` : 'Sin categoría'}</div>
         </div>
         <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:${badgeBg};color:${badgeColor};font-weight:700;white-space:nowrap;flex-shrink:0">${badgeLabel}</span>
         <svg class="inv-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-300)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="inv-acord-body" style="display:none;padding:0 14px 14px;border-top:1px solid var(--gray-100)">
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Precio</span><span style="color:var(--gray-800);font-weight:700">${formatMoney(p.precio)}</span></div>
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Stock</span><span style="color:${stockColor};font-weight:700">${p.stock} unidades</span></div>
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Categoría</span><span style="color:var(--gray-800);font-weight:700">${p.categorias?.nombre || p.categoria || '—'}</span></div>
-        <div style="display:flex;gap:8px;margin-top:10px">
-          <button onclick="editarProducto('${p.id}')" style="flex:1;padding:9px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:13px;font-weight:600;color:var(--gray-600);cursor:pointer">✏️ Editar</button>
-          <button onclick="eliminarProducto('${p.id}')" style="flex:1;padding:9px;border-radius:10px;border:none;background:#FEE2E2;font-size:13px;font-weight:600;color:#DC2626;cursor:pointer">🗑️ Eliminar</button>
+        ${p.sku ? fila('Código de producto', p.sku) : ''}
+        ${fila('Precio venta', formatMoney(p.precio))}
+        ${p.precio_costo ? fila('Precio costo', formatMoney(p.precio_costo)) : ''}
+        ${p.precio_costo && p.precio ? fila('Margen', `${Math.round(((p.precio - p.precio_costo) / p.precio) * 100)}%`) : ''}
+        ${fila('Stock', `<span style="color:${stockColor};font-weight:700">${p.stock} ${p.unidad || 'unidades'}</span>`)}
+        ${fila('Stock mínimo', `${p.stock_minimo || 5} ${p.unidad || 'unidades'}`)}
+        ${p.proveedor ? fila('Proveedor', p.proveedor) : ''}
+        ${p.detalle ? `<div style="padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600;display:block;margin-bottom:3px">Detalle</span><span style="color:var(--gray-700)">${p.detalle}</span></div>` : ''}
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button onclick="editarProducto('${p.id}')" style="flex:1;padding:9px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:13px;font-weight:600;color:var(--gray-600);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Editar
+          </button>
+          <button onclick="eliminarProducto('${p.id}')" style="flex:1;padding:9px;border-radius:10px;border:none;background:#FEE2E2;font-size:13px;font-weight:600;color:#DC2626;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            Eliminar
+          </button>
         </div>
       </div>
     </div>`;
@@ -288,8 +303,9 @@ async function guardarProducto(e) {
     }
   }
 
+  const capFirst = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
   const producto = {
-    nombre:       document.getElementById('prodNombre').value,
+    nombre:       capFirst(document.getElementById('prodNombre').value),
     sku:          document.getElementById('prodSku').value || null,
     categoria_id,
     proveedor:    document.getElementById('prodProveedor').value || null,
@@ -327,7 +343,8 @@ async function editarProducto(id) {
   document.getElementById('prodNombre').value       = p.nombre;
   document.getElementById('prodSku').value          = p.sku || '';
   document.getElementById('prodCategoriaId').value  = p.categoria_id || '';
-  toggleNuevaCategoria(p.categoria_id || '');
+  const catNombre = p.categorias?.nombre || '';
+  document.getElementById('catDisplayText').textContent = catNombre;
   document.getElementById('prodProveedor').value    = p.proveedor || '';
   document.getElementById('prodDetalle').value      = p.detalle || '';
   document.getElementById('prodPrecio').value       = p.precio;
