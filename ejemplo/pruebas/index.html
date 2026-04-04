@@ -3,6 +3,51 @@
 
 <div style="padding:16px;max-width:440px;margin:0 auto">
 
+  <!-- Tabs vistas -->
+  <div style="display:flex;gap:6px;margin-bottom:16px">
+    <button onclick="setVista(1)" id="tab1" style="flex:1;padding:8px;border-radius:10px;border:none;background:var(--primary);color:white;font-size:12px;font-weight:700;cursor:pointer">Vista 1</button>
+    <button onclick="setVista(2)" id="tab2" style="flex:1;padding:8px;border-radius:10px;border:1.5px solid #E2E8F0;background:white;color:#64748B;font-size:12px;font-weight:700;cursor:pointer">Vista 2</button>
+    <button onclick="setVista(3)" id="tab3" style="flex:1;padding:8px;border-radius:10px;border:1.5px solid #E2E8F0;background:white;color:#64748B;font-size:12px;font-weight:700;cursor:pointer">Vista 3</button>
+  </div>
+
+  <!-- VISTA 1: Card compacta con botón grande -->
+  <div id="vista1" class="card" style="margin-bottom:16px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px">
+    <div style="width:56px;height:56px;border-radius:16px;background:#FFF7ED;display:flex;align-items:center;justify-content:center">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:16px;font-weight:800;color:#1E293B">Nueva Venta</div>
+      <div style="font-size:12px;color:#94A3B8;margin-top:2px">Registra una venta rápidamente</div>
+    </div>
+    <button onclick="alert('POS')" style="width:100%;padding:13px;border-radius:12px;border:none;background:var(--primary);color:white;font-size:15px;font-weight:800;cursor:pointer">+ Nueva Venta</button>
+  </div>
+
+  <!-- VISTA 2: Banner horizontal -->
+  <div id="vista2" style="display:none;margin-bottom:16px;border-radius:16px;background:linear-gradient(135deg,#F97316,#FB923C);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+    <div>
+      <div style="font-size:16px;font-weight:800;color:white">Registrar Venta</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.75);margin-top:2px">Toca para comenzar</div>
+    </div>
+    <button onclick="alert('POS')" style="padding:11px 18px;border-radius:12px;border:none;background:white;color:var(--primary);font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap">+ Nueva</button>
+  </div>
+
+  <!-- VISTA 3: Row tipo acción rápida -->
+  <div id="vista3" style="display:none;margin-bottom:16px">
+    <div style="font-size:10px;font-weight:700;color:#94A3B8;letter-spacing:.6px;margin-bottom:8px">ACCIONES RÁPIDAS</div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <button onclick="alert('POS')" style="width:100%;display:flex;align-items:center;gap:14px;padding:16px;border:none;background:white;cursor:pointer;text-align:left">
+        <div style="width:42px;height:42px;border-radius:12px;background:#FFF7ED;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:700;color:#1E293B">Nueva Venta</div>
+          <div style="font-size:12px;color:#94A3B8">Abre el punto de venta</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+
   <!-- Card Inventario -->
   <div class="card" style="padding:0;overflow:hidden">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--gray-100)">
@@ -85,5 +130,15 @@
   function cerrarModalPrueba() {
     const modal = document.getElementById('modalPruebaProd');
     if (modal) modal.style.display = 'none';
+  }
+
+  function setVista(n) {
+    [1,2,3].forEach(i => {
+      const v = document.getElementById('vista'+i);
+      const t = document.getElementById('tab'+i);
+      const activo = i === n;
+      if (v) v.style.display = activo ? (i===2 ? 'flex' : 'block') : 'none';
+      if (t) { t.style.background = activo ? 'var(--primary)' : 'white'; t.style.color = activo ? 'white' : '#64748B'; t.style.border = activo ? 'none' : '1.5px solid #E2E8F0'; }
+    });
   }
 </script>
