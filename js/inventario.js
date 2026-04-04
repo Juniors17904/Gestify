@@ -2,6 +2,35 @@
 
 let productos = [];
 let editandoProductoId = null;
+let categorias = [];
+
+async function loadCategorias() {
+  const { data } = await db.from('categorias')
+    .select('id, nombre')
+    .eq('negocio_id', currentBusiness?.id)
+    .order('nombre');
+  categorias = data || [];
+  const select = document.getElementById('prodCategoriaId');
+  if (!select) return;
+  const valorActual = select.value;
+  select.innerHTML = '<option value="">Categoría (opcional)</option>';
+  categorias.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = c.nombre;
+    select.appendChild(opt);
+  });
+  const optNueva = document.createElement('option');
+  optNueva.value = '__nueva__';
+  optNueva.textContent = '+ Nueva categoría...';
+  select.appendChild(optNueva);
+  if (valorActual) select.value = valorActual;
+}
+
+function toggleNuevaCategoria(val) {
+  const wrap = document.getElementById('nuevaCategoriaWrap');
+  if (wrap) wrap.style.display = val === '__nueva__' ? 'block' : 'none';
+}
 
 async function loadInventario() {
   if (!currentBusiness?.id) return;
@@ -96,11 +125,25 @@ function buscarProducto(query) {
 async function guardarProducto(e) {
   e.preventDefault();
 
+  let categoria_id = document.getElementById('prodCategoriaId').value || null;
+  if (categoria_id === '__nueva__') {
+    const nombreNueva = document.getElementById('prodCategoriaNueva').value.trim();
+    if (nombreNueva) {
+      const { data: catData } = await db.from('categorias')
+        .insert({ nombre: nombreNueva, negocio_id: currentBusiness?.id })
+        .select('id').single();
+      categoria_id = catData?.id || null;
+    } else {
+      categoria_id = null;
+    }
+  }
+
   const producto = {
     nombre:       document.getElementById('prodNombre').value,
     sku:          document.getElementById('prodSku').value || null,
-    categoria:    document.getElementById('prodCategoria').value || null,
+    categoria_id,
     proveedor:    document.getElementById('prodProveedor').value || null,
+    detalle:      document.getElementById('prodDetalle').value || null,
     precio:       parseFloat(document.getElementById('prodPrecio').value),
     precio_costo: parseFloat(document.getElementById('prodCosto').value) || null,
     stock:        parseInt(document.getElementById('prodStock').value),
@@ -125,7 +168,7 @@ async function guardarProducto(e) {
   loadInventario();
 }
 
-function editarProducto(id) {
+async function editarProducto(id) {
   const p = productos.find(x => x.id === id);
   if (!p) return;
 
@@ -133,13 +176,16 @@ function editarProducto(id) {
   document.getElementById('modalProductoTitle').textContent = 'Editar Producto';
   document.getElementById('prodNombre').value       = p.nombre;
   document.getElementById('prodSku').value          = p.sku || '';
-  document.getElementById('prodCategoria').value    = p.categoria || '';
+  document.getElementById('prodCategoriaId').value  = p.categoria_id || '';
+  toggleNuevaCategoria(p.categoria_id || '');
   document.getElementById('prodProveedor').value    = p.proveedor || '';
+  document.getElementById('prodDetalle').value      = p.detalle || '';
   document.getElementById('prodPrecio').value       = p.precio;
   document.getElementById('prodCosto').value        = p.precio_costo || '';
   document.getElementById('prodStock').value        = p.stock;
   document.getElementById('prodStockMinimo').value  = p.stock_minimo || 5;
   document.getElementById('prodUnidad').value       = p.unidad || '';
+  await loadCategorias();
   showModal('modalProducto');
 }
 

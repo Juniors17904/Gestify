@@ -294,10 +294,19 @@
           <input type="text" id="prodSku" placeholder="Código / SKU (opcional)">
         </div>
         <div class="form-group">
-          <input type="text" id="prodCategoria" placeholder="Categoría (opcional)">
+          <select id="prodCategoriaId" onchange="toggleNuevaCategoria(this.value)">
+            <option value="">Categoría (opcional)</option>
+            <option value="__nueva__">+ Nueva categoría...</option>
+          </select>
+        </div>
+        <div class="form-group" id="nuevaCategoriaWrap" style="display:none">
+          <input type="text" id="prodCategoriaNueva" placeholder="Nombre de la nueva categoría">
         </div>
         <div class="form-group">
           <input type="text" id="prodProveedor" placeholder="Proveedor (opcional)">
+        </div>
+        <div class="form-group">
+          <textarea id="prodDetalle" placeholder="Detalle (opcional)" rows="2" style="resize:none"></textarea>
         </div>
         <p style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#94A3B8;margin:16px 0 10px">PRECIOS</p>
         <div class="form-row">

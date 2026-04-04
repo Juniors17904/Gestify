@@ -8,7 +8,7 @@
 <!-- Buscador -->
 <div style="display:flex;gap:8px;margin-bottom:12px">
   <input type="text" class="search-input" placeholder="Buscar producto..." oninput="buscarProducto(this.value)" style="flex:1">
-  <button class="btn-primary" onclick="showModal('modalProducto')">+ Agregar</button>
+  <button class="btn-primary" onclick="loadCategorias().then(()=>showModal('modalProducto'))">+ Agregar</button>
 </div>
 
 <!-- Acordeón -->
