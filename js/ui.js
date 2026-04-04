@@ -9,12 +9,15 @@ let currentNombre = '';
 
 // Cargar HTML de módulos desde /modules/ en paralelo
 async function loadModules() {
-  const mods = ['dashboard','inventario','ventas','caja','empleados','reportes','clientes','agenda','ajustes'];
+  const mods = ['dashboard','inventario','ventas','caja','empleados','reportes','clientes','agenda'];
   await Promise.all(mods.map(m =>
-    fetch('modules/' + m + '.html')
+    fetch('modules/' + m + '.html', { cache: 'no-store' })
       .then(r => r.text())
-      .then(html => { document.getElementById('section-' + m).innerHTML = html; })
-      .catch(() => {}) // si falla un módulo no bloquea el resto
+      .then(html => {
+        if (m === 'ajustes') console.log('[loadModules] ajustes fetch length:', html.length, '| últimos 100:', html.slice(-100));
+        document.getElementById('section-' + m).innerHTML = html;
+      })
+      .catch(e => { if (m === 'ajustes') console.error('[loadModules] ajustes fetch error:', e); })
   ));
   lucide.createIcons();
 }
@@ -275,7 +278,52 @@ async function loadSection(name) {
     case 'agenda':      await loadAgenda();      break;
     case 'empleados':   await loadEmpleados();   break;
     case 'reportes':    await cargarReporte();   break;
+    case 'ajustes':     loadAjustes();           break;
   }
+}
+
+function loadAjustes() {
+  const nombre        = currentNombre || '';
+  const negocioNombre = currentBusiness?.nombre || '';
+
+  const seccion = document.getElementById('section-ajustes');
+  console.log('[ajustes] innerHTML length:', seccion?.innerHTML?.length);
+  console.log('[ajustes] section-ajustes innerHTML (primeros 200):', seccion?.innerHTML?.slice(0, 200));
+
+  const elNombre = document.getElementById('ajusteNombreNegocio');
+  console.log('[ajustes] ajusteNombreNegocio existe:', !!elNombre);
+  console.log('[ajustes] ajusteModulos en document:', !!document.getElementById('ajusteModulos'));
+  const hijos = Array.from(seccion?.children || []).map(c => c.tagName + (c.id ? '#'+c.id : '') + (c.className ? '.'+c.className.split(' ')[0] : ''));
+  console.log('[ajustes] hijos directos de section-ajustes:', hijos);
+  const negocioEl = document.getElementById('ajuste-negocio');
+  const negocioHijos = Array.from(negocioEl?.children || []).map(c => c.tagName + (c.id ? '#'+c.id : '') + (c.className ? '.'+c.className.split(' ')[0] : ''));
+  console.log('[ajustes] hijos de ajuste-negocio:', negocioHijos);
+  console.log('[ajustes] currentBusiness:', currentBusiness?.nombre, '| modulos:', currentBusiness?.modulos);
+  if (!elNombre) return;
+
+  elNombre.value = negocioNombre;
+  if (currentBusiness?.tipo      && document.getElementById('ajusteTipo'))      document.getElementById('ajusteTipo').value      = currentBusiness.tipo;
+  if (currentBusiness?.moneda    && document.getElementById('ajusteMoneda'))    document.getElementById('ajusteMoneda').value    = currentBusiness.moneda;
+  if (currentBusiness?.ruc       && document.getElementById('ajusteRuc'))       document.getElementById('ajusteRuc').value       = currentBusiness.ruc;
+  if (currentBusiness?.telefono  && document.getElementById('ajusteTelefono'))  document.getElementById('ajusteTelefono').value  = currentBusiness.telefono;
+  if (currentBusiness?.direccion && document.getElementById('ajusteDireccion')) document.getElementById('ajusteDireccion').value = currentBusiness.direccion;
+
+  // Cuenta
+  const cuentaNombre = document.getElementById('cuentaNombreDisplay');
+  if (cuentaNombre) {
+    cuentaNombre.textContent = nombre;
+    document.getElementById('cuentaEmailDisplay').textContent = currentUser?.email || '';
+    renderAvatar(document.getElementById('cuentaAvatar'), nombre);
+    document.getElementById('ajusteNombreUsuario').value = nombre;
+  }
+
+  // Módulos activos
+  const modulosActivos = currentBusiness?.modulos || [];
+  document.querySelectorAll('#ajusteModulos input[type=checkbox]').forEach(cb => {
+    cb.checked = modulosActivos.includes(cb.value);
+    const card = cb.closest('.modulo-card');
+    if (card) card.classList.toggle('selected', cb.checked);
+  });
 }
 
 // Sidebar
