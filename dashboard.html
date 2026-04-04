@@ -368,42 +368,40 @@
         <h3>Registrar Venta</h3>
         <button onclick="closeModal('modalVenta')">✕</button>
       </div>
-      <form onsubmit="guardarVenta(event)" style="display:flex;flex-direction:column;gap:10px">
-        <!-- Con inventario: select de productos -->
-        <div id="ventaProductoSelectGroup" class="fl" style="position:relative">
-          <select id="ventaProducto" onchange="actualizarPrecioVenta()" style="width:100%;padding:18px 14px 6px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;background:white;appearance:none;color:#1E293B">
-            <option value=""> </option>
-          </select>
-          <label>Producto</label>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <!-- Buscador con inventario -->
+        <div id="ventaProductoSelectGroup">
+          <div style="position:relative">
+            <input id="ventaBuscarProducto" type="text" placeholder="Buscar producto..." oninput="filtrarProductosVenta(this.value)"
+              style="width:100%;box-sizing:border-box;border:1.5px solid #E2E8F0;border-radius:10px;padding:12px 14px;font-size:14px;outline:none">
+            <div id="ventaProductoDropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:white;border:1.5px solid #E2E8F0;border-radius:12px;z-index:999;box-shadow:0 8px 24px rgba(0,0,0,0.12);max-height:200px;overflow-y:auto"></div>
+          </div>
         </div>
         <!-- Sin inventario: texto libre -->
-        <div id="ventaProductoLibreGroup" class="fl" style="display:none">
-          <input type="text" id="ventaDescripcion" placeholder=" ">
-          <label>Descripción</label>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div class="fl">
-            <input type="number" id="ventaCantidad" placeholder=" " min="1" value="1" required onchange="calcularTotalVenta()">
-            <label>Cantidad</label>
-          </div>
-          <div class="fl">
-            <input type="number" id="ventaPrecio" placeholder=" " step="0.01" min="0" required onchange="calcularTotalVenta()">
-            <label>Precio unitario</label>
+        <div id="ventaProductoLibreGroup" style="display:none">
+          <div style="display:flex;gap:8px">
+            <div class="fl" style="flex:1"><input type="text" id="ventaDescripcion" placeholder=" "><label>Descripción</label></div>
+            <div class="fl" style="width:90px"><input type="number" id="ventaPrecioLibre" placeholder=" " step="0.01" min="0"><label>Precio</label></div>
+            <button type="button" onclick="agregarItemLibre()" style="padding:0 14px;background:var(--primary);color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:18px">+</button>
           </div>
         </div>
-        <div class="fl">
-          <input type="text" id="ventaTotal" placeholder=" " readonly style="background:#F8FAFC;font-weight:700;color:var(--primary)">
-          <label>Total</label>
+
+        <!-- Carrito -->
+        <div id="ventaCarrito" style="display:none;border:1.5px solid #E2E8F0;border-radius:12px;overflow:hidden">
+          <div id="ventaCarritoItems"></div>
+          <div style="padding:12px 14px;background:#F8FAFC;display:flex;justify-content:space-between;align-items:center;border-top:1.5px solid #E2E8F0">
+            <span style="font-size:13px;font-weight:700;color:#64748B">TOTAL</span>
+            <span id="ventaTotalDisplay" style="font-size:18px;font-weight:800;color:var(--primary)">S/ 0.00</span>
+          </div>
         </div>
-        <div class="fl">
-          <input type="text" id="ventaNotas" placeholder=" ">
-          <label>Notas</label>
-        </div>
+
+        <div class="fl"><input type="text" id="ventaNotas" placeholder=" "><label>Notas</label></div>
+
         <div class="modal-actions">
           <button type="button" class="btn-secondary" onclick="closeModal('modalVenta')">Cancelar</button>
-          <button type="submit" class="btn-primary">Registrar</button>
+          <button type="button" class="btn-primary" onclick="guardarVenta()">Registrar venta</button>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 
