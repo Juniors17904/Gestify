@@ -19,6 +19,35 @@
     })();
   </script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .fl { position:relative; margin-bottom:6px; }
+    .fl input, .fl select, .fl textarea {
+      width:100%; box-sizing:border-box;
+      padding:18px 14px 6px;
+      border:1.5px solid #E2E8F0; border-radius:10px;
+      font-size:14px; outline:none; background:white;
+      transition:border-color .15s;
+    }
+    .fl textarea { padding-top:20px; resize:none; }
+    .fl select { appearance:auto; }
+    .fl label {
+      position:absolute; left:14px; top:13px;
+      font-size:14px; color:#94A3B8;
+      pointer-events:none;
+      transition:all .15s ease;
+    }
+    .fl input:focus, .fl select:focus, .fl textarea:focus { border-color:var(--primary); }
+    .fl input:focus ~ label,
+    .fl input:not(:placeholder-shown) ~ label,
+    .fl textarea:focus ~ label,
+    .fl textarea:not(:placeholder-shown) ~ label,
+    .fl select ~ label,
+    .fl select:focus ~ label {
+      top:4px; font-size:10px; font-weight:700; color:#94A3B8;
+    }
+    .fl select:focus ~ label,
+    .fl select.has-value ~ label { color:var(--primary); }
+  </style>
 </head>
 <body class="app-page">
 
@@ -285,51 +314,35 @@
         <h3 id="modalProductoTitle">Agregar Producto</h3>
         <button onclick="closeModal('modalProducto')">✕</button>
       </div>
-      <form onsubmit="guardarProducto(event)">
-        <p style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#94A3B8;margin:0 0 10px">INFORMACIÓN</p>
-        <div class="form-group">
-          <input type="text" id="prodNombre" placeholder="Nombre *" required>
-        </div>
-        <div class="form-group">
-          <input type="text" id="prodSku" placeholder="Código / SKU (opcional)">
-        </div>
-        <div class="form-group">
+      <form onsubmit="guardarProducto(event)" style="display:flex;flex-direction:column;gap:4px">
+        <p style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#94A3B8;margin:4px 0 4px">INFORMACIÓN</p>
+        <div class="fl"><input type="text" id="prodNombre" placeholder=" " required><label>Nombre *</label></div>
+        <div class="fl"><input type="text" id="prodSku" placeholder=" "><label>Código / SKU (opcional)</label></div>
+        <div class="fl">
           <select id="prodCategoriaId" onchange="toggleNuevaCategoria(this.value)">
-            <option value="">Categoría (opcional)</option>
+            <option value=""></option>
             <option value="__nueva__">+ Nueva categoría...</option>
           </select>
+          <label>Categoría (opcional)</label>
         </div>
-        <div class="form-group" id="nuevaCategoriaWrap" style="display:none">
-          <input type="text" id="prodCategoriaNueva" placeholder="Nombre de la nueva categoría">
+        <div class="fl" id="nuevaCategoriaWrap" style="display:none"><input type="text" id="prodCategoriaNueva" placeholder=" "><label>Nueva categoría</label></div>
+        <div class="fl"><input type="text" id="prodProveedor" placeholder=" "><label>Proveedor (opcional)</label></div>
+        <div class="fl"><textarea id="prodDetalle" placeholder=" " rows="2"></textarea><label>Detalle (opcional)</label></div>
+
+        <p style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#94A3B8;margin:10px 0 4px">PRECIOS</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="fl"><input type="number" id="prodPrecio" placeholder=" " step="0.01" min="0" required><label>Precio venta (S/) *</label></div>
+          <div class="fl"><input type="number" id="prodCosto" placeholder=" " step="0.01" min="0"><label>Precio costo (S/)</label></div>
         </div>
-        <div class="form-group">
-          <input type="text" id="prodProveedor" placeholder="Proveedor (opcional)">
+
+        <p style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#94A3B8;margin:10px 0 4px">STOCK</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="fl"><input type="number" id="prodStock" placeholder=" " min="0" required><label>Stock inicial *</label></div>
+          <div class="fl"><input type="number" id="prodStockMinimo" placeholder=" " min="0"><label>Stock mínimo</label></div>
         </div>
-        <div class="form-group">
-          <textarea id="prodDetalle" placeholder="Detalle (opcional)" rows="2" style="resize:none"></textarea>
-        </div>
-        <p style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#94A3B8;margin:16px 0 10px">PRECIOS</p>
-        <div class="form-row">
-          <div class="form-group">
-            <input type="number" id="prodPrecio" placeholder="Precio venta (S/) *" step="0.01" min="0" required>
-          </div>
-          <div class="form-group">
-            <input type="number" id="prodCosto" placeholder="Precio costo (S/)" step="0.01" min="0">
-          </div>
-        </div>
-        <p style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#94A3B8;margin:16px 0 10px">STOCK</p>
-        <div class="form-row">
-          <div class="form-group">
-            <input type="number" id="prodStock" placeholder="Stock inicial *" min="0" required>
-          </div>
-          <div class="form-group">
-            <input type="number" id="prodStockMinimo" placeholder="Stock mínimo" min="0">
-          </div>
-        </div>
-        <div class="form-group">
-          <input type="text" id="prodUnidad" placeholder="Unidad (unidad, kg, metro, litro...)">
-        </div>
-        <div class="modal-actions">
+        <div class="fl"><input type="text" id="prodUnidad" placeholder=" "><label>Unidad (kg, metro, litro...)</label></div>
+
+        <div class="modal-actions" style="margin-top:10px">
           <button type="button" class="btn-secondary" onclick="closeModal('modalProducto')">Cancelar</button>
           <button type="submit" class="btn-primary">Guardar</button>
         </div>

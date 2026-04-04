@@ -29,7 +29,9 @@ async function loadCategorias() {
 
 function toggleNuevaCategoria(val) {
   const wrap = document.getElementById('nuevaCategoriaWrap');
-  if (wrap) wrap.style.display = val === '__nueva__' ? 'block' : 'none';
+  if (wrap) wrap.style.display = val === '__nueva__' ? 'flex' : 'none';
+  const sel = document.getElementById('prodCategoriaId');
+  if (sel) sel.classList.toggle('has-value', !!val);
 }
 
 async function loadInventario() {
