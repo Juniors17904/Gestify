@@ -361,44 +361,72 @@
     </div>
   </div>
 
-  <!-- Modal Venta -->
+  <!-- POS Venta (pantalla completa) -->
+  <div id="posVenta" style="display:none;position:fixed;inset:0;background:#F8FAFC;z-index:1000;flex-direction:column">
+    <!-- Header -->
+    <div style="background:white;padding:16px 16px 12px;border-bottom:1px solid #E2E8F0;display:flex;align-items:center;gap:12px">
+      <button onclick="cerrarPOS()" style="border:none;background:none;cursor:pointer;padding:4px">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      </button>
+      <h2 style="margin:0;font-size:18px;font-weight:800;color:#1E293B">Registrar Venta</h2>
+    </div>
+
+    <!-- Buscador -->
+    <div style="padding:12px 16px;background:white;border-bottom:1px solid #F1F5F9">
+      <div style="display:flex;align-items:center;gap:10px;background:#F1F5F9;border-radius:12px;padding:10px 14px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="posBuscar" type="text" placeholder="Buscar por nombre, categoría o código..." oninput="filtrarPOS(this.value)"
+          style="border:none;background:none;outline:none;font-size:14px;color:#1E293B;flex:1">
+      </div>
+    </div>
+
+    <!-- Lista productos -->
+    <div id="posLista" style="flex:1;overflow-y:auto;padding:8px 16px 120px"></div>
+
+    <!-- Barra inferior -->
+    <div style="position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #E2E8F0;padding:12px 16px;z-index:1001">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span id="posItemCount" style="font-size:13px;font-weight:600;color:#64748B">Sin items</span>
+        </div>
+        <span id="posTotalDisplay" style="font-size:20px;font-weight:800;color:var(--primary)">S/ 0.00</span>
+      </div>
+      <button onclick="confirmarPOS()" id="posConfirmarBtn" style="width:100%;padding:14px;border:none;border-radius:14px;background:#CBD5E1;color:white;font-size:15px;font-weight:800;cursor:not-allowed;letter-spacing:.5px">CONFIRMAR VENTA</button>
+    </div>
+  </div>
+
+  <!-- Modal confirmación venta -->
+  <div id="modalConfirmarVenta" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Confirmar Venta</h3>
+        <button onclick="closeModal('modalConfirmarVenta')">✕</button>
+      </div>
+      <div id="posResumen" style="margin-bottom:12px"></div>
+      <div class="fl" style="margin-bottom:10px"><input type="text" id="ventaNotas" placeholder=" "><label>Notas</label></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="closeModal('modalConfirmarVenta')">Volver</button>
+        <button type="button" class="btn-primary" onclick="guardarVenta()">Registrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Venta legacy (sin inventario) -->
   <div id="modalVenta" class="modal hidden">
     <div class="modal-content">
       <div class="modal-header">
         <h3>Registrar Venta</h3>
         <button onclick="closeModal('modalVenta')">✕</button>
       </div>
-      <form onsubmit="guardarVenta(event)" style="display:flex;flex-direction:column;gap:10px">
-        <!-- Con inventario: select de productos -->
-        <div id="ventaProductoSelectGroup" class="fl" style="position:relative">
-          <select id="ventaProducto" onchange="actualizarPrecioVenta()" style="width:100%;padding:18px 14px 6px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;background:white;appearance:none;color:#1E293B">
-            <option value=""> </option>
-          </select>
-          <label>Producto</label>
-        </div>
-        <!-- Sin inventario: texto libre -->
-        <div id="ventaProductoLibreGroup" class="fl" style="display:none">
-          <input type="text" id="ventaDescripcion" placeholder=" ">
-          <label>Descripción</label>
-        </div>
+      <form onsubmit="guardarVentaLibre(event)" style="display:flex;flex-direction:column;gap:10px">
+        <div class="fl"><input type="text" id="ventaDescripcion" placeholder=" "><label>Descripción</label></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div class="fl">
-            <input type="number" id="ventaCantidad" placeholder=" " min="1" value="1" required onchange="calcularTotalVenta()">
-            <label>Cantidad</label>
-          </div>
-          <div class="fl">
-            <input type="number" id="ventaPrecio" placeholder=" " step="0.01" min="0" required onchange="calcularTotalVenta()">
-            <label>Precio unitario</label>
-          </div>
+          <div class="fl"><input type="number" id="ventaCantidad" placeholder=" " min="1" value="1" required onchange="calcularTotalVenta()"><label>Cantidad</label></div>
+          <div class="fl"><input type="number" id="ventaPrecio" placeholder=" " step="0.01" min="0" required onchange="calcularTotalVenta()"><label>Precio</label></div>
         </div>
-        <div class="fl">
-          <input type="text" id="ventaTotal" placeholder=" " readonly style="background:#F8FAFC;font-weight:700;color:var(--primary)">
-          <label>Total</label>
-        </div>
-        <div class="fl">
-          <input type="text" id="ventaNotas" placeholder=" ">
-          <label>Notas</label>
-        </div>
+        <div class="fl"><input type="text" id="ventaTotal" placeholder=" " readonly style="background:#F8FAFC;font-weight:700;color:var(--primary)"><label>Total</label></div>
+        <div class="fl"><input type="text" id="ventaNotasLibre" placeholder=" "><label>Notas</label></div>
         <div class="modal-actions">
           <button type="button" class="btn-secondary" onclick="closeModal('modalVenta')">Cancelar</button>
           <button type="submit" class="btn-primary">Registrar</button>
