@@ -120,21 +120,21 @@ function confirmarPOS() {
       <div style="background:#F8FAFC;border-radius:12px;padding:14px;margin-bottom:12px">
         <div style="font-size:10px;font-weight:700;color:#94A3B8;letter-spacing:.6px;margin-bottom:10px">PRODUCTOS</div>
         ${carritoVenta.map(i => `
-          <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #F1F5F9">
+          <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #F1F5F9">
             <div style="flex:1;min-width:0">
               <div style="font-size:13px;font-weight:700;color:#1E293B;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${i.nombre}</div>
-              <div style="font-size:12px;color:#94A3B8">${formatMoney(i.precio)} × ${i.cantidad}</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:2px">
+                <span style="font-size:11px;font-weight:700;color:white;background:#94A3B8;border-radius:6px;padding:1px 7px">${i.cantidad} ud</span>
+                <span style="font-size:12px;color:#94A3B8">${formatMoney(i.precio)} c/u</span>
+              </div>
             </div>
-            <span style="font-size:13px;font-weight:700;color:#1E293B">${formatMoney(i.precio * i.cantidad)}</span>
+            <span style="font-size:13px;font-weight:800;color:#1E293B">${formatMoney(i.precio * i.cantidad)}</span>
           </div>`).join('')}
-        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:12px">
-          <span style="font-size:12px;font-weight:700;color:#94A3B8">SUBTOTAL</span>
-          <span style="font-size:13px;font-weight:700;color:#64748B">${formatMoney(subtotal)}</span>
-        </div>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;background:var(--primary);border-radius:12px;padding:14px 16px;margin-bottom:12px">
-        <span style="font-size:14px;font-weight:700;color:rgba(255,255,255,.8)">TOTAL A COBRAR</span>
-        <span style="font-size:22px;font-weight:800;color:white">${formatMoney(subtotal)}</span>
+      <div style="height:1px;background:#E2E8F0;margin:4px 0 12px"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <span style="font-size:16px;font-weight:700;color:#1E293B">Total</span>
+        <span style="font-size:24px;font-weight:800;color:var(--primary)">${formatMoney(subtotal)}</span>
       </div>`;
   }
   document.getElementById('ventaNotas').value = '';
@@ -311,9 +311,12 @@ function renderVentasAcordeon(ventas) {
       const nombre   = it.productos?.nombre || it.descripcion || 'Producto';
       const subtotal = (it.precio_unitario || 0) * (it.cantidad || 1);
       const borde    = i < items.length - 1 ? 'border-bottom:1px solid var(--gray-100)' : 'border-bottom:1px solid var(--gray-200)';
-      return `<div style="display:flex;justify-content:space-between;padding:7px 0;font-size:13px;${borde}">
-        <span style="color:var(--gray-500)">${nombre} × ${it.cantidad || 1}</span>
-        <span style="font-weight:600;color:var(--gray-700)">${formatMoney(subtotal)}</span>
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;font-size:13px;${borde}">
+        <div>
+          <div style="color:var(--gray-700);font-weight:600">${nombre}</div>
+          <div style="color:var(--gray-400);font-size:12px">${formatMoney(it.precio_unitario)} × ${it.cantidad || 1}</div>
+        </div>
+        <span style="font-weight:700;color:var(--gray-700)">${formatMoney(subtotal)}</span>
       </div>`;
     }).join('');
     return `<div style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)">
