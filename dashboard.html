@@ -317,7 +317,7 @@
       <form onsubmit="guardarProducto(event)" style="display:flex;flex-direction:column;gap:4px">
         <p style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#94A3B8;margin:4px 0 4px">INFORMACIÓN</p>
         <div class="fl"><input type="text" id="prodNombre" placeholder=" " required><label>Nombre *</label></div>
-        <div class="fl"><input type="text" id="prodSku" placeholder=" "><label>Código / SKU (opcional)</label></div>
+        <div class="fl"><input type="text" id="prodSku" placeholder=" "><label>Código / SKU</label></div>
         <!-- Selector custom de categoría -->
         <div style="position:relative">
           <div id="catDisplay" onclick="toggleCatDropdown()"
@@ -337,8 +337,8 @@
           </div>
         </div>
         <input type="hidden" id="prodCategoriaId">
-        <div class="fl"><input type="text" id="prodProveedor" placeholder=" "><label>Proveedor (opcional)</label></div>
-        <div class="fl"><textarea id="prodDetalle" placeholder=" " rows="2"></textarea><label>Detalle (opcional)</label></div>
+        <div class="fl"><input type="text" id="prodProveedor" placeholder=" "><label>Proveedor</label></div>
+        <div class="fl"><textarea id="prodDetalle" placeholder=" " rows="2"></textarea><label>Detalle</label></div>
 
         <p style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#94A3B8;margin:10px 0 4px">PRECIOS</p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">

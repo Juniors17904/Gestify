@@ -145,6 +145,7 @@ function renderInventarioAcordeon(lista) {
         <div style="flex:1;min-width:0">
           <div style="font-size:14px;font-weight:700;color:var(--gray-800);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.nombre}</div>
           <div style="font-size:12px;color:var(--gray-400);margin-top:2px">${(p.categorias?.nombre || p.categoria) ? `Categoría: ${(p.categorias?.nombre || p.categoria).replace(/\b\w/g, c => c.toUpperCase())}` : 'Sin categoría'}</div>
+          ${p.detalle ? `<div style="font-size:12px;color:var(--gray-500);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.detalle}</div>` : ''}
         </div>
         <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:${badgeBg};color:${badgeColor};font-weight:700;white-space:nowrap;flex-shrink:0">${badgeLabel}</span>
         <svg class="inv-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-300)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
