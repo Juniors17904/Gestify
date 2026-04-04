@@ -136,7 +136,7 @@ function renderInventarioAcordeon(lista) {
     let badgeBg, badgeColor, badgeLabel;
     if (p.stock === 0)              { badgeBg = '#FEE2E2'; badgeColor = '#DC2626'; badgeLabel = 'Sin stock'; }
     else if (p.stock <= minStock)   { badgeBg = '#FEF3C7'; badgeColor = '#D97706'; badgeLabel = 'Stock bajo'; }
-    else                            { badgeBg = '#D1FAE5'; badgeColor = '#065F46'; badgeLabel = `OK · ${p.stock}`; }
+    else                            { badgeBg = '#D1FAE5'; badgeColor = '#065F46'; badgeLabel = `Stock · ${p.stock}`; }
 
     const stockColor = p.stock === 0 ? '#DC2626' : p.stock <= minStock ? '#D97706' : '#065F46';
 
@@ -144,7 +144,6 @@ function renderInventarioAcordeon(lista) {
       <div onclick="invToggleAcord(this)" style="display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer">
         <div style="flex:1;min-width:0">
           <div style="font-size:14px;font-weight:700;color:var(--gray-800);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.nombre}</div>
-          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">${(p.categorias?.nombre || p.categoria) ? `Categoría: ${(p.categorias?.nombre || p.categoria).replace(/\b\w/g, c => c.toUpperCase())}` : 'Sin categoría'}</div>
           ${p.detalle ? `<div style="font-size:12px;color:var(--gray-500);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.detalle}</div>` : ''}
         </div>
         <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:${badgeBg};color:${badgeColor};font-weight:700;white-space:nowrap;flex-shrink:0">${badgeLabel}</span>
