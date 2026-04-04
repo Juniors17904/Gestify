@@ -3,6 +3,8 @@
 let productos = [];
 let editandoProductoId = null;
 let categorias = [];
+let filtroCategoria = null;
+let filtroProveedor = null;
 
 async function loadCategorias() {
   const { data } = await db.from('categorias')
@@ -97,6 +99,9 @@ async function loadInventario() {
   if (error) { showToast('Error al cargar inventario', 'error'); return; }
 
   productos = data || [];
+  filtroCategoria = null;
+  filtroProveedor = null;
+  renderFiltros();
   renderInventarioAcordeon(productos);
   actualizarSelectProductos();
 }
@@ -168,12 +173,87 @@ function renderStock(stock, stockMinimo) {
   return `<span class="badge-stock ${cls}">${label}</span>`;
 }
 
-function buscarProducto(query) {
-  const filtro = productos.filter(p =>
-    p.nombre.toLowerCase().includes(query.toLowerCase()) ||
-    (p.categorias?.nombre || p.categoria || '').toLowerCase().includes(query.toLowerCase())
-  );
+function aplicarFiltros() {
+  const query = (document.getElementById('invBuscarInput')?.value || '').toLowerCase();
+  const filtro = productos.filter(p => {
+    const matchTexto = !query ||
+      p.nombre.toLowerCase().includes(query) ||
+      (p.categorias?.nombre || '').toLowerCase().includes(query);
+    const matchCat = !filtroCategoria || p.categoria_id === filtroCategoria;
+    const matchProv = !filtroProveedor || (p.proveedor || '') === filtroProveedor;
+    return matchTexto && matchCat && matchProv;
+  });
   renderInventarioAcordeon(filtro);
+}
+
+function buscarProducto(query) {
+  aplicarFiltros();
+}
+
+function renderFiltros() {
+  const elCat  = document.getElementById('filtrosCategorias');
+  const elProv = document.getElementById('filtrosProveedores');
+  if (!elCat || !elProv) return;
+
+  const itemStyle = (activo) =>
+    `display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:8px;font-size:13px;font-weight:${activo ? '700' : '500'};cursor:pointer;color:${activo ? 'var(--primary)' : '#1E293B'};background:${activo ? '#FFF7ED' : 'transparent'}`;
+
+  // Categorías
+  const cats = [...new Map(productos.filter(p => p.categoria_id).map(p => [p.categoria_id, p.categorias?.nombre || ''])).entries()];
+  if (cats.length) {
+    elCat.innerHTML = `<div style="font-size:10px;font-weight:700;color:#94A3B8;letter-spacing:.6px;margin-bottom:4px">CATEGORÍA</div>` +
+      [['null', 'Todas'], ...cats.map(([id, n]) => [id, n])].map(([id, nombre]) => {
+        const activo = id === 'null' ? !filtroCategoria : filtroCategoria === id;
+        return `<div style="${itemStyle(activo)}" onclick="setFiltroCategoria(${id === 'null' ? 'null' : `'${id}'`})">
+          <span>${nombre}</span>${activo ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+        </div>`;
+      }).join('') + `<div style="height:1px;background:#F1F5F9;margin:6px 0"></div>`;
+  } else {
+    elCat.innerHTML = '';
+  }
+
+  // Proveedores
+  const provs = [...new Set(productos.map(p => p.proveedor).filter(Boolean))];
+  if (provs.length) {
+    elProv.innerHTML = `<div style="font-size:10px;font-weight:700;color:#94A3B8;letter-spacing:.6px;margin-bottom:4px">PROVEEDOR</div>` +
+      [['__todos__', 'Todos'], ...provs.map(p => [p, p])].map(([val, nombre]) => {
+        const activo = val === '__todos__' ? !filtroProveedor : filtroProveedor === val;
+        return `<div style="${itemStyle(activo)}" onclick="setFiltroProveedor(${val === '__todos__' ? 'null' : `'${val}'`})">
+          <span>${nombre}</span>${activo ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+        </div>`;
+      }).join('');
+  } else {
+    elProv.innerHTML = '';
+  }
+
+  // Badge
+  const activos = (filtroCategoria ? 1 : 0) + (filtroProveedor ? 1 : 0);
+  const badge = document.getElementById('invFiltrarBadge');
+  if (badge) { badge.textContent = activos; badge.style.display = activos ? 'inline' : 'none'; }
+}
+
+function toggleFiltroPanel() {
+  const panel = document.getElementById('invFiltroPanel');
+  if (panel) panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+function limpiarFiltros() {
+  filtroCategoria = null;
+  filtroProveedor = null;
+  renderFiltros();
+  aplicarFiltros();
+}
+
+function setFiltroCategoria(id) {
+  filtroCategoria = id;
+  renderFiltros();
+  aplicarFiltros();
+}
+
+function setFiltroProveedor(prov) {
+  filtroProveedor = prov;
+  renderFiltros();
+  aplicarFiltros();
 }
 
 async function guardarProducto(e) {
