@@ -10,57 +10,113 @@
     <button onclick="setVista(3)" id="tab3" style="flex:1;padding:8px;border-radius:10px;border:1.5px solid #E2E8F0;background:white;color:#64748B;font-size:12px;font-weight:700;cursor:pointer">Vista 3</button>
   </div>
 
-  <!-- VISTA 1: Card compacta con botón grande -->
-  <div id="vista1" class="card" style="margin-bottom:16px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px">
-    <div style="width:56px;height:56px;border-radius:16px;background:#FFF7ED;display:flex;align-items:center;justify-content:center">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+  <!-- VISTA 1: Clean minimal -->
+  <div id="vista1" style="margin-bottom:16px">
+    <div style="background:white;border-radius:20px;padding:24px 20px;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+        <h3 style="font-size:17px;font-weight:800;margin:0;color:#1E293B">Confirmar Venta</h3>
+        <button style="width:32px;height:32px;border-radius:50%;border:none;background:#F1F5F9;font-size:16px;cursor:pointer;color:#64748B">✕</button>
+      </div>
+      <div style="background:#F8FAFC;border-radius:12px;padding:14px;margin-bottom:16px">
+        <div style="font-size:10px;font-weight:700;color:#94A3B8;letter-spacing:.6px;margin-bottom:10px">PRODUCTOS</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #F1F5F9">
+          <div style="flex:1"><div style="font-size:13px;font-weight:700;color:#1E293B">Blusa estampada</div><div style="display:flex;align-items:center;gap:6px;margin-top:3px"><span style="font-size:11px;font-weight:700;color:white;background:#94A3B8;border-radius:6px;padding:1px 7px">3 ud</span><span style="font-size:12px;color:#94A3B8">S/ 60.00 c/u</span></div></div>
+          <span style="font-size:13px;font-weight:800;color:#1E293B">S/ 180.00</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #F1F5F9">
+          <div style="flex:1"><div style="font-size:13px;font-weight:700;color:#1E293B">Blusa manga larga</div><div style="display:flex;align-items:center;gap:6px;margin-top:3px"><span style="font-size:11px;font-weight:700;color:white;background:#94A3B8;border-radius:6px;padding:1px 7px">1 ud</span><span style="font-size:12px;color:#94A3B8">S/ 55.00 c/u</span></div></div>
+          <span style="font-size:13px;font-weight:800;color:#1E293B">S/ 55.00</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0">
+          <div style="flex:1"><div style="font-size:13px;font-weight:700;color:#1E293B">Casaca denim</div><div style="display:flex;align-items:center;gap:6px;margin-top:3px"><span style="font-size:11px;font-weight:700;color:white;background:#94A3B8;border-radius:6px;padding:1px 7px">1 ud</span><span style="font-size:12px;color:#94A3B8">S/ 180.00 c/u</span></div></div>
+          <span style="font-size:13px;font-weight:800;color:#1E293B">S/ 180.00</span>
+        </div>
+      </div>
+      <div style="height:1px;background:#E2E8F0;margin-bottom:14px"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <span style="font-size:16px;font-weight:700;color:#1E293B">Total</span>
+        <span style="font-size:24px;font-weight:800;color:var(--primary)">S/ 415.00</span>
+      </div>
+      <input type="text" placeholder="Notas" style="width:100%;box-sizing:border-box;border:1.5px solid #E2E8F0;border-radius:10px;padding:11px 14px;font-size:13px;outline:none;margin-bottom:14px;color:#1E293B">
+      <div style="display:flex;gap:10px">
+        <button style="flex:1;padding:13px;border-radius:12px;border:1.5px solid #E2E8F0;background:white;font-size:14px;font-weight:600;color:#64748B;cursor:pointer">Volver</button>
+        <button style="flex:1;padding:13px;border-radius:12px;border:none;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Registrar</button>
+      </div>
     </div>
-    <div style="text-align:center">
-      <div style="font-size:16px;font-weight:800;color:#1E293B">Nueva Venta</div>
-      <div style="font-size:12px;color:#94A3B8;margin-top:2px">Registra una venta rápidamente</div>
-    </div>
-    <button onclick="alert('POS')" style="width:100%;padding:13px;border-radius:12px;border:none;background:var(--primary);color:white;font-size:15px;font-weight:800;cursor:pointer">+ Nueva Venta</button>
   </div>
 
-  <!-- VISTA 2: Banner horizontal -->
-  <div id="vista2" style="display:none;margin-bottom:16px;border-radius:16px;background:linear-gradient(135deg,#F97316,#FB923C);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px">
-    <div>
-      <div style="font-size:16px;font-weight:800;color:white">Registrar Venta</div>
-      <div style="font-size:12px;color:rgba(255,255,255,.75);margin-top:2px">Toca para comenzar</div>
+  <!-- VISTA 2: Estilo ticket/recibo -->
+  <div id="vista2" style="display:none;margin-bottom:16px">
+    <div style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+      <div style="background:var(--primary);padding:20px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.6px">RESUMEN DE VENTA</div>
+          <div style="font-size:18px;font-weight:800;color:white;margin-top:2px">Confirmar</div>
+        </div>
+        <button style="width:32px;height:32px;border-radius:50%;border:none;background:rgba(255,255,255,.2);font-size:16px;cursor:pointer;color:white">✕</button>
+      </div>
+      <div style="padding:16px 20px">
+        <div style="border:1.5px dashed #E2E8F0;border-radius:12px;padding:14px;margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px dashed #F1F5F9;font-size:13px">
+            <div><div style="font-weight:700;color:#1E293B">Blusa estampada</div><div style="color:#94A3B8;font-size:12px">3 × S/ 60.00</div></div>
+            <span style="font-weight:800;color:#1E293B">S/ 180.00</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px dashed #F1F5F9;font-size:13px">
+            <div><div style="font-weight:700;color:#1E293B">Blusa manga larga</div><div style="color:#94A3B8;font-size:12px">1 × S/ 55.00</div></div>
+            <span style="font-weight:800;color:#1E293B">S/ 55.00</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;font-size:13px">
+            <div><div style="font-weight:700;color:#1E293B">Casaca denim</div><div style="color:#94A3B8;font-size:12px">1 × S/ 180.00</div></div>
+            <span style="font-weight:800;color:#1E293B">S/ 180.00</span>
+          </div>
+        </div>
+        <div style="background:#FFF7ED;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <span style="font-size:14px;font-weight:700;color:var(--primary)">Total</span>
+          <span style="font-size:22px;font-weight:800;color:var(--primary)">S/ 415.00</span>
+        </div>
+        <input type="text" placeholder="Notas" style="width:100%;box-sizing:border-box;border:1.5px solid #E2E8F0;border-radius:10px;padding:11px 14px;font-size:13px;outline:none;margin-bottom:14px;color:#1E293B">
+        <div style="display:flex;gap:10px">
+          <button style="flex:1;padding:13px;border-radius:12px;border:1.5px solid #E2E8F0;background:white;font-size:14px;font-weight:600;color:#64748B;cursor:pointer">Volver</button>
+          <button style="flex:1;padding:13px;border-radius:12px;border:none;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Registrar</button>
+        </div>
+      </div>
     </div>
-    <button onclick="alert('POS')" style="padding:11px 18px;border-radius:12px;border:none;background:white;color:var(--primary);font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap">+ Nueva</button>
   </div>
 
-  <!-- VISTA 3: Row tipo acción rápida -->
+  <!-- VISTA 3: Tabla limpia con líneas -->
   <div id="vista3" style="display:none;margin-bottom:16px">
-    <div style="font-size:10px;font-weight:700;color:#94A3B8;letter-spacing:.6px;margin-bottom:8px">ACCIONES RÁPIDAS</div>
-    <div class="card" style="padding:0;overflow:hidden">
-      <button onclick="alert('POS')" style="width:100%;display:flex;align-items:center;gap:14px;padding:16px;border:none;background:white;cursor:pointer;text-align:left">
-        <div style="width:42px;height:42px;border-radius:12px;background:#FFF7ED;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        </div>
-        <div style="flex:1">
-          <div style="font-size:14px;font-weight:700;color:#1E293B">Nueva Venta</div>
-          <div style="font-size:12px;color:#94A3B8">Abre el punto de venta</div>
-        </div>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
+    <div style="background:white;border-radius:20px;padding:24px 20px;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <h3 style="font-size:17px;font-weight:800;margin:0;color:#1E293B">Confirmar Venta</h3>
+        <button style="width:32px;height:32px;border-radius:50%;border:none;background:#F1F5F9;font-size:16px;cursor:pointer;color:#64748B">✕</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F1F5F9;font-size:11px;font-weight:700;color:#94A3B8;margin-bottom:4px">
+        <span>PRODUCTO</span><span>TOTAL</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #F8FAFC">
+        <div><div style="font-size:13px;font-weight:700;color:#1E293B">Blusa estampada</div><div style="font-size:12px;color:#94A3B8;margin-top:1px">3 unidades · S/ 60.00 c/u</div></div>
+        <span style="font-size:14px;font-weight:800;color:#1E293B">S/ 180.00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #F8FAFC">
+        <div><div style="font-size:13px;font-weight:700;color:#1E293B">Blusa manga larga</div><div style="font-size:12px;color:#94A3B8;margin-top:1px">1 unidad · S/ 55.00 c/u</div></div>
+        <span style="font-size:14px;font-weight:800;color:#1E293B">S/ 55.00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1.5px solid #E2E8F0">
+        <div><div style="font-size:13px;font-weight:700;color:#1E293B">Casaca denim</div><div style="font-size:12px;color:#94A3B8;margin-top:1px">1 unidad · S/ 180.00 c/u</div></div>
+        <span style="font-size:14px;font-weight:800;color:#1E293B">S/ 180.00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;margin-bottom:14px">
+        <span style="font-size:15px;font-weight:700;color:#1E293B">Total</span>
+        <span style="font-size:26px;font-weight:800;color:var(--primary)">S/ 415.00</span>
+      </div>
+      <input type="text" placeholder="Notas" style="width:100%;box-sizing:border-box;border:1.5px solid #E2E8F0;border-radius:10px;padding:11px 14px;font-size:13px;outline:none;margin-bottom:14px;color:#1E293B">
+      <div style="display:flex;gap:10px">
+        <button style="flex:1;padding:13px;border-radius:12px;border:1.5px solid #E2E8F0;background:white;font-size:14px;font-weight:600;color:#64748B;cursor:pointer">Volver</button>
+        <button style="flex:1;padding:13px;border-radius:12px;border:none;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Registrar</button>
+      </div>
     </div>
   </div>
 
-  <!-- Card Inventario -->
-  <div class="card" style="padding:0;overflow:hidden">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--gray-100)">
-      <h3 style="font-size:15px;font-weight:700;margin:0">Inventario</h3>
-      <button onclick="abrirModalPrueba()"
-        style="padding:7px 14px;border-radius:10px;border:none;background:var(--primary);color:white;font-size:13px;font-weight:600;cursor:pointer">
-        + Agregar producto
-      </button>
-    </div>
-    <div style="padding:16px;color:var(--gray-400);font-size:13px;text-align:center">
-      Sin productos aún.
-    </div>
-  </div>
 
 </div>
 
