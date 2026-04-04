@@ -85,11 +85,15 @@
 
   <!-- VISTA 3: Tabla limpia con líneas -->
   <div id="vista3" style="display:none;margin-bottom:16px">
-    <div style="background:white;border-radius:20px;padding:24px 20px;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-        <h3 style="font-size:17px;font-weight:800;margin:0;color:#1E293B">Confirmar Venta</h3>
-        <button style="width:32px;height:32px;border-radius:50%;border:none;background:#F1F5F9;font-size:16px;cursor:pointer;color:#64748B">✕</button>
+    <div style="background:white;border-radius:20px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+      <div style="background:var(--primary);padding:20px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.8px">RESUMEN DE VENTA</div>
+          <div style="font-size:18px;font-weight:800;color:white;margin-top:2px">Confirmar</div>
+        </div>
+        <button style="width:32px;height:32px;border-radius:50%;border:none;background:rgba(255,255,255,.2);font-size:16px;cursor:pointer;color:white">✕</button>
       </div>
+      <div style="padding:20px">
       <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F1F5F9;font-size:11px;font-weight:700;color:#94A3B8;margin-bottom:4px">
         <span>PRODUCTO</span><span>TOTAL</span>
       </div>
@@ -113,6 +117,7 @@
       <div style="display:flex;gap:10px">
         <button style="flex:1;padding:13px;border-radius:12px;border:1.5px solid #E2E8F0;background:white;font-size:14px;font-weight:600;color:#64748B;cursor:pointer">Volver</button>
         <button style="flex:1;padding:13px;border-radius:12px;border:none;background:var(--primary);color:white;font-size:14px;font-weight:700;cursor:pointer">Registrar</button>
+      </div>
       </div>
     </div>
   </div>

@@ -398,16 +398,21 @@
 
   <!-- Modal confirmación venta -->
   <div id="modalConfirmarVenta" class="modal hidden">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Confirmar Venta</h3>
-        <button onclick="closeModal('modalConfirmarVenta')">✕</button>
+    <div class="modal-content" style="padding:0;overflow:hidden">
+      <div style="background:var(--primary);padding:20px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.8px">RESUMEN DE VENTA</div>
+          <div style="font-size:18px;font-weight:800;color:white;margin-top:2px">Confirmar</div>
+        </div>
+        <button onclick="closeModal('modalConfirmarVenta')" style="width:32px;height:32px;border-radius:50%;border:none;background:rgba(255,255,255,.2);font-size:16px;cursor:pointer;color:white">✕</button>
       </div>
-      <div id="posResumen" style="margin-bottom:12px"></div>
-      <div class="fl" style="margin-bottom:10px"><input type="text" id="ventaNotas" placeholder=" "><label>Notas</label></div>
-      <div class="modal-actions">
-        <button type="button" class="btn-secondary" onclick="closeModal('modalConfirmarVenta')">Volver</button>
-        <button type="button" class="btn-primary" onclick="guardarVenta()">Registrar</button>
+      <div style="padding:20px">
+        <div id="posResumen" style="margin-bottom:12px"></div>
+        <div class="fl" style="margin-bottom:14px"><input type="text" id="ventaNotas" placeholder=" "><label>Notas</label></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modalConfirmarVenta')">Volver</button>
+          <button type="button" class="btn-primary" onclick="guardarVenta()">Registrar</button>
+        </div>
       </div>
     </div>
   </div>
