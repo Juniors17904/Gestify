@@ -92,73 +92,74 @@ async function loadDashboard() {
 
   if (typeof lucide !== 'undefined') lucide.createIcons();
 
-  // Cargar datos según módulos activos
+  // Cargar datos en paralelo según módulos activos
+  const inicioMes = fechaLocal(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+
+  const consultas = {};
   if (modulos.includes('ventas')) {
-    const { data: ventasHoy, error: e1 } = await db.from('ventas').select('total')
-      .eq('negocio_id', negocioId).gte('created_at', hoy + 'T00:00:00');
-    if (!e1) {
-      const total = (ventasHoy || []).reduce((s, v) => s + v.total, 0);
-      document.getElementById('statVentasHoy') && (document.getElementById('statVentasHoy').textContent = formatMoney(total));
-      document.getElementById('uvStatHoy')     && (document.getElementById('uvStatHoy').textContent     = formatMoney(total));
-      document.getElementById('uvStatCount')   && (document.getElementById('uvStatCount').textContent   = (ventasHoy || []).length);
-    }
+    consultas.ventasHoy  = db.from('ventas').select('total').eq('negocio_id', negocioId).gte('created_at', hoy + 'T00:00:00');
+    consultas.ventasMes  = db.from('ventas').select('total').eq('negocio_id', negocioId).gte('created_at', inicioMes + 'T00:00:00');
+    consultas.ultimas    = db.from('ventas').select('id, total, created_at, venta_items(cantidad, precio_unitario, productos(nombre))').eq('negocio_id', negocioId).order('created_at', { ascending: false }).limit(5);
+  }
+  if (modulos.includes('inventario')) {
+    consultas.totalProductos = db.from('productos').select('*', { count: 'exact', head: true }).eq('negocio_id', negocioId);
+    consultas.stockBajo      = db.from('productos').select('nombre, stock, stock_minimo').eq('negocio_id', negocioId).lte('stock', 5);
+  }
+  if (modulos.includes('caja')) {
+    consultas.ingresos = db.from('caja').select('monto').eq('negocio_id', negocioId).eq('tipo', 'ingreso');
+    consultas.egresos  = db.from('caja').select('monto').eq('negocio_id', negocioId).eq('tipo', 'egreso');
+  }
+  if (modulos.includes('empleados')) {
+    consultas.empleados = db.from('empleados').select('*', { count: 'exact', head: true }).eq('negocio_id', negocioId);
+  }
+  if (modulos.includes('clientes')) {
+    consultas.totalClientes  = db.from('clientes').select('*', { count: 'exact', head: true }).eq('negocio_id', negocioId);
+    consultas.ultimosClientes = db.from('clientes').select('id, nombre, telefono').eq('negocio_id', negocioId).order('created_at', { ascending: false }).limit(3);
+  }
+  if (modulos.includes('agenda')) {
+    consultas.citasHoy = db.from('citas').select('id, hora, duracion, servicio, estado, clientes(nombre)').eq('negocio_id', negocioId).eq('fecha', hoy).order('hora');
+  }
 
-    const inicioMes = fechaLocal(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
-    const { data: ventasMes, error: e2 } = await db.from('ventas').select('total')
-      .eq('negocio_id', negocioId).gte('created_at', inicioMes + 'T00:00:00');
-    if (!e2) {
-      const totalMes = (ventasMes || []).reduce((s, v) => s + v.total, 0);
-      document.getElementById('uvStatMes') && (document.getElementById('uvStatMes').textContent = formatMoney(totalMes));
-    }
+  const keys = Object.keys(consultas);
+  const resultados = await Promise.all(keys.map(k => consultas[k]));
+  const res = {};
+  keys.forEach((k, i) => res[k] = resultados[i]);
 
-    const { data: ultimas, error: e3 } = await db.from('ventas')
-      .select('id, total, created_at, venta_items(cantidad, precio_unitario, productos(nombre))')
-      .eq('negocio_id', negocioId).order('created_at', { ascending: false }).limit(5);
-    renderUltimasVentas(e3 ? [] : (ultimas || []));
+  // Procesar resultados
+  if (modulos.includes('ventas')) {
+    const total = (res.ventasHoy?.data || []).reduce((s, v) => s + v.total, 0);
+    document.getElementById('statVentasHoy') && (document.getElementById('statVentasHoy').textContent = formatMoney(total));
+    document.getElementById('uvStatHoy')     && (document.getElementById('uvStatHoy').textContent     = formatMoney(total));
+    document.getElementById('uvStatCount')   && (document.getElementById('uvStatCount').textContent   = (res.ventasHoy?.data || []).length);
+    const totalMes = (res.ventasMes?.data || []).reduce((s, v) => s + v.total, 0);
+    document.getElementById('uvStatMes') && (document.getElementById('uvStatMes').textContent = formatMoney(totalMes));
+    renderUltimasVentas(res.ultimas?.error ? [] : (res.ultimas?.data || []));
   }
 
   if (modulos.includes('inventario')) {
-    const { count: totalProductos } = await db.from('productos')
-      .select('*', { count: 'exact', head: true }).eq('negocio_id', negocioId);
-    document.getElementById('statProductos') && (document.getElementById('statProductos').textContent = totalProductos || 0);
-
-    const { data: stockBajo, error: e4 } = await db.from('productos')
-      .select('nombre, stock, stock_minimo').eq('negocio_id', negocioId).lte('stock', 5);
-    if (!e4) {
-      document.getElementById('statStockBajo') && (document.getElementById('statStockBajo').textContent = stockBajo?.length || 0);
-      renderStockBajo(stockBajo || []);
-    }
+    document.getElementById('statProductos') && (document.getElementById('statProductos').textContent = res.totalProductos?.count || 0);
+    const stockBajo = res.stockBajo?.data || [];
+    document.getElementById('statStockBajo') && (document.getElementById('statStockBajo').textContent = stockBajo.length);
+    renderStockBajo(stockBajo);
   }
 
   if (modulos.includes('caja')) {
-    const { data: ingresos, error: e5 } = await db.from('caja').select('monto').eq('negocio_id', negocioId).eq('tipo', 'ingreso');
-    const { data: egresos,  error: e6 } = await db.from('caja').select('monto').eq('negocio_id', negocioId).eq('tipo', 'egreso');
-    if (!e5 && !e6) {
-      const saldo = (ingresos || []).reduce((s, r) => s + r.monto, 0) - (egresos || []).reduce((s, r) => s + r.monto, 0);
-      document.getElementById('statCaja') && (document.getElementById('statCaja').textContent = formatMoney(saldo));
-    }
+    const saldo = (res.ingresos?.data || []).reduce((s, r) => s + r.monto, 0)
+                - (res.egresos?.data  || []).reduce((s, r) => s + r.monto, 0);
+    document.getElementById('statCaja') && (document.getElementById('statCaja').textContent = formatMoney(saldo));
   }
 
   if (modulos.includes('empleados')) {
-    const { count } = await db.from('empleados').select('*', { count: 'exact', head: true }).eq('negocio_id', negocioId);
-    document.getElementById('statEmpleados') && (document.getElementById('statEmpleados').textContent = count || 0);
+    document.getElementById('statEmpleados') && (document.getElementById('statEmpleados').textContent = res.empleados?.count || 0);
   }
 
   if (modulos.includes('clientes')) {
-    const { count } = await db.from('clientes').select('*', { count: 'exact', head: true }).eq('negocio_id', negocioId);
-    document.getElementById('statClientes') && (document.getElementById('statClientes').textContent = count || 0);
-
-    const { data: ultimos, error: e7 } = await db.from('clientes')
-      .select('id, nombre, telefono').eq('negocio_id', negocioId)
-      .order('created_at', { ascending: false }).limit(3);
-    renderUltimosClientes(e7 ? [] : (ultimos || []));
+    document.getElementById('statClientes') && (document.getElementById('statClientes').textContent = res.totalClientes?.count || 0);
+    renderUltimosClientes(res.ultimosClientes?.error ? [] : (res.ultimosClientes?.data || []));
   }
 
   if (modulos.includes('agenda')) {
-    const { data: citasHoy, error: e8 } = await db.from('citas')
-      .select('id, hora, duracion, servicio, estado, clientes(nombre)')
-      .eq('negocio_id', negocioId).eq('fecha', hoy).order('hora');
-    const lista = e8 ? [] : (citasHoy || []);
+    const lista = res.citasHoy?.error ? [] : (res.citasHoy?.data || []);
     document.getElementById('statAgenda') && (document.getElementById('statAgenda').textContent = lista.length);
     renderCitasHoy(lista);
   }
