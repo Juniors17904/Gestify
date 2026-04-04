@@ -1,6 +1,6 @@
 // ===== SERVICE WORKER (PWA) =====
 
-const CACHE_NAME = 'ctrl-negocio-v7';
+const CACHE_NAME = 'ctrl-negocio-v8';
 const ASSETS = [
   '/',
   '/index.html',
@@ -27,8 +27,7 @@ const ASSETS = [
   '/modules/empleados.html',
   '/modules/reportes.html',
   '/modules/clientes.html',
-  '/modules/agenda.html',
-  '/modules/ajustes.html'
+  '/modules/agenda.html'
 ];
 
 // Instalar y cachear archivos

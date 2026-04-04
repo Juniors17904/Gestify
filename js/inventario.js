@@ -3,8 +3,8 @@
 let productos = [];
 let editandoProductoId = null;
 let categorias = [];
-let filtroCategoria = null;
-let filtroProveedor = null;
+let filtroCategorias = [];
+let filtroProveedores = [];
 
 async function loadCategorias() {
   const { data } = await db.from('categorias')
@@ -99,8 +99,8 @@ async function loadInventario() {
   if (error) { showToast('Error al cargar inventario', 'error'); return; }
 
   productos = data || [];
-  filtroCategoria = null;
-  filtroProveedor = null;
+  filtroCategorias = [];
+  filtroProveedores = [];
   renderFiltros();
   renderInventarioAcordeon(productos);
   actualizarSelectProductos();
@@ -179,8 +179,8 @@ function aplicarFiltros() {
     const matchTexto = !query ||
       p.nombre.toLowerCase().includes(query) ||
       (p.categorias?.nombre || '').toLowerCase().includes(query);
-    const matchCat = !filtroCategoria || p.categoria_id === filtroCategoria;
-    const matchProv = !filtroProveedor || (p.proveedor || '') === filtroProveedor;
+    const matchCat = !filtroCategorias.length || filtroCategorias.includes(p.categoria_id);
+    const matchProv = !filtroProveedores.length || filtroProveedores.includes(p.proveedor || '');
     return matchTexto && matchCat && matchProv;
   });
   renderInventarioAcordeon(filtro);
@@ -195,6 +195,7 @@ function renderFiltros() {
   const elProv = document.getElementById('filtrosProveedores');
   if (!elCat || !elProv) return;
 
+  const check = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
   const itemStyle = (activo) =>
     `display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:8px;font-size:13px;font-weight:${activo ? '700' : '500'};cursor:pointer;color:${activo ? 'var(--primary)' : '#1E293B'};background:${activo ? '#FFF7ED' : 'transparent'}`;
 
@@ -202,10 +203,10 @@ function renderFiltros() {
   const cats = [...new Map(productos.filter(p => p.categoria_id).map(p => [p.categoria_id, p.categorias?.nombre || ''])).entries()];
   if (cats.length) {
     elCat.innerHTML = `<div style="font-size:10px;font-weight:700;color:#94A3B8;letter-spacing:.6px;margin-bottom:4px">CATEGORÍA</div>` +
-      [['null', 'Todas'], ...cats.map(([id, n]) => [id, n])].map(([id, nombre]) => {
-        const activo = id === 'null' ? !filtroCategoria : filtroCategoria === id;
-        return `<div style="${itemStyle(activo)}" onclick="setFiltroCategoria(${id === 'null' ? 'null' : `'${id}'`})">
-          <span>${nombre}</span>${activo ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+      cats.map(([id, nombre]) => {
+        const activo = filtroCategorias.includes(id);
+        return `<div style="${itemStyle(activo)}" onclick="toggleFiltroCategoria('${id}')">
+          <span>${nombre}</span>${activo ? check : ''}
         </div>`;
       }).join('') + `<div style="height:1px;background:#F1F5F9;margin:6px 0"></div>`;
   } else {
@@ -216,10 +217,10 @@ function renderFiltros() {
   const provs = [...new Set(productos.map(p => p.proveedor).filter(Boolean))];
   if (provs.length) {
     elProv.innerHTML = `<div style="font-size:10px;font-weight:700;color:#94A3B8;letter-spacing:.6px;margin-bottom:4px">PROVEEDOR</div>` +
-      [['__todos__', 'Todos'], ...provs.map(p => [p, p])].map(([val, nombre]) => {
-        const activo = val === '__todos__' ? !filtroProveedor : filtroProveedor === val;
-        return `<div style="${itemStyle(activo)}" onclick="setFiltroProveedor(${val === '__todos__' ? 'null' : `'${val}'`})">
-          <span>${nombre}</span>${activo ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+      provs.map(prov => {
+        const activo = filtroProveedores.includes(prov);
+        return `<div style="${itemStyle(activo)}" onclick="toggleFiltroProveedor('${prov}')">
+          <span>${prov}</span>${activo ? check : ''}
         </div>`;
       }).join('');
   } else {
@@ -227,34 +228,49 @@ function renderFiltros() {
   }
 
   // Badge
-  const activos = (filtroCategoria ? 1 : 0) + (filtroProveedor ? 1 : 0);
+  const activos = filtroCategorias.length + filtroProveedores.length;
   const badge = document.getElementById('invFiltrarBadge');
   if (badge) { badge.textContent = activos; badge.style.display = activos ? 'inline' : 'none'; }
 }
 
 function toggleFiltroPanel() {
   const panel = document.getElementById('invFiltroPanel');
-  if (panel) panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+  if (!panel) return;
+  const abre = panel.style.display === 'none';
+  panel.style.display = abre ? 'block' : 'none';
+}
+
+function toggleFiltroCategoria(id) {
+  const i = filtroCategorias.indexOf(id);
+  if (i === -1) filtroCategorias.push(id); else filtroCategorias.splice(i, 1);
+  renderFiltros();
+  aplicarFiltros();
+}
+
+function toggleFiltroProveedor(prov) {
+  const i = filtroProveedores.indexOf(prov);
+  if (i === -1) filtroProveedores.push(prov); else filtroProveedores.splice(i, 1);
+  renderFiltros();
+  aplicarFiltros();
 }
 
 function limpiarFiltros() {
-  filtroCategoria = null;
-  filtroProveedor = null;
+  filtroCategorias = [];
+  filtroProveedores = [];
   renderFiltros();
   aplicarFiltros();
+  const panel = document.getElementById('invFiltroPanel');
+  if (panel) panel.style.display = 'none';
 }
 
-function setFiltroCategoria(id) {
-  filtroCategoria = id;
-  renderFiltros();
-  aplicarFiltros();
-}
-
-function setFiltroProveedor(prov) {
-  filtroProveedor = prov;
-  renderFiltros();
-  aplicarFiltros();
-}
+// Cerrar panel al click fuera
+document.addEventListener('click', e => {
+  const panel = document.getElementById('invFiltroPanel');
+  const btn = document.getElementById('invFiltrarBtn');
+  if (panel && panel.style.display !== 'none' && !panel.contains(e.target) && !btn?.contains(e.target)) {
+    panel.style.display = 'none';
+  }
+});
 
 async function guardarProducto(e) {
   e.preventDefault();
