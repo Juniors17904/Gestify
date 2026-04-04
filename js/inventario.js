@@ -10,35 +10,81 @@ async function loadCategorias() {
     .eq('negocio_id', currentBusiness?.id)
     .order('nombre');
   categorias = data || [];
-  const select = document.getElementById('prodCategoriaId');
-  if (!select) return;
-  const valorActual = select.value;
-  select.innerHTML = '<option value="">Categoría (opcional)</option>';
-  categorias.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c.id;
-    opt.textContent = c.nombre;
-    select.appendChild(opt);
-  });
-  const optNueva = document.createElement('option');
-  optNueva.value = '__nueva__';
-  optNueva.textContent = '+ Nueva categoría...';
-  select.appendChild(optNueva);
-  if (valorActual) select.value = valorActual;
+  renderCatLista(categorias);
 }
 
-function toggleNuevaCategoria(val) {
-  const wrap = document.getElementById('nuevaCategoriaWrap');
-  if (wrap) wrap.style.display = val === '__nueva__' ? 'flex' : 'none';
-  const sel = document.getElementById('prodCategoriaId');
-  if (sel) sel.classList.toggle('has-value', !!val);
+function renderCatLista(lista) {
+  const el = document.getElementById('catLista');
+  if (!el) return;
+  if (!lista.length) {
+    el.innerHTML = '<p style="font-size:12px;color:#94A3B8;text-align:center;padding:10px 0">Sin categorías aún</p>';
+    return;
+  }
+  el.innerHTML = lista.map(c => `
+    <div onclick="seleccionarCategoria('${c.id}','${c.nombre}')"
+      style="padding:9px 10px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;color:#1E293B"
+      onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='none'">
+      ${c.nombre}
+    </div>`).join('');
 }
+
+function toggleCatDropdown() {
+  const dd = document.getElementById('catDropdown');
+  const isOpen = dd.style.display !== 'none';
+  dd.style.display = isOpen ? 'none' : 'block';
+  if (!isOpen) document.getElementById('catBuscar').focus();
+}
+
+function filtrarCategorias(query) {
+  const filtradas = categorias.filter(c => c.nombre.toLowerCase().includes(query.toLowerCase()));
+  renderCatLista(filtradas);
+}
+
+function seleccionarCategoria(id, nombre) {
+  document.getElementById('prodCategoriaId').value = id;
+  document.getElementById('catDisplayText').textContent = nombre;
+  document.getElementById('catDropdown').style.display = 'none';
+  document.getElementById('catBuscar').value = '';
+  renderCatLista(categorias);
+}
+
+function mostrarInputNuevaCat() {
+  document.getElementById('catNuevaSection').style.display = 'none';
+  const sec = document.getElementById('catNuevaInputSection');
+  sec.style.display = 'flex';
+  document.getElementById('catNuevaInput').focus();
+}
+
+async function confirmarNuevaCat() {
+  const nombre = document.getElementById('catNuevaInput').value.trim();
+  if (!nombre) return;
+  const { data } = await db.from('categorias')
+    .insert({ nombre, negocio_id: currentBusiness?.id })
+    .select('id, nombre').single();
+  if (data) {
+    categorias.push(data);
+    categorias.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    seleccionarCategoria(data.id, data.nombre);
+  }
+  document.getElementById('catNuevaInput').value = '';
+  document.getElementById('catNuevaSection').style.display = 'block';
+  document.getElementById('catNuevaInputSection').style.display = 'none';
+}
+
+// Cerrar dropdown al click fuera
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('catDisplay')?.closest('div');
+  if (wrap && !wrap.contains(e.target)) {
+    const dd = document.getElementById('catDropdown');
+    if (dd) dd.style.display = 'none';
+  }
+});
 
 async function loadInventario() {
   if (!currentBusiness?.id) return;
   const { data, error } = await db
     .from('productos')
-    .select('*')
+    .select('*, categorias(nombre)')
     .eq('negocio_id', currentBusiness.id)
     .order('nombre');
 
@@ -83,7 +129,7 @@ function renderInventarioAcordeon(lista) {
       <div onclick="invToggleAcord(this)" style="display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer">
         <div style="flex:1;min-width:0">
           <div style="font-size:14px;font-weight:700;color:var(--gray-800);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.nombre}</div>
-          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">${p.categoria || '—'}</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:2px">${p.categorias?.nombre || p.categoria || '—'}</div>
         </div>
         <span style="font-size:12px;padding:3px 10px;border-radius:20px;background:${badgeBg};color:${badgeColor};font-weight:700;white-space:nowrap;flex-shrink:0">${badgeLabel}</span>
         <svg class="inv-chv" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray-300)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
@@ -91,7 +137,7 @@ function renderInventarioAcordeon(lista) {
       <div class="inv-acord-body" style="display:none;padding:0 14px 14px;border-top:1px solid var(--gray-100)">
         <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Precio</span><span style="color:var(--gray-800);font-weight:700">${formatMoney(p.precio)}</span></div>
         <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Stock</span><span style="color:${stockColor};font-weight:700">${p.stock} unidades</span></div>
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Categoría</span><span style="color:var(--gray-800);font-weight:700">${p.categoria || '—'}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:13px"><span style="color:var(--gray-400);font-weight:600">Categoría</span><span style="color:var(--gray-800);font-weight:700">${p.categorias?.nombre || p.categoria || '—'}</span></div>
         <div style="display:flex;gap:8px;margin-top:10px">
           <button onclick="editarProducto('${p.id}')" style="flex:1;padding:9px;border-radius:10px;border:1px solid var(--gray-200);background:var(--white);font-size:13px;font-weight:600;color:var(--gray-600);cursor:pointer">✏️ Editar</button>
           <button onclick="eliminarProducto('${p.id}')" style="flex:1;padding:9px;border-radius:10px;border:none;background:#FEE2E2;font-size:13px;font-weight:600;color:#DC2626;cursor:pointer">🗑️ Eliminar</button>
@@ -119,7 +165,7 @@ function renderStock(stock, stockMinimo) {
 function buscarProducto(query) {
   const filtro = productos.filter(p =>
     p.nombre.toLowerCase().includes(query.toLowerCase()) ||
-    (p.categoria || '').toLowerCase().includes(query.toLowerCase())
+    (p.categorias?.nombre || p.categoria || '').toLowerCase().includes(query.toLowerCase())
   );
   renderInventarioAcordeon(filtro);
 }
